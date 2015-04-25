@@ -1,11 +1,13 @@
 .start {
+    margin: 0 auto;
     padding: 10px 0 25px;
+    max-width: 200px;
     text-align: center;
 
     .or {
         position: relative;
         display: inline-block;
-        margin: 10px 0 30px;
+        margin: 10px 0 26px;
         font-size: 1.1em;
 
         &:before, &:after {
@@ -25,12 +27,18 @@
     }
 
     .name, .join_id {
-        width: 138px;
         padding: 0 12px;
         font-size: 1.1em;
     }
-    
-    .name {
-        width: 138px;
+
+    .join_id {
+        margin-top: 3px;
+    }
+
+    input {
+        width: 100%;
+    }
+    input[type="submit"] {
+        margin-top: 5px;
     }
 }

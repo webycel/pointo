@@ -10,16 +10,35 @@
 angular.module('pointoApp')
     .controller('StoryCtrl', function ($scope, $routeParams, $location, storyFactory) {
 
-        var sessionID = $routeParams.sessionID;
+        var sessionID = $routeParams.sessionID,
+            session;
 
         if(sessionID < 100000000 || sessionID > 999999999) {
             $location.path('');
         }
+        storyFactory.sessionExists(sessionID);
+        
+        $scope.view = 1;
+        $scope.name = '';
+        $scope.sessionID = sessionID;
 
-        var session = storyFactory.getSession(sessionID);
-        //$scope.participants = { users: { name: 'Anthony' } };
-        $scope.participants = session;
+        console.log(storyFactory.user);
+        
+        if(!storyFactory.isLoggedIn()) {
+            $scope.view = 2;
+        } else {
+            storyFactory.joinSession(sessionID, storyFactory.user.name);
+        }
 
-        console.log(sessionID);
+        session = storyFactory.getSession(sessionID);
+
+
+        $scope.participants = session.participants;
+        $scope.storypoints = [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'];
+
+        $scope.joinSession = function() {
+            storyFactory.joinSession(sessionID, $scope.name);
+            $scope.view = 1;
+        };
 
     });

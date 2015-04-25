@@ -3,6 +3,10 @@ body {
   font-size: 160%;
 }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
 header,
 footer {
@@ -59,6 +63,12 @@ $greyCCC:   #ccc;
 
 $green:     #16a085;
 $turquoise: #1abc9c;
+$blueLight: #3498db;
+$blue:      #2980b9;
+$redLight:  #e74c3c;
+$red:       #c0392b; 
+$clouds:    #ecf0f1;
+$silver:    #bdc3c7;  
 
 @import 'general/_buttons';
 @import 'general/_forms';

@@ -4,6 +4,7 @@
     color: $white;
     border: 1px solid $green;
     transition: background .25s ease;
+    cursor: pointer;
 
     &:hover {
         outline: 0;
@@ -11,5 +12,32 @@
     }
     &:active, &:focus {
         outline: 0;
+    }
+
+
+    &.btn-action {
+        background-color: $blueLight;
+        border: 1px solid $blue;
+
+        &:hover {
+            background-color: $blue;
+        }
+    }
+    &.btn-secondary {
+        background-color: $redLight;
+        border: 1px solid $red;
+
+        &:hover {
+            background-color: $red;
+        }
+    }
+    &.btn-light {
+        background-color: $clouds;
+        border: 1px solid $silver;
+        color: $black;
+
+        &:hover {
+            background-color: $silver;
+        }
     }
 }

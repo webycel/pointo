@@ -1,12 +1,48 @@
-<div class="row story">
-    
-    <div class="col-md-8"></div>
-    <div class="col-md-2">
-        <h2>Participants</h2>
+<div ng-cloak class="story">
 
-        <ul class="participants">
-            <li ng-repeat="participant in participants">{{participant}}</li>
-        </ul>
+    <div class="row" ng-show="view === 1">
+        
+        <div class="col-md-3 voting">
+            <h2>Vote</h2>
+            <ul>
+                <li class="btn point" ng-repeat="point in storypoints">{{point}}</li>
+            </ul>
+            
+            <button class="btn-action options">Reveal all votes</button>
+            <button class="btn-light options">Clear all votes</button>
+
+        </div>
+
+        <div class="col-md-9">
+            <h2>Participants</h2>
+
+            <div class="row participants">
+                <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="participant in participants">
+                    <span class="name">{{participant.name}}</span>
+                    <span class="rated">
+                        {{participant.points > -1 ? participant.points : "*" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <div class="row" ng-show="view === 2">
+
+        <div class="set_name">
+            <h1>Session {{sessionID}}</h1>
+
+            <form ng-submit="joinSession()">
+
+                <div class="form-group">
+                    <input type="text" class="name" placeholder="Your name" ng-model="name" required />
+                    <input type="submit" value="Join Session" />
+                </div>
+
+            </form>
+        </div>
+
+    </div>    
 
 </div>

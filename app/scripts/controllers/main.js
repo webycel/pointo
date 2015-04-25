@@ -10,15 +10,15 @@
 angular.module('pointoApp')
     .controller('MainCtrl', function ($scope, storyFactory) {
         
-        $scope.name = 'Anthony';
-        $scope.sessionID = '';
+        $scope.name = 'Jeff';
+        $scope.sessionID = 222018624;
 
         $scope.createSession = function() {
             storyFactory.createSession($scope.name);
         };
 
         $scope.joinSession = function() {
-            storyFactory.joinSession($scope.sessionID);
+            storyFactory.joinSession($scope.sessionID, $scope.name);
         };
 
 });

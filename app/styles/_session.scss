@@ -1,0 +1,51 @@
+.story {
+    .voting {
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+        .point {
+            display: inline-block;
+            margin: 0 6px 6px 0;
+            padding: 6px 0;
+            width: 42px;
+            border: 1px solid $greyCCC;
+            text-align: center;
+        }
+    }
+
+    .participant {
+        margin: 0 5px 10px;
+        padding: 10px 0;
+        border: 1px solid $greyCCC;
+        text-align: center;
+        transition: border .25s ease;
+
+        &:hover {
+            border: 1px solid $grey555;
+        }
+
+        .name {
+            padding:0 4px 2px;
+            font-size: 0.9em;
+            border-bottom: 1px solid $greyCCC;
+        }
+
+        .rated {
+            display: block;
+            margin-top: 8px;
+            color: $green;
+            font-size: 2em;
+        }
+    }
+
+    .options {
+        margin-bottom: 10px;
+        width: 97%;
+    }
+
+    .set_name {
+        padding-bottom: 50px;
+        text-align: center;
+    }
+}
