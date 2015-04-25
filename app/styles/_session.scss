@@ -14,6 +14,13 @@
             text-align: center;
             vertical-align: top;
 
+            @media (max-width: $break-medium) {
+                width: 48.5px;
+            }
+            @media (max-width: $break-x-small) {
+                padding: 9px 0;
+                width: 64px;
+            }
             &.glyphicon {
                 top: 0;
                 line-height: 1.43em;

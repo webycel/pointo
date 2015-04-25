@@ -2,7 +2,7 @@
 
     <div class="row" ng-show="view === 1">
         
-        <div class="col-md-3 voting">
+        <div class="col-md-3 col-sm-4 col-xs-12 voting">
             <h2>Vote</h2>
             <ul>
                 <li class="btn point" ng-repeat="point in storypoints" ng-click="vote(point)" ng-class="{active: user.points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2}">
@@ -15,7 +15,7 @@
 
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-9 col-sm-8">
             <h2>Participants</h2>
 
             <div class="row participants">
