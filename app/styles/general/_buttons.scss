@@ -10,6 +10,9 @@
         outline: 0;
         background-color: $green;
     }
+    &.active {
+        background-color: $green;
+    }
     &:active, &:focus {
         outline: 0;
     }

@@ -11,8 +11,13 @@
             margin: 0 6px 6px 0;
             padding: 6px 0;
             width: 42px;
-            border: 1px solid $greyCCC;
             text-align: center;
+            vertical-align: top;
+
+            &.glyphicon {
+                top: 0;
+                line-height: 1.43em;
+            }
         }
     }
 

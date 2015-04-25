@@ -30,6 +30,7 @@ angular.module('pointoApp')
 
         session = storyFactory.getSession(sessionID);
 
+        $scope.user = storyFactory.user;
         $scope.participants = session.participants;
         $scope.session = session.session;
 
@@ -54,6 +55,10 @@ angular.module('pointoApp')
 
         $scope.vote = function(points) {
             storyFactory.setVote(points);
+        };
+
+        $scope.revealVotes = function() {
+            storyFactory.revealVotes();
         };
 
         $scope.clearVotes = function() {

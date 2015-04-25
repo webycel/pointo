@@ -7,7 +7,7 @@ angular.module('pointoApp')
             ref = new Firebase(FIREBASE_URL);
 
         storyFactory.user = {
-            key: null, name: null, 'new': false
+            key: null, name: null, points: {}, 'new': false
         };
 
         storyFactory.sessionID = null;
@@ -45,20 +45,24 @@ angular.module('pointoApp')
             storyFactory.sessionID = id;
 
             //on vote status change
-            ref.child('sessions').child(id).child('voteStatus').on('value', function() {
-                ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({points: { text: -1, value: -1 }});
+            ref.child('sessions').child(id).child('voteStatus').on('value', function(snap) {
+                if(snap.val() === 0) {
+                    ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({points: { text: -1, value: -1 }});
+                }
             });
             
         };
 
         storyFactory.addUser = function(id, name, authData, redirect) {
-            var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users');
+            var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users'),
+                points = { text: -1, value: -1 };
 
-            usersRef.child(authData.uid).set({ name: name, points: { text: -1, value: -1 } }, function (error) {
+            usersRef.child(authData.uid).set({ name: name, points: points }, function (error) {
                 if(!error) {
                     storyFactory.user.key = authData.uid;
                     storyFactory.user.name = name;
                     storyFactory.user.redirect = redirect;
+                    storyFactory.user.points = points;
 
                     localStorage[authData.uid] = name;
 
@@ -84,7 +88,6 @@ angular.module('pointoApp')
             if (authData) {
                 storyFactory.user.key = authData.uid;
                 storyFactory.user.name = localStorage[authData.uid] || 'Anonymous';
-                console.log('Authenticated user with name:', storyFactory.user.name);
                 return true;
             } else {
                 return false;
@@ -100,12 +103,20 @@ angular.module('pointoApp')
         storyFactory.setVote = function(points) {
             var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
             user.update({points: { text: points.text, value: points.value }});
+            storyFactory.user.points = points;
+        };
+
+        storyFactory.revealVotes = function() {
+            var session = ref.child('sessions').child(storyFactory.sessionID);
+            session.update({ voteStatus: 1 });
         };
 
         storyFactory.clearVotes = function() {
-            var session = ref.child('sessions').child(storyFactory.sessionID);
+            var session = ref.child('sessions').child(storyFactory.sessionID),
+                points = { text: -1, value: -1 };
             session.update({ voteStatus: 0 });
-            session.child('users').child(storyFactory.user.key).update({points: { text: -1, value: -1 }});
+            session.child('users').child(storyFactory.user.key).update({points: points});
+            storyFactory.user.points = points;
         };
 
         storyFactory.randomID = function(min, max) {
@@ -119,6 +130,7 @@ angular.module('pointoApp')
             getSession: storyFactory.getSession,
             isLoggedIn: storyFactory.isLoggedIn,
             setVote: storyFactory.setVote,
+            revealVotes: storyFactory.revealVotes,
             clearVotes: storyFactory.clearVotes,
             user: storyFactory.user
         };
