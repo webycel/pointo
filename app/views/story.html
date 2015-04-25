@@ -5,11 +5,11 @@
         <div class="col-md-3 voting">
             <h2>Vote</h2>
             <ul>
-                <li class="btn point" ng-repeat="point in storypoints">{{point}}</li>
+                <li class="btn point" ng-repeat="point in storypoints" ng-click="vote(point)">{{point.text}}</li>
             </ul>
             
             <button class="btn-action options">Reveal all votes</button>
-            <button class="btn-light options">Clear all votes</button>
+            <button class="btn-light options" ng-click="clearVotes()">Clear all votes</button>
 
         </div>
 
@@ -17,10 +17,10 @@
             <h2>Participants</h2>
 
             <div class="row participants">
-                <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="participant in participants">
-                    <span class="name">{{participant.name}}</span>
-                    <span class="rated">
-                        {{participant.points > -1 ? participant.points : "*" }}
+                <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in participants">
+                    <span class="name">{{p.name}}</span>
+                    <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value > -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1}">
+                        {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : (p.points.value === -2 ? '?' : '' ) }}
                     </span>
                 </div>
             </div>
