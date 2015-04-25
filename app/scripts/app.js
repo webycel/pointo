@@ -18,13 +18,14 @@ angular
     'ngTouch',
     'firebase'
   ])
+  .constant('FIREBASE_URL', 'https://pointo.firebaseio.com/')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/#id', {
+      .when('/:sessionID', {
         templateUrl: 'views/story.html',
         controller: 'StoryCtrl'
       })

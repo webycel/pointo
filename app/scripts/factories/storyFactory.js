@@ -1,23 +1,54 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('storyFactory', function($firebaseArray) {
+    .factory('storyFactory', function($firebaseArray, $location, FIREBASE_URL) {
 
-        var ref = new Firebase('https://pointo.firebaseio.com/'),
-            session = $firebaseArray(ref);
+        var storyFactory = {},
+            ref = new Firebase(FIREBASE_URL);
 
-        this.createSession = function(name) {
-            console.log(name);
-            session.$add({ id: 1 });
+        storyFactory.user = {
+            key: '', name: ''
         };
 
-        this.joinSession = function(id) {
+        storyFactory.session = {
+
+        };
+
+        storyFactory.createSession = function(name) {
+            var id  = storyFactory.randomID(100000000, 999999999);
+            var sessionsRef = $firebaseArray(ref.child('sessions').child(id));
+            
+            sessionsRef.$add().then(function() {
+                storyFactory.joinSession(id, name);
+            });
+        };
+
+        storyFactory.joinSession = function(id, name) {
             console.log(id);
+            var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id);
+            var users = $firebaseArray(usersRef.child('users'));
+
+            users.$add({ name: name, points: -1 }).then(function (snap) {
+                storyFactory.user.key = snap.key();
+                storyFactory.user.name = name;
+
+                $location.path(id);
+            });
+        };
+
+        storyFactory.getSession = function(id) {
+            var session = $firebaseArray(ref.child('sessions').child(id));
+            console.log(session);
+        };
+
+        storyFactory.randomID = function(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
         };
 
         return {
-            createSession: this.createSession,
-            joinSession: this.joinSession
+            createSession: storyFactory.createSession,
+            joinSession: storyFactory.joinSession,
+            getSession: storyFactory.getSession
         };
 
     });

@@ -8,10 +8,18 @@
  * Controller of the pointoApp
  */
 angular.module('pointoApp')
-  .controller('StoryCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+    .controller('StoryCtrl', function ($scope, $routeParams, $location, storyFactory) {
+
+        var sessionID = $routeParams.sessionID;
+
+        if(sessionID < 100000000 || sessionID > 999999999) {
+            $location.path('');
+        }
+
+        var session = storyFactory.getSession(sessionID);
+        //$scope.participants = { users: { name: 'Anthony' } };
+        $scope.participants = session;
+
+        console.log(sessionID);
+
+    });
