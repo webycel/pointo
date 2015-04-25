@@ -1,0 +1,14 @@
+input[type="text"], input[type="number"] {
+    padding: 6px 12px;
+    height: 34px;
+    font-size: 0.9em;
+    color: $grey555;
+    border: 1px solid $greyCCC;
+    vertical-align: top;
+    transition: border-color ease-in-out .15s;
+
+    &:focus {
+        outline: 0;
+        border-color: $green;
+    }
+}

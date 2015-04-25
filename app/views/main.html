@@ -1,0 +1,23 @@
+<div class="row start">
+
+    <form ng-submit="createSession()">
+
+        <div class="form-group">
+            <input type="text" class="name" placeholder="Your name" ng-model="name" required />
+            <input type="submit" value="Create Session" />
+        </div>
+
+        <span class="or">or</span>
+
+    </form>
+
+    <form ng-submit="joinSession()">
+
+        <div class="form-group">
+            <input type="number" class="join_id" placeholder="123 456 789" ng-model="sessionID" required />
+            <input type="submit" value="Join Session" />
+        </div>
+
+    </form>
+
+</div>

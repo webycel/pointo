@@ -1,0 +1,15 @@
+.btn, button, input[type="submit"] {
+    padding: 5px 10px;
+    background-color: $turquoise;
+    color: $white;
+    border: 1px solid $green;
+    transition: background .25s ease;
+
+    &:hover {
+        outline: 0;
+        background-color: $green;
+    }
+    &:active, &:focus {
+        outline: 0;
+    }
+}

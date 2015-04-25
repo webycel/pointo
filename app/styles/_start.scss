@@ -1,0 +1,36 @@
+.start {
+    padding: 10px 0 25px;
+    text-align: center;
+
+    .or {
+        position: relative;
+        display: inline-block;
+        margin: 10px 0 30px;
+        font-size: 1.1em;
+
+        &:before, &:after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 13px;
+            left: -72px;
+            width: 60px;
+            height: 1px;
+            background-color: $grey555;
+        }
+        &:after {
+            left: auto;
+            right: -72px;
+        }
+    }
+
+    .name, .join_id {
+        width: 138px;
+        padding: 0 12px;
+        font-size: 1.1em;
+    }
+    
+    .name {
+        width: 138px;
+    }
+}
