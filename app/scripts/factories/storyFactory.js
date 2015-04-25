@@ -32,17 +32,17 @@ angular.module('pointoApp')
                         console.log('Login Failed!', error);
                     } else {
                         console.log('Authenticated successfully with payload:', authData);
-                        storyFactory.createUser(id, name, authData, redirect);                        
+                        storyFactory.addUser(id, name, authData, redirect);                        
                     }
                 });
             } else {
                 var authData = ref.getAuth();
-                storyFactory.createUser(id, name, authData, redirect);                        
+                storyFactory.addUser(id, name, authData, redirect);                        
             }
             
         };
 
-        storyFactory.createUser = function(id, name, authData, redirect) {
+        storyFactory.addUser = function(id, name, authData, redirect) {
             var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users');
 
             usersRef.child(authData.uid).set({ name: name, points: -1 }, function (error) {
