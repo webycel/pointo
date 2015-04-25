@@ -22,7 +22,7 @@
                 <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in participants">
                     <span class="name">{{p.name}}</span>
                     <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1}">
-                        {{ session.voteStatus === 1 ? (p.points.value !== -1 ? p.points.text : '') : '' }}
+                        {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
                     </span>
                 </div>
             </div>
