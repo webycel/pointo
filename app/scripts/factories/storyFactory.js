@@ -13,28 +13,23 @@ angular.module('pointoApp')
         storyFactory.sessionID = null;
 
         storyFactory.createSession = function(name) {
-            var id  = storyFactory.randomID(100000, 999999);
+            var id = storyFactory.randomID(100000, 999999);
             var sessionsRef = ref.child('sessions').child(id);
 
-
-
-            /*sessionsRef.on('value', function(snap) {
-                console.log(snap.child(id).exists());
-                if(snap.child(id).exists()) {
+            ref.child('sessions').once('value', function(snapshot) {
+                if(snapshot.child(id).exists()) {
                     storyFactory.createSession(name);
-                    return false;
                 } else {
-                    sessionsRef.off('value');
-                }
-            });*/
-
-            sessionsRef.set({ users: '', voteStatus: 0 }, function(error) {
-                if(!error) {
-                    storyFactory.joinSession(id, name, true);
-                } else {
-                    console.log(error);
+                    sessionsRef.set({ users: '', voteStatus: 0 }, function(error) {
+                        if(!error) {
+                            storyFactory.joinSession(id, name, true);
+                        } else {
+                            console.log(error);
+                        }
+                    });
                 }
             });
+
         };
 
         storyFactory.joinSession = function(id, name, redirect) {
@@ -86,12 +81,9 @@ angular.module('pointoApp')
             }); 
         };
 
-        storyFactory.sessionExists = function(id) {
-            ref.child('sessions').child(id).once('value', function(snapshot) {
-                if(!snapshot.exists()) {
-                    $window.location.assign('#/');
-                }
-            });
+        storyFactory.sessionExists = function() {
+            var text = ref.child('sessions');
+            return text;
         };
 
         storyFactory.isLoggedIn = function() {
