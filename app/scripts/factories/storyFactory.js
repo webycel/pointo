@@ -7,7 +7,7 @@ angular.module('pointoApp')
             ref = new Firebase(FIREBASE_URL);
 
         storyFactory.user = {
-            key: null, name: null
+            key: null, name: null, 'new': false
         };
 
         storyFactory.createSession = function(name) {
@@ -16,40 +16,50 @@ angular.module('pointoApp')
             
             sessionsRef.set({ users: '', voteStatus: 0 }, function(error) {
                 if(!error) {
-                    storyFactory.joinSession(id, name);
+                    storyFactory.joinSession(id, name, true);
                 } else {
                     console.log(error);
                 }
             });
         };
 
-        storyFactory.joinSession = function(id, name) {
+        storyFactory.joinSession = function(id, name, redirect) {
 
-            ref.authAnonymously(function(error, authData) {
-                if(error) {
-                    console.log('Login Failed!', error);
-                } else {
-                    console.log('Authenticated successfully with payload:', authData);
-
-                    var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users');
-
-                    usersRef.child(authData.uid).set({ name: name, points: -1 }, function (error) {
-                        if(!error) {
-                            storyFactory.user.key = authData.uid;
-                            storyFactory.user.name = name;
-
-                            localStorage[authData.uid] = name;
-
-                            usersRef.child(authData.uid).onDisconnect().remove();
-
-                            $window.location.assign('#/' + id);
-                        } else {
-                            console.log(error);
-                        }
-                    });
-                }
-            });
+            if(!storyFactory.user.key) {
+                ref.unauth();
+                ref.authAnonymously(function(error, authData) {
+                    if(error) {
+                        console.log('Login Failed!', error);
+                    } else {
+                        console.log('Authenticated successfully with payload:', authData);
+                        storyFactory.createUser(id, name, authData, redirect);                        
+                    }
+                });
+            } else {
+                var authData = ref.getAuth();
+                storyFactory.createUser(id, name, authData, redirect);                        
+            }
             
+        };
+
+        storyFactory.createUser = function(id, name, authData, redirect) {
+            var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users');
+
+            usersRef.child(authData.uid).set({ name: name, points: -1 }, function (error) {
+                if(!error) {
+                    storyFactory.user.key = authData.uid;
+                    storyFactory.user.name = name;
+                    storyFactory.user.redirect = redirect;
+
+                    localStorage[authData.uid] = name;
+
+                    usersRef.child(authData.uid).onDisconnect().remove();
+
+                    $window.location.assign('#/' + id);
+                } else {
+                    console.log(error);
+                }
+            }); 
         };
 
         storyFactory.sessionExists = function(id) {
@@ -65,7 +75,7 @@ angular.module('pointoApp')
             if (authData) {
                 storyFactory.user.key = authData.uid;
                 storyFactory.user.name = localStorage[authData.uid] || 'Anonymous';
-                console.log('Authenticated user with name:', localStorage[authData.uid]);
+                console.log('Authenticated user with name:', storyFactory.user.name);
                 return true;
             } else {
                 return false;
@@ -75,7 +85,6 @@ angular.module('pointoApp')
         storyFactory.getSession = function(id) {
             var session = $firebaseObject(ref.child('sessions').child(id)),
                 users = $firebaseObject(ref.child('sessions').child(id).child('users'));
-
             return { session: session, participants: users};
         };
 

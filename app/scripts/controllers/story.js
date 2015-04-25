@@ -22,16 +22,13 @@ angular.module('pointoApp')
         $scope.name = '';
         $scope.sessionID = sessionID;
 
-        console.log(storyFactory.user);
-        
         if(!storyFactory.isLoggedIn()) {
             $scope.view = 2;
-        } else {
+        } else if(!storyFactory.user.redirect) {
             storyFactory.joinSession(sessionID, storyFactory.user.name);
         }
 
         session = storyFactory.getSession(sessionID);
-
 
         $scope.participants = session.participants;
         $scope.storypoints = [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'];

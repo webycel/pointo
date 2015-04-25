@@ -11,7 +11,7 @@ angular.module('pointoApp')
     .controller('MainCtrl', function ($scope, storyFactory) {
         
         $scope.name = 'Jeff';
-        $scope.sessionID = 222018624;
+        $scope.sessionID = 487294700;
 
         $scope.createSession = function() {
             storyFactory.createSession($scope.name);
