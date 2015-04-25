@@ -13,7 +13,7 @@ angular.module('pointoApp')
         var sessionID = $routeParams.sessionID,
             session;
 
-        if(sessionID < 100000000 || sessionID > 999999999) {
+        if(sessionID < 100000 || sessionID > 999999) {
             $location.path('');
         }
         storyFactory.sessionExists(sessionID);

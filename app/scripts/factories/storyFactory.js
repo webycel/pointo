@@ -13,9 +13,21 @@ angular.module('pointoApp')
         storyFactory.sessionID = null;
 
         storyFactory.createSession = function(name) {
-            var id  = storyFactory.randomID(100000000, 999999999);
+            var id  = storyFactory.randomID(100000, 999999);
             var sessionsRef = ref.child('sessions').child(id);
-            
+
+
+
+            /*sessionsRef.on('value', function(snap) {
+                console.log(snap.child(id).exists());
+                if(snap.child(id).exists()) {
+                    storyFactory.createSession(name);
+                    return false;
+                } else {
+                    sessionsRef.off('value');
+                }
+            });*/
+
             sessionsRef.set({ users: '', voteStatus: 0 }, function(error) {
                 if(!error) {
                     storyFactory.joinSession(id, name, true);
@@ -33,7 +45,6 @@ angular.module('pointoApp')
                     if(error) {
                         console.log('Login Failed!', error);
                     } else {
-                        console.log('Authenticated successfully with payload:', authData);
                         storyFactory.addUser(id, name, authData, redirect);                        
                     }
                 });
@@ -43,13 +54,6 @@ angular.module('pointoApp')
             }
 
             storyFactory.sessionID = id;
-
-            //on vote status change
-            ref.child('sessions').child(id).child('voteStatus').on('value', function(snap) {
-                if(snap.val() === 0) {
-                    ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({points: { text: -1, value: -1 }});
-                }
-            });
             
         };
 
@@ -67,6 +71,13 @@ angular.module('pointoApp')
                     localStorage[authData.uid] = name;
 
                     usersRef.child(authData.uid).onDisconnect().remove();
+
+                    //on vote status change
+                    ref.child('sessions').child(id).child('voteStatus').on('value', function(snap) {
+                        if(snap.val() === 0) {
+                            ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({points: { text: -1, value: -1 }});
+                        }
+                    });
 
                     $window.location.assign('#/' + id);
                 } else {
