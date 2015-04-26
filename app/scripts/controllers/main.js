@@ -14,13 +14,29 @@ angular.module('pointoApp')
         $scope.joinName = '';
         $scope.sessionID = null;
         $scope.errors = storyFactory.getErrors;
+        $scope.loading = storyFactory.getLoading;
+
+        //reset
+        storyFactory.setLoading('create', false);
+        storyFactory.setLoading('join', false);
+        storyFactory.setErrors('noSession', false);
 
         $scope.createSession = function() {
-            storyFactory.createSession($scope.name);
+            if(!$scope.loading().create) {
+                $scope.loading().create = true;
+                storyFactory.createSession($scope.name);
+            }
         };
 
         $scope.joinSession = function() {
-            storyFactory.joinSession($scope.sessionID, $scope.joinName);
+            if(!$scope.loading().join) {
+                storyFactory.setLoading('join', true);
+                storyFactory.setErrors('noSession', false);
+
+                storyFactory.joinSession($scope.sessionID, $scope.joinName);
+
+                setTimeout(function() { $scope.$apply(); }, 1000);
+            }
         };
 
 });

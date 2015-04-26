@@ -1,3 +1,5 @@
+@import 'lib/_bootstrap';
+
 body {
   padding: 0;
   font-size: 160%;
@@ -77,6 +79,7 @@ $clouds:        #ecf0f1;
 $silver:        #bdc3c7;  
 $orangeLight:   #f39c12;
 $orange:        #e67e22;
+
 
 @import 'general/_buttons';
 @import 'general/_messaging';

@@ -33,3 +33,14 @@ angular
         redirectTo: '/'
       });
   });
+
+angular.module('pointoApp')
+  .directive('loading', function() {
+
+    return {
+      restrict: 'AE',
+      replace: true,
+      templateUrl: '../views/_loading.html'
+    };
+
+});

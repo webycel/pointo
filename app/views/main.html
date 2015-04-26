@@ -4,7 +4,7 @@
 
         <div class="form-group">
             <input type="text" class="name" placeholder="Your name" ng-model="name" required />
-            <input type="submit" value="Create Session" />
+            <input type="submit" value="Create Session" ng-class="{loading: loading().create}" />
         </div>
 
         <span class="or">or</span>
@@ -16,7 +16,7 @@
         <div class="form-group">
             <input type="text" class="name" placeholder="Your name" ng-model="joinName" required />
             <input type="number" class="join_id" placeholder="123 456" min="10000" max="999999" ng-model="sessionID" required />
-            <input type="submit" value="Join Session" />
+            <input type="submit" value="Join Session" ng-class="{loading: loading().join}" />
             <div class="error warning" ng-show="errors().noSession">This session does not exist.</div>
         </div>
 

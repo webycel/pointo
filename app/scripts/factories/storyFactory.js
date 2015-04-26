@@ -14,6 +14,10 @@ angular.module('pointoApp')
             noSession: false
         };
 
+        storyFactory.loading = {
+            create: false, join: false
+        };
+
         storyFactory.sessionID = null;
 
         storyFactory.createSession = function(name) {
@@ -41,6 +45,7 @@ angular.module('pointoApp')
             ref.child('sessions').once('value', function(snapshot) {
                 if(!snapshot.child(id).exists()) {
                     storyFactory.errors.noSession = true;
+                    storyFactory.loading.join = false;
                 } else {
                     storyFactory.errors.noSession = false;
                     if(!storyFactory.user.key) {
@@ -137,6 +142,17 @@ angular.module('pointoApp')
             return storyFactory.errors;
         };
 
+        storyFactory.setErrors = function(e, v) {
+            storyFactory.errors[e] = v;
+        };
+
+        storyFactory.getLoading = function() {
+            return storyFactory.loading;
+        };
+        storyFactory.setLoading = function(t, v) {
+            storyFactory.loading[t] = v;
+        };
+
         storyFactory.randomID = function(min, max) {
             return Math.floor(Math.random() * (max - min + 1) + min);
         };
@@ -151,6 +167,9 @@ angular.module('pointoApp')
             revealVotes: storyFactory.revealVotes,
             clearVotes: storyFactory.clearVotes,
             getErrors: storyFactory.getErrors,
+            setErrors: storyFactory.setErrors,
+            getLoading: storyFactory.getLoading,
+            setLoading: storyFactory.setLoading,
             user: storyFactory.user
         };
 

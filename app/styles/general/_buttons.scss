@@ -17,6 +17,14 @@
         outline: 0;
     }
 
+    &.loading {
+        text-indent: -9999px;
+        background: url('../images/loading.gif') $turquoise no-repeat center center;
+
+        &:hover {
+            cursor: default;
+        }
+    }
 
     &.btn-action {
         background-color: $blueLight;
