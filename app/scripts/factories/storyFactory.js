@@ -10,6 +10,10 @@ angular.module('pointoApp')
             key: null, name: null, points: {}, 'new': false
         };
 
+        storyFactory.errors = {
+            noSession: false
+        };
+
         storyFactory.sessionID = null;
 
         storyFactory.createSession = function(name) {
@@ -34,21 +38,28 @@ angular.module('pointoApp')
 
         storyFactory.joinSession = function(id, name, redirect) {
 
-            if(!storyFactory.user.key) {
-                ref.unauth();
-                ref.authAnonymously(function(error, authData) {
-                    if(error) {
-                        console.log('Login Failed!', error);
+            ref.child('sessions').once('value', function(snapshot) {
+                if(!snapshot.child(id).exists()) {
+                    storyFactory.errors.noSession = true;
+                } else {
+                    storyFactory.errors.noSession = false;
+                    if(!storyFactory.user.key) {
+                        ref.unauth();
+                        ref.authAnonymously(function(error, authData) {
+                            if(error) {
+                                console.log('Login Failed!', error);
+                            } else {
+                                storyFactory.addUser(id, name, authData, redirect);                        
+                            }
+                        });
                     } else {
+                        var authData = ref.getAuth();
                         storyFactory.addUser(id, name, authData, redirect);                        
                     }
-                });
-            } else {
-                var authData = ref.getAuth();
-                storyFactory.addUser(id, name, authData, redirect);                        
-            }
 
-            storyFactory.sessionID = id;
+                    storyFactory.sessionID = id;
+                }
+            });
             
         };
 
@@ -122,6 +133,10 @@ angular.module('pointoApp')
             storyFactory.user.points = points;
         };
 
+        storyFactory.getErrors = function() {
+            return storyFactory.errors;
+        };
+
         storyFactory.randomID = function(min, max) {
             return Math.floor(Math.random() * (max - min + 1) + min);
         };
@@ -135,6 +150,7 @@ angular.module('pointoApp')
             setVote: storyFactory.setVote,
             revealVotes: storyFactory.revealVotes,
             clearVotes: storyFactory.clearVotes,
+            getErrors: storyFactory.getErrors,
             user: storyFactory.user
         };
 

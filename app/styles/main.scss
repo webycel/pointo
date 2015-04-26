@@ -56,27 +56,30 @@ footer {
 }
 
 /* grid sizes */
-$break-large: 1200px;
-$break-medium: 991px;
-$break-small: 769px;
+$break-large:   1200px;
+$break-medium:  991px;
+$break-small:   769px;
 $break-x-small: 768px;
 
 /* colours */
-$white:     #fff;
-$black:     #000;
-$grey555:   #555;
-$greyCCC:   #ccc;
+$white:         #fff;
+$black:         #000;
+$grey555:       #555;
+$greyCCC:       #ccc;
 
-$green:     #16a085;
-$turquoise: #1abc9c;
-$blueLight: #3498db;
-$blue:      #2980b9;
-$redLight:  #e74c3c;
-$red:       #c0392b; 
-$clouds:    #ecf0f1;
-$silver:    #bdc3c7;  
+$green:         #16a085;
+$turquoise:     #1abc9c;
+$blueLight:     #3498db;
+$blue:          #2980b9;
+$redLight:      #e74c3c;
+$red:           #c0392b; 
+$clouds:        #ecf0f1;
+$silver:        #bdc3c7;  
+$orangeLight:   #f39c12;
+$orange:        #e67e22;
 
 @import 'general/_buttons';
+@import 'general/_messaging';
 @import 'general/_forms';
 
 @import 'start';
