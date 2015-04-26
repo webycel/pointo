@@ -10,12 +10,9 @@
  */
 angular
   .module('pointoApp', [
-    'ngAnimate',
-    'ngCookies',
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch',
     'firebase'
   ])
   .constant('FIREBASE_URL', 'https://pointo.firebaseio.com/')
