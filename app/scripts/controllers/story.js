@@ -24,6 +24,7 @@ angular.module('pointoApp')
                 $scope.view = 1;
                 $scope.name = '';
                 $scope.sessionID = sessionID;
+                $scope.revealed = false;
 
                 if(!storyFactory.isLoggedIn()) {
                     $scope.view = 2;
@@ -64,10 +65,12 @@ angular.module('pointoApp')
         };
 
         $scope.revealVotes = function() {
+            $scope.revealed = true;
             storyFactory.revealVotes();
         };
 
         $scope.clearVotes = function() {
+            $scope.revealed = false;
             storyFactory.clearVotes();
         };
 
