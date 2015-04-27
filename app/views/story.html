@@ -10,8 +10,8 @@
                 </li>
             </ul>
             
-            <button class="btn-action options" ng-click="revealVotes(); isFlipped=!isFlipped">Reveal all votes</button>
-            <button class="btn-light options" ng-class="{disabled: !revealed}" ng-click="clearVotes(); isFlipped=!isFlipped">Clear all votes</button>
+            <button class="btn-action options" ng-class="{disabled: revealed}" ng-click="revealVotes()">Reveal all votes</button>
+            <button class="btn-light options" ng-class="{disabled: !revealed}" ng-click="clearVotes()">Clear all votes</button>
 
         </div>
 

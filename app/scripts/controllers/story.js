@@ -25,6 +25,7 @@ angular.module('pointoApp')
                 $scope.name = '';
                 $scope.sessionID = sessionID;
                 $scope.revealed = false;
+                $scope.isFlipped = false;
 
                 if(!storyFactory.isLoggedIn()) {
                     $scope.view = 2;
@@ -65,13 +66,23 @@ angular.module('pointoApp')
         };
 
         $scope.revealVotes = function() {
-            $scope.revealed = true;
-            storyFactory.revealVotes();
+            if(!$scope.revealed) {
+                $scope.revealed = true;
+                $scope.flip();
+                storyFactory.revealVotes();
+            }
         };
 
         $scope.clearVotes = function() {
-            $scope.revealed = false;
-            storyFactory.clearVotes();
+            if($scope.revealed) {
+                $scope.revealed = false;
+                $scope.flip();
+                storyFactory.clearVotes();
+            }
+        };
+
+        $scope.flip = function() {
+            $scope.isFlipped =! $scope.isFlipped;
         };
 
     });
