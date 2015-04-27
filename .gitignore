@@ -4,3 +4,4 @@ dist
 .sass-cache
 .DS_Store
 bower_components
+todo.txt
