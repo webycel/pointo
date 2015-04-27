@@ -3,6 +3,7 @@
     background-color: $turquoise;
     color: $white;
     border: 1px solid $green;
+    -ms-transition: background .25s ease, opacity 0.2s linear;
     transition: background .25s ease, opacity 0.2s linear;
     cursor: pointer;
 

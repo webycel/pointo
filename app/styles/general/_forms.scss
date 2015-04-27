@@ -5,6 +5,7 @@ input[type="text"], input[type="number"] {
     color: $grey555;
     border: 1px solid $greyCCC;
     vertical-align: top;
+    -ms-transition: border-color ease-in-out .15s;
     transition: border-color ease-in-out .15s;
 
     &:focus {
