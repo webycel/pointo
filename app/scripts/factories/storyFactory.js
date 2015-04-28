@@ -138,6 +138,13 @@ angular.module('pointoApp')
             storyFactory.user.points = points;
         };
 
+        storyFactory.changeName = function(name) {
+            var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
+            user.update({ name: name });
+            storyFactory.user.name = name;
+            localStorage[storyFactory.user.key] = name;
+        };
+
         storyFactory.getErrors = function() {
             return storyFactory.errors;
         };
@@ -166,6 +173,7 @@ angular.module('pointoApp')
             setVote: storyFactory.setVote,
             revealVotes: storyFactory.revealVotes,
             clearVotes: storyFactory.clearVotes,
+            changeName: storyFactory.changeName,
             getErrors: storyFactory.getErrors,
             setErrors: storyFactory.setErrors,
             getLoading: storyFactory.getLoading,

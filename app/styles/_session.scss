@@ -3,6 +3,7 @@
 
     .voting {
         ul {
+            margin-bottom: 35px;
             padding: 0;
             list-style: none;
         }
@@ -70,5 +71,14 @@
 
     .set_name {
         text-align: center;
+    }
+
+    .settings {
+        margin-top: 35px;
+
+        input {
+            margin-top: 5px;
+            width: 100%;
+        }
     }
 }

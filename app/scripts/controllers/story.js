@@ -38,6 +38,7 @@ angular.module('pointoApp')
                 $scope.user = storyFactory.user;
                 $scope.participants = session.participants;
                 $scope.session = session.session;
+                $scope.newName = storyFactory.user.name;
 
                 $scope.storypoints = [
                     { text: 0, value: 0 },
@@ -79,6 +80,10 @@ angular.module('pointoApp')
                 $scope.flip();
                 storyFactory.clearVotes();
             }
+        };
+
+        $scope.changeName = function() {
+            storyFactory.changeName($scope.newName);
         };
 
         $scope.flip = function() {
