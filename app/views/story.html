@@ -13,8 +13,8 @@
                 </ul>
                 
                 <h3>Actions</h3>
-                <button class="btn-action options" ng-class="{disabled: revealed}" ng-click="revealVotes()">Reveal all votes</button>
-                <button class="btn-light options" ng-class="{disabled: !revealed}" ng-click="clearVotes()">Clear all votes</button>
+                <button class="btn-action options" ng-class="{disabled: session.voteStatus == 1}" ng-click="revealVotes()">Reveal all votes</button>
+                <button class="btn-light options" ng-class="{disabled: session.voteStatus == 0}" ng-click="clearVotes()">Clear all votes</button>
             </div>
 
             <div class="col-md-9 col-sm-8 col-xs-12">
