@@ -39,6 +39,9 @@
         &:hover {
             border: 1px solid $grey555;
         }
+        &.active {
+            border-color: $turquoise;
+        }
 
         .name {
             padding:0 4px 2px;
