@@ -83,6 +83,13 @@ angular.module('pointoApp')
 
                     usersRef.child(authData.uid).onDisconnect().remove();
 
+                    //reset vote status if first user to join
+                    ref.child('sessions').child(id).child('users').once('value', function(snap) {
+                        if(snap.numChildren() <= 1) {
+                            ref.child('sessions').child(id).update({ voteStatus: 0 });
+                        }
+                    });
+
                     //on vote status change
                     ref.child('sessions').child(id).child('voteStatus').on('value', function(snap) {
                         if(snap.val() === 0) {
