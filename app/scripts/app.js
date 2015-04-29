@@ -13,7 +13,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'firebase'
+    'firebase',
+    'chart.js'
   ])
   .constant('FIREBASE_URL', 'https://pointo.firebaseio.com/')
   .config(function ($routeProvider) {

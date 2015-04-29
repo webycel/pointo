@@ -55,7 +55,14 @@ angular.module('pointoApp')
             }
 
         });
+    
+        $scope.stats = {
+            options: { scaleShowVerticalLines: false, showTooltips: false, scaleFontSize: 14, fillColor: 'rgba(0,0,0,1)' },
+            labels: [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
+            data: [[0, 0, 3, 2, 3, 2, 2, 1, 2, 4, 1, 5]]
+        };
 
+        /* functions */
         $scope.joinSession = function() {
             storyFactory.joinSession(sessionID, $scope.name);
             $scope.view = 1;
