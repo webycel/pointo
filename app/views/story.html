@@ -12,7 +12,7 @@
             <div class="col-md-3 col-sm-4 col-xs-12 voting">
                 <h2>Vote</h2>
                 <ul>
-                    <li class="btn point" ng-repeat="point in storypoints" ng-click="vote(point)" ng-class="{active: session.users[user.key].points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2}">
+                    <li class="btn point" ng-repeat="point in storypoints | filter:'!X'" ng-click="vote(point)" ng-class="{active: session.users[user.key].points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2}">
                         {{point.value !== -2 ? point.text : ''}}
                     </li>
                 </ul>
@@ -31,6 +31,12 @@
                         <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1, 'flipped': isFlipped}">
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
                         </span>
+                    </div>
+                </div>
+
+                <div class="row stats" ng-class="{hidden: session.voteStatus == 0 || statistics().participants <= 1}">
+                    <div class="col-md-10 col-sm-11 col-xs-12">
+                        <canvas class="chart chart-bar" data="stats.data" labels="stats.labels" options="stats.options"></canvas>
                     </div>
                 </div>
             </div>
