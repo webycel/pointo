@@ -18,6 +18,24 @@ angular.module('pointoApp')
             create: false, join: false
         };
 
+        storyFactory.storyPointSet = [
+                    { text: 0, value: 0 },
+                    { text: '½', value: 0.5 },
+                    { text: 1, value: 1 },
+                    { text: 2, value: 2 },
+                    { text: 3, value: 3 },
+                    { text: 5, value: 6 },
+                    { text: 8, value: 8 },
+                    { text: 13, value: 13 },
+                    { text: 20, value: 20 },
+                    { text: 40, value: 40 },
+                    { text: 100, value: 100 },
+                    { text: '?', value: -2 },
+                    { text: 'X', value: -1 }];
+
+        storyFactory.session = {};
+        storyFactory.participants = {};
+        storyFactory.statistics = {};
         storyFactory.sessionID = null;
 
         storyFactory.createSession = function(name) {
@@ -97,6 +115,28 @@ angular.module('pointoApp')
                         }
                     });
 
+                    ref.child('sessions').child(id).on('value', function(snap) {
+                        var users = snap.val().users,
+                            s, points, i,
+                            stats = { labels: [], data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], participants: 0 };
+
+                        storyFactory.statistics = {};
+                        
+                        for(s in users) {
+                            points = users[s].points;
+                            
+                            for (i = 0; i < storyFactory.storyPointSet.length; i++) {
+                                if(storyFactory.storyPointSet[i].value === points.value) {
+                                    stats.data[0][i] += 1;
+                                }
+                            }
+                            stats.participants += 1;
+                        }
+
+                        storyFactory.statistics = stats;
+                        console.log(storyFactory.statistics);
+                    });
+
                     $window.location.assign('#/' + id);
                 } else {
                     console.log(error);
@@ -121,9 +161,9 @@ angular.module('pointoApp')
         };
 
         storyFactory.getSession = function(id) {
-            var session = $firebaseObject(ref.child('sessions').child(id)),
-                users = $firebaseObject(ref.child('sessions').child(id).child('users'));
-            return { session: session, participants: users};
+            storyFactory.session = $firebaseObject(ref.child('sessions').child(id));
+            storyFactory.participants = $firebaseObject(ref.child('sessions').child(id).child('users'));
+            return { session: storyFactory.session, participants: storyFactory.participants};
         };
 
         storyFactory.setVote = function(points) {
@@ -150,6 +190,14 @@ angular.module('pointoApp')
             user.update({ name: name });
             storyFactory.user.name = name;
             localStorage[storyFactory.user.key] = name;
+        };
+
+        storyFactory.getVoteStatistics = function() {
+            return storyFactory.statistics;
+        };
+
+        storyFactory.getStoryPointSet = function() {
+            return storyFactory.storyPointSet;
         };
 
         storyFactory.getErrors = function() {
@@ -181,6 +229,8 @@ angular.module('pointoApp')
             revealVotes: storyFactory.revealVotes,
             clearVotes: storyFactory.clearVotes,
             changeName: storyFactory.changeName,
+            getVoteStatistics: storyFactory.getVoteStatistics,
+            getStoryPointSet: storyFactory.getStoryPointSet,
             getErrors: storyFactory.getErrors,
             setErrors: storyFactory.setErrors,
             getLoading: storyFactory.getLoading,

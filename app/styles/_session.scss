@@ -52,6 +52,7 @@
         padding: 10px 0;
         border: 1px solid $greyCCC;
         text-align: center;
+        -ms-transition: border .25s ease;
         transition: border .25s ease;
 
         &:hover {
@@ -75,6 +76,7 @@
             -moz-transform-style: preserve-3d;
             -webkit-transform-style: preserve-3d;
             -ms-transform-style: preserve-3d;
+            -ms-transition: 0.5s;
             transition: 0.5s;
 
             &.flipped {
@@ -92,6 +94,14 @@
 
     .stats {
         margin-top: 40px;
+        opacity: 1;
+        transition: opacity .2s linear;
+
+        &.hidden {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+        }
     }
 
     .set_name {

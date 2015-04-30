@@ -8,7 +8,7 @@
  * Controller of the pointoApp
  */
 angular.module('pointoApp')
-    .controller('StoryCtrl', function ($scope, $routeParams, $window, storyFactory) {
+    .controller('StoryCtrl', function ($scope, $routeParams, $window, $timeout, storyFactory) {
 
         var sessionID = $routeParams.sessionID,
             session, exists;
@@ -16,7 +16,7 @@ angular.module('pointoApp')
         if(sessionID < 100000 || sessionID > 999999) {
             $window.location.assign('#/');
         }
-        
+
         exists = storyFactory.sessionExists(sessionID).once('value', function(snapshot) {
             if(!snapshot.child(sessionID).exists()) {
                 $window.location.assign('#/');
@@ -39,27 +39,26 @@ angular.module('pointoApp')
                 $scope.session = session.session;
                 $scope.newName = storyFactory.user.name;
 
-                $scope.storypoints = [
-                    { text: 0, value: 0 },
-                    { text: '½', value: 0.5 },
-                    { text: 1, value: 1 },
-                    { text: 2, value: 2 },
-                    { text: 3, value: 3 },
-                    { text: 5, value: 6 },
-                    { text: 8, value: 8 },
-                    { text: 13, value: 13 },
-                    { text: 20, value: 20 },
-                    { text: 40, value: 40 },
-                    { text: 100, value: 100 },
-                    { text: '?', value: -2 }];
+                $scope.statistics = storyFactory.getVoteStatistics;
+
+                $scope.$watch('statistics()', function(data) {
+                    //$scope.stats.labels = data.labels;
+                    $scope.stats.data = data.data;
+                });
+
+                $scope.storypoints = storyFactory.getStoryPointSet();
             }
 
         });
-    
+                
+        //overwrite chart colours
+        Chart.defaults.global.colours[0] = '#16a085';
+        Chart.defaults.global.colours[1] = '#1abc9c';
+
         $scope.stats = {
-            options: { scaleShowVerticalLines: false, showTooltips: false, scaleFontSize: 14, fillColor: 'rgba(0,0,0,1)' },
-            labels: [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
-            data: [[0, 0, 3, 2, 3, 2, 2, 1, 2, 4, 1, 5]]
+            options: { scaleShowVerticalLines: false, showTooltips: false, scaleFontSize: 14 },
+            labels: [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?', 'X'],
+            data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         };
 
         /* functions */
