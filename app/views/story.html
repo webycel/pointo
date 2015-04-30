@@ -1,6 +1,9 @@
 <div ng-cloak class="story">
 
-    <div class="session-loading" ng-hide="view > 0"></div>
+    <div class="session-loading" ng-hide="view > 0">
+        <h2>{{ 'Loading session ' + sessionID }}</h2>
+        <div class="loading-bar"></div>
+    </div>
 
     <div ng-show="view === 1">
 

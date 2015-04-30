@@ -16,6 +16,8 @@ angular.module('pointoApp')
         if(sessionID < 100000 || sessionID > 999999) {
             $window.location.assign('#/');
         }
+            
+        $scope.sessionID = sessionID;
         
         exists = storyFactory.sessionExists(sessionID).once('value', function(snapshot) {
             if(!snapshot.child(sessionID).exists()) {
@@ -23,7 +25,6 @@ angular.module('pointoApp')
             } else {
                 $scope.view = 1;
                 $scope.name = '';
-                $scope.sessionID = sessionID;
                 $scope.isFlipped = false;
 
                 if(!storyFactory.isLoggedIn()) {

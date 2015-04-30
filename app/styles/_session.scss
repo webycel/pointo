@@ -3,19 +3,25 @@
 
     .session-loading {
         margin: 0 auto;
-        width: 200px;
-        height: 75px;
-        background: url('../images/loading.gif') $turquoise no-repeat center center;
+        width: 300px;
+        text-align: center;
 
-        &:before {
-            content: "";
-            display: block;
-            position: relative;
-            top: 2px;
-            left: 2px;
-            width: 196px;
-            height: 71px;
-            border: 1px solid $white;
+        .loading-bar {
+            margin: 0 auto;
+            width: 200px;
+            height: 75px;
+            background: url('../images/loading.gif') $turquoise no-repeat center center;
+
+            &:before {
+                content: "";
+                display: block;
+                position: relative;
+                top: 2px;
+                left: 2px;
+                width: 196px;
+                height: 71px;
+                border: 1px solid $white;
+            }
         }
     }
 
