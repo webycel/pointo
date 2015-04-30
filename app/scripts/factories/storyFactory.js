@@ -118,7 +118,7 @@ angular.module('pointoApp')
                     ref.child('sessions').child(id).on('value', function(snap) {
                         var users = snap.val().users,
                             s, points, i,
-                            stats = { labels: [], data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], participants: 0 };
+                            stats = { data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], participants: 0 };
 
                         storyFactory.statistics = {};
                         
@@ -134,7 +134,6 @@ angular.module('pointoApp')
                         }
 
                         storyFactory.statistics = stats;
-                        console.log(storyFactory.statistics);
                     });
 
                     $window.location.assign('#/' + id);

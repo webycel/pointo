@@ -43,7 +43,6 @@ angular.module('pointoApp')
                 $scope.statistics = storyFactory.getVoteStatistics;
 
                 $scope.$watch('statistics()', function(data) {
-                    //$scope.stats.labels = data.labels;
                     $scope.stats.data = data.data;
                 });
 
