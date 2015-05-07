@@ -17,9 +17,26 @@ angular.module('pointoApp')
 		    }
         };
 
+        utilsFactory.getClosestNumber = function(array, num) {
+            var i = 0,
+                minDiff = 1000,
+                closest;
+
+            for(i in array){
+                var m = Math.abs(num - array[i]);
+                if(m < minDiff){ 
+                    minDiff = m; 
+                    closest = array[i]; 
+                }
+            }
+
+            return closest;
+        };
+
         return {
         	randomID: utilsFactory.randomID,
-        	hasStorage: utilsFactory.hasStorage
+        	hasStorage: utilsFactory.hasStorage,
+            getClosestNumber: utilsFactory.getClosestNumber
         };
 
     });
