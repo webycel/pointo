@@ -25,6 +25,7 @@ angular.module('pointoApp')
             } else {
                 $scope.view = 1;
                 $scope.name = '';
+                $scope.shareURL =  $window.location.host + '/#/' + $scope.sessionID;
                 $scope.isFlipped = false;
 
                 if(!storyFactory.isLoggedIn()) {

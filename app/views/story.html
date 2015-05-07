@@ -45,6 +45,15 @@
 
         <div class="row settings">
             <div class="col-md-3 col-sm-4 col-xs-12">
+                <form>
+                    <h3>Share</h3>
+                    <div class="form-group">
+                        <input type="text" onclick="this.select()" ng-model="shareURL" readonly />
+                        <span class="help-block"><span class="glyphicon glyphicon-share"></span> Share this URL with your lovely team-mates!</span>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3 col-sm-4 col-xs-12">
                 <form ng-submit="changeName()">
                     <h3>Settings</h3>
                     <div class="form-group">
