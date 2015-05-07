@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('storyFactory', function($firebaseObject, $window, FIREBASE_URL, utilsFactory) {
+    .factory('storyFactory', function($firebaseObject, $window, $timeout, FIREBASE_URL, utilsFactory) {
 
         var storyFactory = {},
             ref = new Firebase(FIREBASE_URL);
@@ -24,7 +24,7 @@ angular.module('pointoApp')
                     { text: 1, value: 1 },
                     { text: 2, value: 2 },
                     { text: 3, value: 3 },
-                    { text: 5, value: 6 },
+                    { text: 5, value: 5 },
                     { text: 8, value: 8 },
                     { text: 13, value: 13 },
                     { text: 20, value: 20 },
@@ -32,6 +32,8 @@ angular.module('pointoApp')
                     { text: 100, value: 100 },
                     { text: '?', value: -2 },
                     { text: 'X', value: -1 }];
+
+        storyFactory.storyPointValues = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
 
         storyFactory.session = {};
         storyFactory.participants = {};
@@ -117,32 +119,49 @@ angular.module('pointoApp')
                         }
                     });
 
-                    ref.child('sessions').child(id).on('value', function(snap) {
-                        var users = snap.val().users,
-                            s, points, i,
-                            stats = { data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], participants: 0 };
-
-                        storyFactory.statistics = {};
-                        
-                        for(s in users) {
-                            points = users[s].points;
-                            
-                            for (i = 0; i < storyFactory.storyPointSet.length -2; i++) {
-                                if(storyFactory.storyPointSet[i].value === points.value) {
-                                    stats.data[0][i] += 1;
-                                }
-                            }
-                            stats.participants += 1;
-                        }
-
-                        storyFactory.statistics = stats;
-                    });
+                    $timeout(function() { ref.child('sessions').child(id).once('value', storyFactory.onSessionChange); }, 300);
+                    ref.child('sessions').child(id).on('value', storyFactory.onSessionChange);
 
                     $window.location.assign('#/' + id);
                 } else {
                     console.log(error);
                 }
             }); 
+        };
+
+        storyFactory.onSessionChange = function(snap) {
+            var users = snap.val().users,
+                s, points, i,
+                stats = { data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], participants: 0, score: 0 },
+                data, x = 0, total = 0;
+
+            //get statistics
+            storyFactory.statistics = {};
+            
+            for(s in users) {
+                points = users[s].points;
+                
+                for (i = 0; i < storyFactory.storyPointSet.length -2; i++) {
+                    if(storyFactory.storyPointSet[i].value === points.value) {
+                        stats.data[0][i] += 1;
+                    }
+                }
+                stats.participants += 1;
+            }
+
+            //calculate average score
+            data = stats.data[0];
+
+            for(i = 0; i < data.length; i++) {
+                if(data[i] > 0) {
+                    total += storyFactory.storyPointSet[i].value;
+                    x++;
+                }
+            }
+
+            stats.score = x > 0 ? utilsFactory.getClosestNumber(storyFactory.storyPointValues, total / x) : -1;
+
+            storyFactory.statistics = stats;
         };
 
         storyFactory.sessionExists = function() {
@@ -164,6 +183,7 @@ angular.module('pointoApp')
         storyFactory.getSession = function(id) {
             storyFactory.session = $firebaseObject(ref.child('sessions').child(id));
             storyFactory.participants = $firebaseObject(ref.child('sessions').child(id).child('users'));
+
             return { session: storyFactory.session, participants: storyFactory.participants};
         };
 
@@ -175,6 +195,7 @@ angular.module('pointoApp')
 
         storyFactory.revealVotes = function() {
             var session = ref.child('sessions').child(storyFactory.sessionID);
+            
             session.update({ voteStatus: 1 });
         };
 

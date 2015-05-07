@@ -32,6 +32,12 @@
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
                         </span>
                     </div>
+                    <div class="col-md-2 col-sm-2 col-xs-3 participant score" ng-show="session.voteStatus == 1">
+                        <span class="title">Score</span>
+                        <span class="rated glyphicon" ng-class="{'glyphicon-remove': statistics().score == -1}">
+                            {{ statistics().score >= 0 ? statistics().score : '' }}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="row stats" ng-class="{hidden: session.voteStatus == 0 || statistics().participants <= 1}">
