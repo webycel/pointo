@@ -7,7 +7,7 @@ angular.module('pointoApp')
             ref = new Firebase(FIREBASE_URL);
 
         storyFactory.user = {
-            key: null, name: null, points: {}, 'new': false
+            key: null, name: null, points: {}, 'new': false, leader: false
         };
 
         storyFactory.errors = {
@@ -216,6 +216,12 @@ angular.module('pointoApp')
             }
         };
 
+        storyFactory.leadSession = function() {
+            var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
+            storyFactory.user.leader = !storyFactory.user.leader;
+            user.update({ leader: storyFactory.user.leader });
+        };
+
         storyFactory.getVoteStatistics = function() {
             return storyFactory.statistics;
         };
@@ -249,6 +255,7 @@ angular.module('pointoApp')
             revealVotes: storyFactory.revealVotes,
             clearVotes: storyFactory.clearVotes,
             changeName: storyFactory.changeName,
+            leadSession: storyFactory.leadSession,
             getVoteStatistics: storyFactory.getVoteStatistics,
             getStoryPointSet: storyFactory.getStoryPointSet,
             getErrors: storyFactory.getErrors,
