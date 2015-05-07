@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('storyFactory', function($firebaseObject, $window, FIREBASE_URL) {
+    .factory('storyFactory', function($firebaseObject, $window, FIREBASE_URL, utilsFactory) {
 
         var storyFactory = {},
             ref = new Firebase(FIREBASE_URL);
@@ -39,7 +39,7 @@ angular.module('pointoApp')
         storyFactory.sessionID = null;
 
         storyFactory.createSession = function(name) {
-            var id = storyFactory.randomID(100000, 999999);
+            var id = utilsFactory.randomID(100000, 999999);
             var sessionsRef = ref.child('sessions').child(id);
 
             ref.child('sessions').once('value', function(snapshot) {
@@ -97,7 +97,9 @@ angular.module('pointoApp')
                     storyFactory.user.redirect = redirect;
                     storyFactory.user.points = points;
 
-                    localStorage[authData.uid] = name;
+                    if(utilsFactory.hasStorage()) {
+                        localStorage[authData.uid] = name;
+                    }
 
                     usersRef.child(authData.uid).onDisconnect().remove();
 
@@ -150,7 +152,7 @@ angular.module('pointoApp')
 
         storyFactory.isLoggedIn = function() {
             var authData = ref.getAuth();
-            if (authData) {
+            if (authData && utilsFactory.hasStorage()) {
                 storyFactory.user.key = authData.uid;
                 storyFactory.user.name = localStorage[authData.uid] || 'Anonymous';
                 return true;
@@ -188,7 +190,9 @@ angular.module('pointoApp')
             var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
             user.update({ name: name });
             storyFactory.user.name = name;
-            localStorage[storyFactory.user.key] = name;
+            if(utilsFactory.hasStorage()) {
+                localStorage[storyFactory.user.key] = name;
+            }
         };
 
         storyFactory.getVoteStatistics = function() {
@@ -212,10 +216,6 @@ angular.module('pointoApp')
         };
         storyFactory.setLoading = function(t, v) {
             storyFactory.loading[t] = v;
-        };
-
-        storyFactory.randomID = function(min, max) {
-            return Math.floor(Math.random() * (max - min + 1) + min);
         };
 
         return {
