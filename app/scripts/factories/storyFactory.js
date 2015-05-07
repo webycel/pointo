@@ -120,14 +120,14 @@ angular.module('pointoApp')
                     ref.child('sessions').child(id).on('value', function(snap) {
                         var users = snap.val().users,
                             s, points, i,
-                            stats = { data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], participants: 0 };
+                            stats = { data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], participants: 0 };
 
                         storyFactory.statistics = {};
                         
                         for(s in users) {
                             points = users[s].points;
                             
-                            for (i = 0; i < storyFactory.storyPointSet.length; i++) {
+                            for (i = 0; i < storyFactory.storyPointSet.length -2; i++) {
                                 if(storyFactory.storyPointSet[i].value === points.value) {
                                     stats.data[0][i] += 1;
                                 }

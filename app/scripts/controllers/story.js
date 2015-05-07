@@ -57,8 +57,8 @@ angular.module('pointoApp')
 
         $scope.stats = {
             options: { scaleShowVerticalLines: false, showTooltips: false, scaleFontSize: 14 },
-            labels: [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?', 'X'],
-            data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+            labels: [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100],
+            data: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         };
 
         /* functions */
