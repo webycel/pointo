@@ -108,7 +108,7 @@ angular.module('pointoApp')
                     //reset vote status if first user to join
                     ref.child('sessions').child(id).child('users').once('value', function(snap) {
                         if(snap.numChildren() <= 1) {
-                            ref.child('sessions').child(id).update({ voteStatus: 0 });
+                            ref.child('sessions').child(id).update({ voteStatus: 0, score: 0 });
                         }
                     });
 
