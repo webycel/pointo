@@ -51,6 +51,11 @@
                 line-height: 1.43em;
             }
         }
+        .hint {
+            display: inline-block;
+            font-size: 0.85em;
+            color: $grey737;
+        }
     }
 
     .participant {
@@ -67,6 +72,12 @@
         }
         &.active {
             border-color: $turquoise;
+        }
+
+        &.leader {
+            .name {
+                color: $redLight;
+            }
         }
 
         .name {
@@ -128,15 +139,20 @@
         text-align: center;
     }
 
-    .settings {
+    .settings-container {
         margin-top: 35px;
 
-        input {
+        input, button {
             margin-top: 5px;
             width: 100%;
         }
         .help-block {
             font-size: 0.85em;
+        }
+    }
+    .settings {
+        .col {
+            padding-left: 0;
         }
     }
 }

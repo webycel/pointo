@@ -18,20 +18,22 @@
                 </ul>
                 
                 <h3>Actions</h3>
-                <button class="btn-action options" ng-class="{disabled: session.voteStatus == 1}" ng-click="revealVotes()">Reveal all votes</button>
-                <button class="btn-light options" ng-class="{disabled: session.voteStatus == 0}" ng-click="clearVotes()">Clear all votes</button>
+                <button class="btn-action options" ng-class="{disabled: session.voteStatus == 1 || !user.leader}" ng-click="revealVotes()">Reveal all votes</button>
+                <button class="btn-light options" ng-class="{disabled: session.voteStatus == 0 || !user.leader}" ng-click="clearVotes()">Clear all votes</button>
+                <span class="hint"><span class="glyphicon glyphicon-info-sign"></span> You can only use these actions if you are the leader.</span>
             </div>
 
             <div class="col-md-9 col-sm-8 col-xs-12">
                 <h2>Participants</h2>
 
                 <div class="row participants">
-                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="(id, p) in participants" ng-class="{active: id == user.key}">
-                        <span class="name">{{p.name}}</span>
+                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="(id, p) in participants" ng-class="{active: id == user.key, leader: p.leader}">
+                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-show="p.leader"></span>  {{p.name}}</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1, 'flipped': isFlipped}">
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
                         </span>
                     </div>
+
                     <div class="col-md-2 col-sm-2 col-xs-3 participant score" ng-show="session.voteStatus == 1 && statistics().participants > 1">
                         <span class="title">Score</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-remove': statistics().score == -1}">
@@ -68,22 +70,13 @@
                     </button>
                 </div>
             </div>
-
+            
             <div class="col-md-3 col-sm-4 col-xs-12">
                 <form>
                     <h3>Share</h3>
                     <div class="form-group">
                         <input type="text" onclick="this.select()" ng-model="shareURL" readonly />
                         <span class="help-block"><span class="glyphicon glyphicon-share"></span> Share this URL with your lovely team-mates!</span>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-3 col-sm-4 col-xs-12">
-                <form ng-submit="changeName()">
-                    <h3>Settings</h3>
-                    <div class="form-group">
-                        <input type="text" class="name" placeholder="Your name" ng-model="newName" required />
-                        <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
                     </div>
                 </form>
             </div>
