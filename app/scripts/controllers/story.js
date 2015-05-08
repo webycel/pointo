@@ -73,7 +73,7 @@ angular.module('pointoApp')
         };
 
         $scope.revealVotes = function() {
-            if($scope.session.voteStatus === 0) {
+            if($scope.session.voteStatus === 0 && $scope.user.leader) {
                 $scope.revealed = true;
                 $scope.flip();
                 storyFactory.revealVotes();
@@ -81,7 +81,7 @@ angular.module('pointoApp')
         };
 
         $scope.clearVotes = function() {
-            if($scope.session.voteStatus === 1) {
+            if($scope.session.voteStatus === 1 && $scope.user.leader) {
                 $scope.revealed = false;
                 $scope.flip();
                 storyFactory.clearVotes();
@@ -90,6 +90,10 @@ angular.module('pointoApp')
 
         $scope.changeName = function() {
             storyFactory.changeName($scope.newName);
+        };
+
+        $scope.leadSession = function() {
+            storyFactory.leadSession();
         };
 
         $scope.flip = function() {
