@@ -49,7 +49,26 @@
 
         </div>
 
-        <div class="row settings">
+        <div class="row settings-container">
+            <div class="col-md-9 col-sm-8 col-xs-12 settings">
+                <h3>Settings</h3>
+                
+                <div class="col col-md-4 col-sm-5 col-xs-12">
+                    <form ng-submit="changeName()">
+                        <div class="form-group">
+                            <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="newName" required />
+                            <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="col col-md-4 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1">
+                    <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}">
+                        <span class="glyphicon glyphicon-king"></span> {{ user.leader ? 'Leading session' : 'Lead session' }}
+                    </button>
+                </div>
+            </div>
+
             <div class="col-md-3 col-sm-4 col-xs-12">
                 <form>
                     <h3>Share</h3>
@@ -84,7 +103,7 @@
             <form ng-submit="joinSession()">
 
                 <div class="form-group">
-                    <input type="text" class="name" placeholder="Your name" ng-model="name" required />
+                    <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name" required />
                     <input type="submit" value="Join Session" />
                 </div>
 

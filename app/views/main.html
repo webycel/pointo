@@ -3,7 +3,7 @@
     <form ng-submit="createSession()">
 
         <div class="form-group">
-            <input type="text" class="name" placeholder="Your name" ng-model="name" required />
+            <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name" required />
             <input type="submit" value="Create Session" ng-class="{loading: loading().create}" />
         </div>
 
