@@ -48,7 +48,7 @@ angular.module('pointoApp')
                 if(snapshot.child(id).exists()) {
                     storyFactory.createSession(name);
                 } else {
-                    sessionsRef.set({ users: '', voteStatus: 0 }, function(error) {
+                    sessionsRef.set({ users: '', voteStatus: 0, score: 0 }, function(error) {
                         if(!error) {
                             storyFactory.joinSession(id, name, true);
                         } else {
