@@ -25,6 +25,7 @@ angular.module('pointoApp')
             } else {
                 $scope.view = 1;
                 $scope.name = '';
+                $scope.spectator = false;
                 $scope.shareURL =  $window.location.host + '/#/' + $scope.sessionID;
                 $scope.isFlipped = false;
 
@@ -64,6 +65,8 @@ angular.module('pointoApp')
 
         /* functions */
         $scope.joinSession = function() {
+            console.log('oksi');
+            console.log($scope.spectator);
             storyFactory.joinSession(sessionID, $scope.name);
             $scope.view = 1;
         };

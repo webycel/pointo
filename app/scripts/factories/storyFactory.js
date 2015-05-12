@@ -15,7 +15,7 @@ angular.module('pointoApp')
         };
 
         storyFactory.loading = {
-            create: false, join: false
+            create: false, join: false, joinSpectator: false
         };
 
         storyFactory.storyPointSet = [
@@ -50,7 +50,7 @@ angular.module('pointoApp')
                 } else {
                     sessionsRef.set({ users: '', voteStatus: 0, score: 0 }, function(error) {
                         if(!error) {
-                            storyFactory.joinSession(id, name, true);
+                            storyFactory.joinSession(id, name, false, true);
                         } else {
                             console.log(error);
                         }
@@ -60,12 +60,13 @@ angular.module('pointoApp')
 
         };
 
-        storyFactory.joinSession = function(id, name, redirect) {
+        storyFactory.joinSession = function(id, name, spectator, redirect) {
 
             ref.child('sessions').once('value', function(snapshot) {
                 if(!snapshot.child(id).exists()) {
                     storyFactory.errors.noSession = true;
                     storyFactory.loading.join = false;
+                    storyFactory.loading.joinSpectator = false;
                 } else {
                     storyFactory.errors.noSession = false;
                     if(!storyFactory.user.key) {
@@ -74,12 +75,12 @@ angular.module('pointoApp')
                             if(error) {
                                 console.log('Login Failed!', error);
                             } else {
-                                storyFactory.addUser(id, name, authData, redirect);                        
+                                storyFactory.addUser(id, name, spectator, authData, redirect);                        
                             }
                         });
                     } else {
                         var authData = ref.getAuth();
-                        storyFactory.addUser(id, name, authData, redirect);                        
+                        storyFactory.addUser(id, name, spectator, authData, redirect);                        
                     }
 
                     storyFactory.sessionID = id;
@@ -88,7 +89,7 @@ angular.module('pointoApp')
             
         };
 
-        storyFactory.addUser = function(id, name, authData, redirect) {
+        storyFactory.addUser = function(id, name, spectator, authData, redirect) {
             var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users'),
                 points = { text: -1, value: -1 };
 

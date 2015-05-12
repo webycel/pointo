@@ -4,7 +4,7 @@
 
         <div class="form-group">
             <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name" required />
-            <input type="submit" value="Create Session" ng-class="{loading: loading().create}" />
+            <button type="submit" ng-class="{loading: loading().create}"><span class="glyphicon glyphicon-blackboard"></span> Create session</button>
         </div>
 
         <span class="or">or</span>
@@ -15,8 +15,11 @@
 
         <div class="form-group">
             <input type="text" class="name" placeholder="Your name" ng-model="joinName" required />
-            <input type="number" class="join_id" placeholder="123 456" min="10000" max="999999" ng-model="sessionID" required />
-            <input type="submit" value="Join Session" ng-class="{loading: loading().join}" />
+            <input type="number" class="join_id" placeholder="123 456" min="100000" max="999999" ng-model="sessionID" required />
+            
+            <button type="submit" class="join-btn" ng-class="{loading: loading().join, disabled: loading().join}" ng-click="spectator = false"><span class="glyphicon glyphicon-transfer"></span> Join Session</button>
+            <button type="submit" class="btn-light" ng-class="{loading: loading().joinSpectator, disabled: loading().joinSpectator}" ng-click="spectator = true"><span class="glyphicon glyphicon-sunglasses"></span> Join as spectator</button>
+            
             <div class="error warning" ng-show="errors().noSession">This session does not exist.</div>
         </div>
 

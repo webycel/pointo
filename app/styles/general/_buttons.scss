@@ -18,10 +18,17 @@
         outline: 0;
     }
 
+    .glyphicon {
+        padding-right: 4px;
+    }
+
     &.loading {
         text-indent: -9999px;
         background: url('../images/loading.gif') $turquoise no-repeat center center;
 
+        .glyphicon {
+            display: none;
+        }
         &:hover {
             cursor: default;
         }
