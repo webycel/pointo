@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('storyFactory', function($firebaseObject, $window, $timeout, FIREBASE_URL, utilsFactory) {
+    .factory('storyFactory', function($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory) {
 
         var storyFactory = {},
             ref = new Firebase(FIREBASE_URL);
 
         storyFactory.user = {
-            key: null, name: null, points: {}, 'new': false, leader: false
+            key: null, name: null, points: {}, 'new': false, leader: false, spectator: false
         };
 
         storyFactory.errors = {
@@ -15,7 +15,7 @@ angular.module('pointoApp')
         };
 
         storyFactory.loading = {
-            create: false, join: false
+            create: false, join: false, joinSpectator: false
         };
 
         storyFactory.storyPointSet = [
@@ -48,9 +48,9 @@ angular.module('pointoApp')
                 if(snapshot.child(id).exists()) {
                     storyFactory.createSession(name);
                 } else {
-                    sessionsRef.set({ users: '', voteStatus: 0 }, function(error) {
+                    sessionsRef.set({ users: '', voteStatus: 0, score: 0 }, function(error) {
                         if(!error) {
-                            storyFactory.joinSession(id, name, true);
+                            storyFactory.joinSession(id, name, false, true);
                         } else {
                             console.log(error);
                         }
@@ -60,12 +60,13 @@ angular.module('pointoApp')
 
         };
 
-        storyFactory.joinSession = function(id, name, redirect) {
+        storyFactory.joinSession = function(id, name, spectator, redirect) {
 
             ref.child('sessions').once('value', function(snapshot) {
                 if(!snapshot.child(id).exists()) {
                     storyFactory.errors.noSession = true;
                     storyFactory.loading.join = false;
+                    storyFactory.loading.joinSpectator = false;
                 } else {
                     storyFactory.errors.noSession = false;
                     if(!storyFactory.user.key) {
@@ -74,12 +75,12 @@ angular.module('pointoApp')
                             if(error) {
                                 console.log('Login Failed!', error);
                             } else {
-                                storyFactory.addUser(id, name, authData, redirect);                        
+                                storyFactory.addUser(id, name, spectator, authData, redirect);                        
                             }
                         });
                     } else {
                         var authData = ref.getAuth();
-                        storyFactory.addUser(id, name, authData, redirect);                        
+                        storyFactory.addUser(id, name, spectator, authData, redirect);                        
                     }
 
                     storyFactory.sessionID = id;
@@ -88,16 +89,17 @@ angular.module('pointoApp')
             
         };
 
-        storyFactory.addUser = function(id, name, authData, redirect) {
+        storyFactory.addUser = function(id, name, spectator, authData, redirect) {
             var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users'),
                 points = { text: -1, value: -1 };
 
-            usersRef.child(authData.uid).set({ name: name, points: points }, function (error) {
+            usersRef.child(authData.uid).set({ name: name, points: points, spectator: spectator }, function (error) {
                 if(!error) {
                     storyFactory.user.key = authData.uid;
                     storyFactory.user.name = name;
                     storyFactory.user.redirect = redirect;
                     storyFactory.user.points = points;
+                    storyFactory.user.spectator = spectator;
 
                     if(utilsFactory.hasStorage()) {
                         localStorage[authData.uid] = name;
@@ -108,7 +110,7 @@ angular.module('pointoApp')
                     //reset vote status if first user to join
                     ref.child('sessions').child(id).child('users').once('value', function(snap) {
                         if(snap.numChildren() <= 1) {
-                            ref.child('sessions').child(id).update({ voteStatus: 0 });
+                            ref.child('sessions').child(id).update({ voteStatus: 0, score: 0 });
                         }
                     });
 
@@ -174,6 +176,7 @@ angular.module('pointoApp')
             if (authData && utilsFactory.hasStorage()) {
                 storyFactory.user.key = authData.uid;
                 storyFactory.user.name = localStorage[authData.uid] || 'Anonymous';
+                storyFactory.user.spectator = false;
                 return true;
             } else {
                 return false;
@@ -182,7 +185,7 @@ angular.module('pointoApp')
 
         storyFactory.getSession = function(id) {
             storyFactory.session = $firebaseObject(ref.child('sessions').child(id));
-            storyFactory.participants = $firebaseObject(ref.child('sessions').child(id).child('users'));
+            storyFactory.participants = $firebaseArray(ref.child('sessions').child(id).child('users'));
 
             return { session: storyFactory.session, participants: storyFactory.participants};
         };
@@ -222,6 +225,12 @@ angular.module('pointoApp')
             user.update({ leader: storyFactory.user.leader });
         };
 
+        storyFactory.participateStatus = function() {
+            var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
+            storyFactory.user.spectator = !storyFactory.user.spectator;
+            user.update({ spectator: storyFactory.user.spectator, points: { text: -1, value: -1 } });
+        };
+
         storyFactory.getVoteStatistics = function() {
             return storyFactory.statistics;
         };
@@ -256,6 +265,7 @@ angular.module('pointoApp')
             clearVotes: storyFactory.clearVotes,
             changeName: storyFactory.changeName,
             leadSession: storyFactory.leadSession,
+            participateStatus: storyFactory.participateStatus,
             getVoteStatistics: storyFactory.getVoteStatistics,
             getStoryPointSet: storyFactory.getStoryPointSet,
             getErrors: storyFactory.getErrors,

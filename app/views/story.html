@@ -12,7 +12,7 @@
             <div class="col-md-3 col-sm-4 col-xs-12 voting">
                 <h2>Vote</h2>
                 <ul>
-                    <li class="btn point" ng-repeat="point in storypoints | filter:'!X'" ng-click="vote(point)" ng-class="{active: session.users[user.key].points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2}">
+                    <li class="btn point" ng-repeat="point in storypoints | filter:'!X'" ng-click="vote(point)" ng-class="{active: session.users[user.key].points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2, disabled: user.spectator}">
                         {{point.value !== -2 ? point.text : ''}}
                     </li>
                 </ul>
@@ -27,18 +27,26 @@
                 <h2>Participants</h2>
 
                 <div class="row participants">
-                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="(id, p) in participants" ng-class="{active: id == user.key, leader: p.leader}">
+                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
                         <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-show="p.leader"></span>  {{p.name}}</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1, 'flipped': isFlipped}">
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
                         </span>
                     </div>
 
-                    <div class="col-md-2 col-sm-2 col-xs-3 participant score" ng-show="session.voteStatus == 1 && statistics().participants > 1">
+                    <div class="col-md-2 col-sm-2 col-xs-3 participant score" ng-show="session.voteStatus == 1 && filteredParticipants.length > 1">
                         <span class="title">Score</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-remove': statistics().score == -1}">
                             {{ statistics().score >= 0 ? statistics().score : '' }}
                         </span>
+                    </div>
+                </div>
+
+                <div class="row participants spectators" ng-show="filteredSpectators.length > 0">
+                    <h3>Spectators</h3>
+
+                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredSpectators = (participants | filter: {spectator: true})" ng-class="{active: p.$id == user.key, leader: p.leader}">
+                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-show="p.leader"></span> {{p.name}}</span>                       
                     </div>
                 </div>
 
@@ -67,6 +75,9 @@
                 <div class="col col-md-4 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1">
                     <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}">
                         <span class="glyphicon glyphicon-king"></span> {{ user.leader ? 'Leading session' : 'Lead session' }}
+                    </button>
+                    <button ng-click="participateStatus()" class="btn-light">
+                        <span class="glyphicon" ng-class="{'glyphicon-briefcase': user.spectator, 'glyphicon-sunglasses': !user.spectator}"></span> {{ user.spectator ? 'Participate' : 'Spectate' }}
                     </button>
                 </div>
             </div>
@@ -97,7 +108,8 @@
 
                 <div class="form-group">
                     <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name" required />
-                    <input type="submit" value="Join Session" />
+                    <button type="submit" ng-click="spectator = false"><span class="glyphicon glyphicon-transfer"></span> Join Session</button>
+                    <button type="submit" class="btn-light" ng-click="spectator = true"><span class="glyphicon glyphicon-sunglasses"></span> Join as spectator</button>
                 </div>
 
             </form>

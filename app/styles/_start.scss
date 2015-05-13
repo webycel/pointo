@@ -35,10 +35,13 @@
         margin-top: 3px;
     }
 
-    input {
+    input, button {
         width: 100%;
     }
-    input[type="submit"] {
+    input[type="submit"], button {
         margin-top: 5px;
+    }
+    .join-btn .glyphicon {
+        vertical-align: text-bottom;
     }
 }
