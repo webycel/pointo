@@ -11,6 +11,9 @@
         outline: 0;
         background-color: $green;
     }
+    &.disabled:hover {
+        background-color: $turquoise;
+    }
     &.active {
         background-color: $green;
     }

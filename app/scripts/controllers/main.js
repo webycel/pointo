@@ -40,7 +40,7 @@ angular.module('pointoApp')
 
                 storyFactory.setErrors('noSession', false);
 
-                storyFactory.joinSession($scope.sessionID, $scope.joinName, $scope.spectator);
+                storyFactory.joinSession($scope.sessionID, $scope.joinName, $scope.spectator, true);
 
                 setTimeout(function() { $scope.$apply(); }, 1000);
             }

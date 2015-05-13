@@ -117,6 +117,19 @@
             }
         }
     }
+    .spectators {
+        h3 {
+            margin-left: 15px;
+        }
+
+        .participant {
+            min-height: 0;
+        }
+
+        .name {
+            border: none;
+        }
+    }
 
     .options {
         margin-bottom: 10px;
@@ -136,7 +149,14 @@
     }
 
     .set_name {
+        margin: 0 auto;
+        max-width: 200px;
         text-align: center;
+
+        input, button {
+            margin-bottom: 5px;
+            width: 100%;
+        }
     }
 
     .settings-container {

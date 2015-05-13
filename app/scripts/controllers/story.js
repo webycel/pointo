@@ -32,7 +32,7 @@ angular.module('pointoApp')
                 if(!storyFactory.isLoggedIn()) {
                     $scope.view = 2;
                 } else if(!storyFactory.user.redirect) {
-                    storyFactory.joinSession(sessionID, storyFactory.user.name);
+                    storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
                 }
 
                 session = storyFactory.getSession(sessionID);
@@ -65,14 +65,14 @@ angular.module('pointoApp')
 
         /* functions */
         $scope.joinSession = function() {
-            console.log('oksi');
-            console.log($scope.spectator);
-            storyFactory.joinSession(sessionID, $scope.name);
+            storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
             $scope.view = 1;
         };
 
         $scope.vote = function(points) {
-            storyFactory.setVote(points);
+            if(!$scope.user.spectator) {
+                storyFactory.setVote(points);
+            }
         };
 
         $scope.revealVotes = function() {
@@ -97,6 +97,10 @@ angular.module('pointoApp')
 
         $scope.leadSession = function() {
             storyFactory.leadSession();
+        };
+
+        $scope.participateStatus = function() {
+            storyFactory.participateStatus();
         };
 
         $scope.flip = function() {
