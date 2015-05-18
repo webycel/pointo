@@ -16,6 +16,7 @@ angular.module('pointoApp')
         $scope.spectator = false;
         $scope.errors = storyFactory.getErrors;
         $scope.loading = storyFactory.getLoading;
+        $scope.auth = { 'new': { login: false, register: false } };
 
         //reset
         storyFactory.setLoading('create', false);
@@ -44,6 +45,16 @@ angular.module('pointoApp')
 
                 setTimeout(function() { $scope.$apply(); }, 1000);
             }
+        };
+
+        $scope.authLogin = function() {
+            $scope.auth.new.login = true;
+            $scope.auth.new.register = false;
+        };
+
+        $scope.authRegister = function() {
+            $scope.auth.new.register = true;
+            $scope.auth.new.login = false;
         };
 
 });
