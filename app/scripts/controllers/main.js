@@ -8,7 +8,7 @@
  * Controller of the pointoApp
  */
 angular.module('pointoApp')
-    .controller('MainCtrl', function ($scope, storyFactory) {
+    .controller('MainCtrl', function ($scope, accountFactory, storyFactory) {
         
         $scope.name = '';
         $scope.joinName = '';
@@ -16,7 +16,11 @@ angular.module('pointoApp')
         $scope.spectator = false;
         $scope.errors = storyFactory.getErrors;
         $scope.loading = storyFactory.getLoading;
-        $scope.auth = { 'new': { login: false, register: false } };
+        $scope.auth = { 
+            state: { login: false, register: false },
+            login: { email: '', password: '' },
+            register: { email: '', password: '' }
+        };
 
         //reset
         storyFactory.setLoading('create', false);
@@ -47,14 +51,26 @@ angular.module('pointoApp')
             }
         };
 
-        $scope.authLogin = function() {
-            $scope.auth.new.login = true;
-            $scope.auth.new.register = false;
+        $scope.formLogin = function() {
+            $scope.auth.state.login = true;
+            $scope.auth.state.register = false;
         };
 
-        $scope.authRegister = function() {
-            $scope.auth.new.register = true;
-            $scope.auth.new.login = false;
+        $scope.formRegister = function() {
+            $scope.auth.state.register = true;
+            $scope.auth.state.login = false;
+        };
+
+        $scope.login = function() {
+            storyFactory.setLoading('login', true);
+            storyFactory.setErrors('registerError', false);
+            //accountFactory.login($scope.auth.login.email, $scope.auth.login.password);
+        };
+
+        $scope.register = function() {
+            storyFactory.setLoading('register', true);
+            storyFactory.setErrors('registerError', false);
+            accountFactory.register($scope.auth.register.email, $scope.auth.register.password);
         };
 
 });

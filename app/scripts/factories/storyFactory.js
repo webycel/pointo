@@ -11,11 +11,11 @@ angular.module('pointoApp')
         };
 
         storyFactory.errors = {
-            noSession: false
+            noSession: false, registerError: false
         };
 
         storyFactory.loading = {
-            create: false, join: false, joinSpectator: false
+            create: false, join: false, joinSpectator: false, login: false, register: false
         };
 
         storyFactory.storyPointSet = [

@@ -31,42 +31,36 @@
 
     <div class="col col-md-6 col-sm-6 col-xs-12 auth">
 
+        <!-- LOGIN -->
         <form>
-                                    
-            <!-- CHOOSE LOGIN - REGISTER -->
-            <div class="form-group">
-
-                <!-- LOGIN -->
-                <div class="form-group" ng-show="auth.new.login">
-                    <input type="text" class="name" placeholder="Your name" ng-model="loginName" required />
-                    <input type="password" class="join_id" placeholder="Your password" ng-model="loginPassword" required />
-                    
-                    <button type="submit" ng-class="{loading: loading().login, disabled: loading().login}" ng-click="spectator = false">Login</button>
-                    <div class="error warning" ng-show="errors().noSession">This session does not exist.</div>
-                </div>
-
-                <div class="btn btn-primary" ng-hide="auth.new.login" ng-click="authLogin()">Login</div>
-
-                <span class="or">or</span>
-
-                <!-- REGISTER -->
-                <div class="form-group" ng-show="auth.new.register">
-                    <input type="email" class="name" placeholder="Your email" ng-model="loginName" required />
-                    <input type="password" class="join_id" placeholder="Your password" ng-model="loginPassword" required />
-                    
-                    <button type="submit" class="btn-action join-btn" ng-class="{loading: loading().register, disabled: loading().register}" ng-click="spectator = false">Register</button>
-                    <div class="error warning" ng-show="errors().noSession">This session does not exist.</div>
-                </div>
-
-                <div class="btn btn-action" ng-hide="auth.new.register" ng-click="authRegister()">Register</div>
-
-                <div class="hint">
-                    <span class="glyphicon glyphicon-info-sign"></span>
-                    <strong>No account is required for using this application.</strong><br>
-                    With an account you can benefit from managing your sessions and give them a password protection.
-                </div>
+            <div class="form-group" ng-show="auth.state.login">
+                <input type="text" class="name" placeholder="Your email" ng-model="auth.login.email" required />
+                <input type="password" class="join_id" placeholder="Your password" ng-model="auth.login.password" required />
+                
+                <button type="submit" ng-class="{loading: loading().login, disabled: loading().login}" ng-click="spectator = false">Login</button>
             </div>
+            <div class="btn btn-primary" ng-hide="auth.state.login" ng-click="formLogin()">Login</div>
+        </form>
 
+
+        <span class="or">or</span>
+
+        <!-- REGISTER -->
+        <form ng-submit="register()">
+            <div class="form-group" ng-show="auth.state.register">
+                <input type="email" class="name" placeholder="Your email" ng-model="auth.register.email" required />
+                <input type="password" class="join_id" placeholder="Your password" ng-model="auth.register.password" required />
+                
+                <button type="submit" class="btn-action join-btn" ng-class="{loading: loading().register, disabled: loading().register}" ng-click="spectator = false">Register</button>
+                <div class="error warning" ng-show="errors().registerError">{{errors().registerError}}</div>
+            </div>
+            <div class="btn btn-action" ng-hide="auth.state.register" ng-click="formRegister()">Register</div>
+
+            <div class="hint">
+                <span class="glyphicon glyphicon-info-sign"></span>
+                <strong>No account is required for using this application.</strong><br>
+                With an account you can benefit from managing your sessions and give them a password protection.
+            </div>
         </form>
 
     </div>
