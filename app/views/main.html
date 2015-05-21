@@ -1,3 +1,5 @@
+<header global-header></header>
+
 <div class="row start">
 
     <div class="col col-md-6 col-sm-6 col-xs-12 non-auth">
@@ -29,10 +31,11 @@
 
     </div>
 
-    <div class="col col-md-6 col-sm-6 col-xs-12 auth">
+    <!-- LOGIN / REGISTER -->
+    <div class="col col-md-6 col-sm-6 col-xs-12 auth" ng-hide="authUser().account">
 
         <!-- LOGIN -->
-        <form>
+        <form ng-submit="login()">
             <div class="form-group" ng-show="auth.state.login">
                 <input type="text" class="name" placeholder="Your email" ng-model="auth.login.email" required />
                 <input type="password" class="join_id" placeholder="Your password" ng-model="auth.login.password" required />
@@ -52,7 +55,7 @@
                 <input type="password" class="join_id" placeholder="Your password" ng-model="auth.register.password" required />
                 
                 <button type="submit" class="btn-action join-btn" ng-class="{loading: loading().register, disabled: loading().register}" ng-click="spectator = false">Register</button>
-                <div class="error warning" ng-show="errors().registerError">{{errors().registerError}}</div>
+                <div class="error" ng-show="errors().registerError">{{errors().registerError}}</div>
             </div>
             <div class="btn btn-action" ng-hide="auth.state.register" ng-click="formRegister()">Register</div>
 
@@ -62,6 +65,13 @@
                 With an account you can benefit from managing your sessions and give them a password protection.
             </div>
         </form>
+
+    </div>
+
+
+    <div class="col col-md-6 col-sm-6 col-xs-12 auth" ng-show="authUser().account">
+
+        <h2>My sessions</h2>
 
     </div>
 

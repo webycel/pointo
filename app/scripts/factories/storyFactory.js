@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('storyFactory', function($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory) {
+    .factory('storyFactory', function($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory, accountFactory) {
 
         var storyFactory = {},
             ref = new Firebase(FIREBASE_URL);
@@ -70,6 +70,10 @@ angular.module('pointoApp')
                 } else {
                     storyFactory.errors.noSession = false;
                     if(!storyFactory.user.key) {
+                        console.log('no user');
+                        console.log(accountFactory.getUser().account);
+
+                        /*
                         ref.unauth();
                         ref.authAnonymously(function(error, authData) {
                             if(error) {
@@ -77,7 +81,7 @@ angular.module('pointoApp')
                             } else {
                                 storyFactory.addUser(id, name, spectator, authData, redirect);                        
                             }
-                        });
+                        });*/
                     } else {
                         var authData = ref.getAuth();
                         storyFactory.addUser(id, name, spectator, authData, redirect);                        

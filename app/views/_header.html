@@ -1,0 +1,6 @@
+<h1><a href="#/">poin.to</a></h1>
+
+<div class="account">
+	<span class="email">{{ authUser().data ? authUser().data.password.email : '' }}</span>
+	<a class="logout" ng-click="authUser().logout()" ng-show="authUser().data">Logout</a>
+</div>

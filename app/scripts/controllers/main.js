@@ -22,6 +22,11 @@ angular.module('pointoApp')
             register: { email: '', password: '' }
         };
 
+        accountFactory.init();
+
+        $scope.authUser = accountFactory.getUser;
+        console.log($scope.authUser());
+
         //reset
         storyFactory.setLoading('create', false);
         storyFactory.setLoading('join', false);
@@ -64,7 +69,7 @@ angular.module('pointoApp')
         $scope.login = function() {
             storyFactory.setLoading('login', true);
             storyFactory.setErrors('registerError', false);
-            //accountFactory.login($scope.auth.login.email, $scope.auth.login.password);
+            accountFactory.login($scope.auth.login.email, $scope.auth.login.password);
         };
 
         $scope.register = function() {

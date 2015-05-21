@@ -33,12 +33,10 @@ angular
   });
 
 angular.module('pointoApp')
-  .directive('loading', function() {
+  .directive('globalHeader', function() {
 
     return {
-      restrict: 'AE',
-      replace: true,
-      templateUrl: '../views/_loading.html'
+      templateUrl: '../views/_header.html'
     };
 
 });
