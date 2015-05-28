@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('storyFactory', function($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory, accountFactory) {
+    .factory('storyFactory', function($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory, viewFactory, accountFactory) {
 
         var storyFactory = {},
             ref = new Firebase(FIREBASE_URL);
@@ -64,11 +64,11 @@ angular.module('pointoApp')
 
             ref.child('sessions').once('value', function(snapshot) {
                 if(!snapshot.child(id).exists()) {
-                    storyFactory.errors.noSession = true;
-                    storyFactory.loading.join = false;
-                    storyFactory.loading.joinSpectator = false;
+                    viewFactory.errors.noSession = true;
+                    viewFactory.loading.join = false;
+                    viewFactory.loading.joinSpectator = false;
                 } else {
-                    storyFactory.errors.noSession = false;
+                    viewFactory.errors.noSession = false;
                     if(!storyFactory.user.key) {
                         console.log('no user');
                         console.log(accountFactory.getUser().account);
@@ -243,21 +243,6 @@ angular.module('pointoApp')
             return storyFactory.storyPointSet;
         };
 
-        storyFactory.getErrors = function() {
-            return storyFactory.errors;
-        };
-
-        storyFactory.setErrors = function(e, v) {
-            storyFactory.errors[e] = v;
-        };
-
-        storyFactory.getLoading = function() {
-            return storyFactory.loading;
-        };
-        storyFactory.setLoading = function(t, v) {
-            storyFactory.loading[t] = v;
-        };
-
         return {
             createSession: storyFactory.createSession,
             joinSession: storyFactory.joinSession,
@@ -272,10 +257,6 @@ angular.module('pointoApp')
             participateStatus: storyFactory.participateStatus,
             getVoteStatistics: storyFactory.getVoteStatistics,
             getStoryPointSet: storyFactory.getStoryPointSet,
-            getErrors: storyFactory.getErrors,
-            setErrors: storyFactory.setErrors,
-            getLoading: storyFactory.getLoading,
-            setLoading: storyFactory.setLoading,
             user: storyFactory.user
         };
 

@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('accountFactory', function($firebaseObject, $rootScope, $timeout, FIREBASE_URL, storyFactory) {
+    .factory('accountFactory', function($firebaseObject, $rootScope, $timeout, FIREBASE_URL, viewFactory) {
     
-    	var accountFactory = { user: { data: null, logout: null } },
+    	var accountFactory = { user: { data: null, logout: null, account: false } },
             ref = new Firebase(FIREBASE_URL);
 
         //public
@@ -12,7 +12,7 @@ angular.module('pointoApp')
 
             accountFactory.user.data = ref.getAuth();
             accountFactory.user.logout = accountFactory.logout;
-            accountFactory.user.account = accountFactory.user.data.auth.provider === 'password' ? true : false;
+            accountFactory.user.account = accountFactory.user.data !== null && accountFactory.user.data.auth.provider === 'password' ? true : false;
         };
 
         accountFactory.getUser = function() {
@@ -20,14 +20,13 @@ angular.module('pointoApp')
         };
 
     	accountFactory.register = function(email, pwd) {
-            console.log(email, pwd);
 
             ref.createUser({
                 email: email, password: pwd
             }, function(error, userData) {
                 if(error) {
                     console.log('Error creating user: ', error);
-                    storyFactory.setErrors('registerError', error.message);
+                    viewFactory.setErrors('registerError', error.message);
                 } else {
                     ref.authWithPassword({
                         email    : email,
@@ -38,7 +37,7 @@ angular.module('pointoApp')
                 }
 
                 $rootScope.$apply(function(){
-                    storyFactory.setLoading('register', false);
+                    viewFactory.setLoading('register', false);
                 });
             });
 
@@ -54,12 +53,14 @@ angular.module('pointoApp')
         accountFactory.logout = function() {
             console.log('bye');
             ref.unauth();
+            accountFactory.user.account = false;
         };
 
         //private
         accountFactory.setUser = function(data) {
             $timeout(function(){
                 accountFactory.user.data = data;
+                accountFactory.user.account = data ? true : false;
             });
         };
         accountFactory.authDataCallback = function(authData) {
@@ -79,8 +80,8 @@ angular.module('pointoApp')
             } else {
                 console.log('Authenticated successfully with payload:', authData);
                 accountFactory.setUser(authData);
-                storyFactory.setLoading('login', false);
             }
+            viewFactory.setLoading('login', false);
         };
 
         //return
