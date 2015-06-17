@@ -31,15 +31,6 @@ header {
     padding-bottom: 19px;
     font-size: 2.5em;
   }
-  .account {
-    float: right;
-    margin-top: 22px;
-
-    .logout {
-      font-size: 0.75em;
-      cursor: pointer;
-    }
-  }
 }
 
 /* Custom page footer */
@@ -77,6 +68,7 @@ $break-x-small: 768px;
 /* colours */
 $white:         #fff;
 $black:         #000;
+$grey333:       #333;
 $grey555:       #555;
 $greyCCC:       #ccc;
 $grey737:       #737373;
@@ -98,3 +90,4 @@ $orange:        #e67e22;
 
 @import 'start';
 @import 'session';
+@import 'account';

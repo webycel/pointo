@@ -1,0 +1,28 @@
+.account {
+    float: right;
+    margin-top: 22px;
+    
+    .account-settings {
+        position: relative;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .account-settings-panel {
+        position: absolute;
+        top: 37px;
+        right: -160px;
+        padding: 10px;
+        width: 300px;
+        border: 1px solid $greyCCC;
+        background-color: $white;
+        z-index: 10;
+
+        input {
+            width: 100%;
+        }
+    }
+    .logout {
+        font-size: 0.75em;
+        cursor: pointer;
+    }
+}

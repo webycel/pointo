@@ -12,3 +12,11 @@
         color: $orange;
     }
 }
+
+.fakelink {
+    color: $grey333;
+
+    &:hover, &:active, &:focus {
+        text-decoration: none;
+    }
+}
