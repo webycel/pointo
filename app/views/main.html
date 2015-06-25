@@ -7,7 +7,7 @@
         <form ng-submit="createSession()">
 
             <div class="form-group">
-                <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name" required />
+                <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name().name" ng-hide="authUser().account" required />
                 <button type="submit" ng-class="{loading: loading().create}"><span class="glyphicon glyphicon-blackboard"></span> Create session</button>
             </div>
 
@@ -18,7 +18,7 @@
         <form ng-submit="joinSession()">
 
             <div class="form-group">
-                <input type="text" class="name" placeholder="Your name" ng-model="joinName" required />
+                <input type="text" class="name" placeholder="Your name" ng-model="joinName().name" ng-hide="authUser().account" required />
                 <input type="number" class="join_id" placeholder="123 456" min="100000" max="999999" ng-model="sessionID" required />
                 
                 <button type="submit" class="join-btn" ng-class="{loading: loading().join, disabled: loading().join}" ng-click="spectator = false"><span class="glyphicon glyphicon-transfer"></span> Join Session</button>

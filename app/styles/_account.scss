@@ -1,16 +1,16 @@
 .account {
     float: right;
+    position: relative;
     margin-top: 22px;
     
     .account-settings {
-        position: relative;
         display: inline-block;
         margin-right: 8px;
     }
     .account-settings-panel {
         position: absolute;
         top: 37px;
-        right: -160px;
+        right: 0;
         padding: 10px;
         width: 300px;
         border: 1px solid $greyCCC;
@@ -19,6 +19,9 @@
 
         input {
             width: 100%;
+        }
+        button {
+            width: 74px;
         }
     }
     .logout {

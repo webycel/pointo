@@ -1,95 +1,136 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('accountFactory', function($firebaseObject, $rootScope, $timeout, FIREBASE_URL, viewFactory) {
-    
-    	var accountFactory = { user: { data: null, logout: null, account: false } },
-            ref = new Firebase(FIREBASE_URL);
+	.factory('accountFactory', function ($firebaseObject, $rootScope, $timeout, FIREBASE_URL, viewFactory) {
 
-        //public
-        accountFactory.init = function() {
-            ref.onAuth(accountFactory.authDataCallback);
+		var accountFactory = {
+				user: {
+					data: null,
+					name: '',
+					logout: null,
+					account: false
+				}
+			},
+			ref = new Firebase(FIREBASE_URL),
+			isNewUser = false,
+			userRef;
 
-            accountFactory.user.data = ref.getAuth();
-            accountFactory.user.logout = accountFactory.logout;
-            accountFactory.user.account = accountFactory.user.data !== null && accountFactory.user.data.auth.provider === 'password' ? true : false;
-        };
+		//public
+		accountFactory.init = function () {
+			ref.onAuth(accountFactory.authDataCallback);
 
-        accountFactory.getUser = function() {
-            return accountFactory.user;
-        };
+			accountFactory.user.data = ref.getAuth();
+			accountFactory.user.logout = accountFactory.logout;
+			accountFactory.user.account = accountFactory.user.data !== null && accountFactory.user.data.auth.provider === 'password' ? true : false;
+		};
 
-    	accountFactory.register = function(email, pwd) {
+		accountFactory.getUser = function () {
+			return accountFactory.user;
+		};
 
-            ref.createUser({
-                email: email, password: pwd
-            }, function(error, userData) {
-                if(error) {
-                    console.log('Error creating user: ', error);
-                    viewFactory.setErrors('registerError', error.message);
-                } else {
-                    ref.authWithPassword({
-                        email    : email,
-                        password : pwd
-                    }, accountFactory.authHandler);
+		accountFactory.register = function (email, pwd) {
 
-                    console.log('Successfully created user with uid: ', userData.uid);
-                }
+			isNewUser = true;
 
-                $rootScope.$apply(function(){
-                    viewFactory.setLoading('register', false);
-                });
-            });
+			ref.createUser({
+				email: email,
+				password: pwd
+			}, function (error, userData) {
+				if (error) {
+					console.log('Error creating user: ', error);
+					viewFactory.setErrors('registerError', error.message);
+				} else {
+					ref.authWithPassword({
+						email: email,
+						password: pwd
+					}, accountFactory.authHandler);
 
-        };
+					console.log('Successfully created user with uid: ', userData.uid);
+				}
 
-        accountFactory.login = function(email, pwd) {
-            ref.authWithPassword({
-                email    : email,
-                password : pwd
-            }, accountFactory.authHandler);
-        };
+				$rootScope.$apply(function () {
+					viewFactory.setLoading('register', false);
+				});
+			});
 
-        accountFactory.logout = function() {
-            console.log('bye');
-            ref.unauth();
-            accountFactory.user.account = false;
-        };
+		};
 
-        //private
-        accountFactory.setUser = function(data) {
-            $timeout(function(){
-                accountFactory.user.data = data;
-                accountFactory.user.account = data ? true : false;
-            });
-        };
-        accountFactory.authDataCallback = function(authData) {
-            if (authData) {
-                console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
-                accountFactory.setUser(authData);
-            } else {
-                console.log('User is logged out');
-                accountFactory.setUser(null);
-            }
-        };
+		accountFactory.login = function (email, pwd) {
+			ref.authWithPassword({
+				email: email,
+				password: pwd
+			}, accountFactory.authHandler);
+		};
 
-        accountFactory.authHandler = function(error, authData) {
-            if (error) {
-                console.log('Login Failed!', error);
-                accountFactory.setUser(null);
-            } else {
-                console.log('Authenticated successfully with payload:', authData);
-                accountFactory.setUser(authData);
-            }
-            viewFactory.setLoading('login', false);
-        };
+		accountFactory.logout = function () {
+			ref.unauth();
+			accountFactory.user.account = false;
+		};
 
-        //return
-        return {
-            init: accountFactory.init,
-            getUser: accountFactory.getUser,
-            login: accountFactory.login,
-        	register: accountFactory.register
-        };
+		//private
+		accountFactory.setUser = function (data, user) {
+			$timeout(function () {
+				accountFactory.user.data = data;
+				accountFactory.user.account = data ? true : false;
+				accountFactory.user.name = user.name;
+			});
+		};
+		accountFactory.authDataCallback = function (authData) {
+			if (authData) {
 
-    });
+				userRef = ref.child('users').child(authData.uid);
+				userRef.once('value', function (snap) {
+					var user = snap.val();
+					if (!user) {
+						return;
+					}
+
+					// set the fields
+					console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
+					accountFactory.setUser(authData, user);
+				});
+
+			} else {
+				console.log('User is logged out');
+				accountFactory.setUser(null, '');
+			}
+		};
+
+		accountFactory.authHandler = function (error, authData) {
+			if (error) {
+				console.log('Login Failed!', error);
+				accountFactory.setUser(null, '');
+			} else {
+				console.log('Authenticated successfully with payload:', authData);
+
+				if (isNewUser) {
+					ref.child('users').child(authData.uid).set({
+						name: authData.password.email.replace(/@.*/, '')
+					});
+				}
+
+				accountFactory.setUser(authData);
+			}
+			viewFactory.setLoading('login', false);
+		};
+
+		accountFactory.updateAccount = function (data) {
+			ref.child('users').child(accountFactory.user.data.uid).set({
+				name: data.name
+			});
+			$timeout(function () {
+				accountFactory.user.name = data.name;
+				viewFactory.setLoading('updateAccount', false);
+			}, 250);
+		};
+
+		//return
+		return {
+			init: accountFactory.init,
+			getUser: accountFactory.getUser,
+			login: accountFactory.login,
+			register: accountFactory.register,
+			updateAccount: accountFactory.updateAccount
+		};
+
+	});

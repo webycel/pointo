@@ -1,41 +1,48 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('viewFactory', function() {
-    
-    	var viewFactory = {};
+	.factory('viewFactory', function () {
 
-        viewFactory.errors = {
-            noSession: false, registerError: false
-        };
+		var viewFactory = {};
 
-        viewFactory.loading = {
-            create: false, join: false, joinSpectator: false, login: false, register: false
-        };
+		viewFactory.errors = {
+			noSession: false,
+			registerError: false,
+			updateAccount: false
+		};
 
-        //public
-        viewFactory.getErrors = function() {
-            return viewFactory.errors;
-        };
+		viewFactory.loading = {
+			create: false,
+			join: false,
+			joinSpectator: false,
+			login: false,
+			register: false,
+			updateAccount: false
+		};
 
-        viewFactory.setErrors = function(e, v) {
-            viewFactory.errors[e] = v;
-        };
+		//public
+		viewFactory.getErrors = function () {
+			return viewFactory.errors;
+		};
 
-        viewFactory.getLoading = function() {
-            return viewFactory.loading;
-        };
-        viewFactory.setLoading = function(t, v) {
-            viewFactory.loading[t] = v;
-        };
+		viewFactory.setErrors = function (e, v) {
+			viewFactory.errors[e] = v;
+		};
+
+		viewFactory.getLoading = function () {
+			return viewFactory.loading;
+		};
+		viewFactory.setLoading = function (t, v) {
+			viewFactory.loading[t] = v;
+		};
 
 
-        //return
-        return {
-            getErrors: viewFactory.getErrors,
-            setErrors: viewFactory.setErrors,
-            getLoading: viewFactory.getLoading,
-            setLoading: viewFactory.setLoading
-        };
+		//return
+		return {
+			getErrors: viewFactory.getErrors,
+			setErrors: viewFactory.setErrors,
+			getLoading: viewFactory.getLoading,
+			setLoading: viewFactory.setLoading
+		};
 
-    });
+	});
