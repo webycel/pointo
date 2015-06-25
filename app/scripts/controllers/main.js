@@ -43,8 +43,8 @@ angular.module('pointoApp')
 		$scope.createSession = function () {
 			if (!$scope.loading().create) {
 				$scope.loading().create = true;
-				console.log($scope.name().name);
-				//storyFactory.createSession($scope.name);
+				var name = $scope.authUser().account ? $scope.authUser().name : $scope.name;
+				storyFactory.createSession(name);
 			}
 		};
 

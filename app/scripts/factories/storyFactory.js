@@ -74,7 +74,8 @@ angular.module('pointoApp')
 					sessionsRef.set({
 						users: '',
 						voteStatus: 0,
-						score: 0
+						score: 0,
+						owner: accountFactory.getUser().data.uid
 					}, function (error) {
 						if (!error) {
 							storyFactory.joinSession(id, name, false, true);
@@ -126,8 +127,6 @@ angular.module('pointoApp')
 					text: -1,
 					value: -1
 				};
-
-			console.log(uid);
 
 			usersRef.child(uid).set({
 				name: name,

@@ -7,7 +7,7 @@
         <form ng-submit="createSession()">
 
             <div class="form-group">
-                <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name().name" ng-hide="authUser().account" required />
+                <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name().name" ng-hide="authUser().account" ng-disabled="authUser().account" required />
                 <button type="submit" ng-class="{loading: loading().create}"><span class="glyphicon glyphicon-blackboard"></span> Create session</button>
             </div>
 
