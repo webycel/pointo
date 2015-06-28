@@ -133,7 +133,8 @@ angular.module('pointoApp')
 					});
 				}
 
-				accountFactory.setUser(authData);
+				accountFactory.authDataCallback(authData);
+				accountFactory.setUser(authData, '');
 			}
 			viewFactory.setLoading('login', false);
 		};
