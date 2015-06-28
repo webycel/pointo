@@ -95,15 +95,17 @@ angular.module('pointoApp')
 					});
 
 					sessionRef = ref.child('sessions');
-					sessionRef.once('value', function (snap) {
+					sessionRef.on('value', function (snap) {
 						var sessions = snap.val();
 						if (!sessions) {
 							return;
 						}
 
+						accountFactory.user.sessions = []; //reset
+
 						angular.forEach(sessions, function (val, key) {
 							if (val.owner === authData.uid) {
-                            val.sessionId = key;
+								val.sessionId = key;
 								accountFactory.user.sessions.push(val);
 							}
 						});

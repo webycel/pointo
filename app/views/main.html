@@ -77,6 +77,8 @@
             <li ng-repeat="session in authUser().sessions">{{session.sessionId}}</li>
         </ul>
 
+        <div class="loading" ng-hide="authUser().sessions.length > 0"></div>
+
     </div>
 
 </div>
