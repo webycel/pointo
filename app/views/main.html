@@ -69,9 +69,13 @@
     </div>
 
 
-    <div class="col col-md-6 col-sm-6 col-xs-12 auth" ng-show="authUser().account">
+    <div class="col col-md-6 col-sm-6 col-xs-12 my-sessions" ng-show="authUser().account">
 
         <h2>My sessions</h2>
+            
+        <ul>
+            <li ng-repeat="session in authUser().sessions">{{session.sessionId}}</li>
+        </ul>
 
     </div>
 

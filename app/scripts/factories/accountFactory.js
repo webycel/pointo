@@ -8,12 +8,14 @@ angular.module('pointoApp')
 					data: null,
 					name: '',
 					logout: null,
-					account: false
-				}
+					account: false,
+					sessions: []
+				},
+				inited: false
 			},
 			ref = new Firebase(FIREBASE_URL),
 			isNewUser = false,
-			userRef;
+			userRef, sessionRef;
 
 		//public
 		accountFactory.init = function () {
@@ -78,17 +80,37 @@ angular.module('pointoApp')
 		accountFactory.authDataCallback = function (authData) {
 			if (authData) {
 
-				userRef = ref.child('users').child(authData.uid);
-				userRef.once('value', function (snap) {
-					var user = snap.val();
-					if (!user) {
-						return;
-					}
+				if (!accountFactory.inited) {
 
-					// set the fields
-					console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
-					accountFactory.setUser(authData, user);
-				});
+					userRef = ref.child('users').child(authData.uid);
+					userRef.once('value', function (snap) {
+						var user = snap.val();
+						if (!user) {
+							return;
+						}
+
+						// set the fields
+						console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
+						accountFactory.setUser(authData, user);
+					});
+
+					sessionRef = ref.child('sessions');
+					sessionRef.once('value', function (snap) {
+						var sessions = snap.val();
+						if (!sessions) {
+							return;
+						}
+
+						angular.forEach(sessions, function (val, key) {
+							if (val.owner === authData.uid) {
+                            val.sessionId = key;
+								accountFactory.user.sessions.push(val);
+							}
+						});
+					});
+
+					accountFactory.inited = true;
+				}
 
 			} else {
 				console.log('User is logged out');
