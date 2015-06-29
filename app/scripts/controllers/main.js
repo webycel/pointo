@@ -59,7 +59,8 @@ angular.module('pointoApp')
 
 				viewFactory.setErrors('noSession', false);
 
-				storyFactory.joinSession($scope.sessionID, $scope.joinName, $scope.spectator, true);
+                var name = $scope.authUser().account ? $scope.authUser().name : $scope.joinName;
+				storyFactory.joinSession($scope.sessionID, name, $scope.spectator, true);
 
 				setTimeout(function () {
 					$scope.$apply();
