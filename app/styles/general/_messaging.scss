@@ -1,12 +1,36 @@
 .error {
     margin: 5px 0;
-    padding: 6px 0;
+    padding: 6px;
     font-size: 0.85em;
     border: 1px solid;
     text-align: center;
+    border-color: $red;
+    color: $redLight;
 
     &.warning {
         border-color: $orangeLight;
         color: $orange;
+    }
+}
+
+.fakelink {
+    color: $grey333;
+
+    &:hover, &:active, &:focus {
+        text-decoration: none;
+    }
+}
+
+
+
+.loading {
+    text-indent: -9999px;
+    background: url('../images/loading.gif') $turquoise no-repeat center center;
+
+    .glyphicon {
+        display: none;
+    }
+    &:hover {
+        cursor: default;
     }
 }

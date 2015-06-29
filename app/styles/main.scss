@@ -24,6 +24,7 @@ header {
 
   /* Make the masthead heading the same height as the navigation */
   h1 {
+    display: inline-block;
     margin-top: 0;
     margin-bottom: 0;
     line-height: 40px;
@@ -67,6 +68,7 @@ $break-x-small: 768px;
 /* colours */
 $white:         #fff;
 $black:         #000;
+$grey333:       #333;
 $grey555:       #555;
 $greyCCC:       #ccc;
 $grey737:       #737373;
@@ -88,3 +90,4 @@ $orange:        #e67e22;
 
 @import 'start';
 @import 'session';
+@import 'account';

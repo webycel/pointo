@@ -1,8 +1,12 @@
 .start {
     margin: 0 auto;
     padding: 10px 0 25px;
-    max-width: 200px;
     text-align: center;
+
+    .col form {
+        margin: 0 auto;
+        max-width: 200px;
+    }
 
     .or {
         position: relative;
@@ -43,5 +47,36 @@
     }
     .join-btn .glyphicon {
         vertical-align: text-bottom;
+    }
+
+    .non-auth {
+        border-right: 1px solid $greyCCC;
+    }
+    .auth {
+        .or {
+            margin-bottom: 8px;
+        }
+        .hint {
+            margin-top: 12px;
+            color: $grey737;
+            font-size: 0.8em;
+            text-align: left;
+        }
+    }
+
+    .my-sessions {
+        text-align: left;
+
+        h2 {
+            margin-top: 0;
+        }
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+        .loading {
+            width: 142px;
+            height: 42px;
+        }
     }
 }
