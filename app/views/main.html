@@ -4,11 +4,13 @@
 
     <div class="col col-md-6 col-sm-6 col-xs-12 non-auth">
 
-        <form ng-submit="createSession()">
+        <form name="createForm" ng-submit="createSession()">
 
             <div class="form-group">
                 <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name().name" ng-hide="authUser().account" ng-disabled="authUser().account" required />
-                <button type="submit" ng-class="{loading: loading().create}"><span class="glyphicon glyphicon-blackboard"></span> Create session</button>
+                <input type="text" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="passcode" ng-hide="!authUser().account" ng-disabled="!authUser().account" />
+                <span class="info">Setting a passcode is optional.<br>4 digits, e.g. 4321</span>
+                <button type="submit" ng-class="{loading: loading().create}" ng-disabled="!createForm.$valid"><span class="glyphicon glyphicon-blackboard"></span> Create session</button>
             </div>
 
             <span class="or">or</span>

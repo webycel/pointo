@@ -14,7 +14,8 @@ angular.module('pointoApp')
 
 		$scope.authUser = accountFactory.getUser;
 		$scope.name = $scope.authUser;
-		$scope.joinName = $scope.authUser;
+        $scope.joinName = $scope.authUser;
+		$scope.passcode = null;
 		$scope.sessionID = null;
 		$scope.spectator = false;
 		$scope.errors = viewFactory.getErrors;
@@ -44,7 +45,7 @@ angular.module('pointoApp')
 			if (!$scope.loading().create) {
 				$scope.loading().create = true;
 				var name = $scope.authUser().account ? $scope.authUser().name : $scope.name;
-				storyFactory.createSession(name);
+				storyFactory.createSession({name: name, passcode: $scope.passcode});
 			}
 		};
 
