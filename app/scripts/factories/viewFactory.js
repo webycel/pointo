@@ -7,8 +7,10 @@ angular.module('pointoApp')
 
 		viewFactory.errors = {
 			noSession: false,
+			noSessionJoin: false,
 			registerError: false,
-			updateAccount: false
+			updateAccount: false,
+			wrongPasscode: false
 		};
 
 		viewFactory.loading = {
