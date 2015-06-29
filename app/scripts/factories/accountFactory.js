@@ -89,7 +89,6 @@ angular.module('pointoApp')
 							return;
 						}
 
-						// set the fields
 						console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
 						accountFactory.setUser(authData, user);
 					});
@@ -139,6 +138,10 @@ angular.module('pointoApp')
 			viewFactory.setLoading('login', false);
 		};
 
+		accountFactory.getUserName = function () {
+			return ref.child('users').child(accountFactory.user.data.uid);
+		};
+
 		accountFactory.updateAccount = function (data) {
 			ref.child('users').child(accountFactory.user.data.uid).set({
 				name: data.name
@@ -153,6 +156,7 @@ angular.module('pointoApp')
 		return {
 			init: accountFactory.init,
 			getUser: accountFactory.getUser,
+			getUserName: accountFactory.getUserName,
 			login: accountFactory.login,
 			register: accountFactory.register,
 			updateAccount: accountFactory.updateAccount

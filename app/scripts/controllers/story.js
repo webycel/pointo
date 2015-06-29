@@ -29,13 +29,19 @@ angular.module('pointoApp')
 				$scope.spectator = false;
 				$scope.shareURL = $window.location.host + '/#/' + $scope.sessionID;
 				$scope.isFlipped = false;
+				$scope.authUser = accountFactory.getUser;
 
-				console.log(accountFactory.getUser());
 				if (!storyFactory.isLoggedIn()) {
 					$scope.view = 2;
 				} else if (!storyFactory.user.redirect) {
-					if (accountFactory.getUser().account) {
-						storyFactory.joinSession(sessionID, accountFactory.getUser().data.uid, false);
+					if ($scope.authUser().account) {
+						accountFactory.getUserName().once('value', function (snap) {
+							var user = snap.val();
+							if (!user) {
+								return;
+							}
+							storyFactory.joinSession(sessionID, user.name, false);
+						});
 					} else {
 						storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
 					}
