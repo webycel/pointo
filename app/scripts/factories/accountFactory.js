@@ -90,7 +90,9 @@ angular.module('pointoApp')
 						}
 
 						console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
-						accountFactory.setUser(authData, user);
+						$timeout(function () {
+							accountFactory.setUser(authData, user);
+						});
 					});
 
 					sessionRef = ref.child('sessions');
@@ -118,6 +120,7 @@ angular.module('pointoApp')
 			} else {
 				console.log('User is logged out');
 				accountFactory.setUser(null, '');
+				accountFactory.inited = false;
 			}
 		};
 
