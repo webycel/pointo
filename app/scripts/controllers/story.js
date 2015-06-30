@@ -156,7 +156,7 @@ angular.module('pointoApp')
 					$window.location.assign('#/');
 				} else {
 					if (snapshot.child(sessionID).val().passcode) {
-						$scope.$apply(function () {
+						$timeout(function () {
 							$scope.passcodeNeeded = true;
 							$scope.view = 2;
 						});

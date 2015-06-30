@@ -76,7 +76,9 @@
         <h2>My sessions</h2>
             
         <ul>
-            <li ng-repeat="session in authUser().sessions">{{session.sessionId}}</li>
+            <li ng-repeat="session in authUser().sessions">
+                <a ng-click="joinSession(session.sessionId)">{{session.sessionId}}</a>
+            </li>
         </ul>
 
         <div class="loading" ng-hide="authUser().sessions.length > 0"></div>

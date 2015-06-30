@@ -102,11 +102,13 @@ angular.module('pointoApp')
 
 						accountFactory.user.sessions = []; //reset
 
-						angular.forEach(sessions, function (val, key) {
-							if (val.owner === authData.uid) {
-								val.sessionId = key;
-								accountFactory.user.sessions.push(val);
-							}
+						$timeout(function () {
+							angular.forEach(sessions, function (val, key) {
+								if (val.owner === authData.uid) {
+									val.sessionId = key;
+									accountFactory.user.sessions.push(val);
+								}
+							});
 						});
 					});
 
