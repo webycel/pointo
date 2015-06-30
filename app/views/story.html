@@ -112,7 +112,7 @@
 
                     <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="name" ng-hide="authUser().account" ng-disabled="authUser().account" required />
 
-                    <input type="text" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="passcode" ng-show="passcodeNeeded" ng-disabled="!passcodeNeeded" required />
+                    <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="passcode" ng-show="passcodeNeeded" ng-disabled="!passcodeNeeded" required />
 
                     <button type="submit" ng-click="spectator = false"><span class="glyphicon glyphicon-transfer"></span> Join Session</button>
                     <button type="submit" class="btn-light" ng-click="spectator = true"><span class="glyphicon glyphicon-sunglasses"></span> Join as spectator</button>
