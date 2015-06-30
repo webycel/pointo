@@ -7,8 +7,15 @@
  * # AboutCtrl
  * Controller of the pointoApp
  */
+
+/*
+	$scope.view =
+	view = 0 -> loading screen
+	view = 1 -> session screen
+	view = 2 -> enter name & passcode screen
+ */
 angular.module('pointoApp')
-	.controller('StoryCtrl', function ($scope, $routeParams, $window, $timeout, storyFactory, accountFactory) {
+	.controller('StoryCtrl', function ($scope, $routeParams, $window, $timeout, storyFactory, accountFactory, viewFactory) {
 
 		var sessionID = $routeParams.sessionID,
 			session, exists;
@@ -18,50 +25,12 @@ angular.module('pointoApp')
 		}
 
 		$scope.sessionID = sessionID;
+
 		accountFactory.init();
 
-		exists = storyFactory.sessionExists(sessionID).once('value', function (snapshot) {
-			if (!snapshot.child(sessionID).exists()) {
-				$window.location.assign('#/');
-			} else {
-				$scope.view = 1;
-				$scope.name = '';
-				$scope.spectator = false;
-				$scope.shareURL = $window.location.host + '/#/' + $scope.sessionID;
-				$scope.isFlipped = false;
-
-				console.log(accountFactory.getUser());
-				if (!storyFactory.isLoggedIn()) {
-					$scope.view = 2;
-				} else if (!storyFactory.user.redirect) {
-					if (accountFactory.getUser().account) {
-						storyFactory.joinSession(sessionID, accountFactory.getUser().data.uid, false);
-					} else {
-						storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
-					}
-				}
-
-				session = storyFactory.getSession(sessionID);
-
-				$scope.user = storyFactory.user;
-				$scope.participants = session.participants;
-				$scope.session = session.session;
-				$scope.newName = storyFactory.user.name;
-
-				$scope.statistics = storyFactory.getVoteStatistics;
-
-				$scope.$watch('statistics()', function (data) {
-					$scope.stats.data = data.data;
-				});
-
-				$scope.storypoints = storyFactory.getStoryPointSet();
-			}
-
-		});
-
-		//overwrite chart colours
-		Chart.defaults.global.colours[0] = '#16a085';
-		Chart.defaults.global.colours[1] = '#1abc9c';
+		$scope.errors = viewFactory.getErrors;
+		$scope.loading = viewFactory.getLoading;
+		$scope.authUser = accountFactory.getUser;
 
 		$scope.stats = {
 			options: {
@@ -76,9 +45,71 @@ angular.module('pointoApp')
 		};
 
 		/* functions */
-		$scope.joinSession = function () {
-			storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
+		$scope.autoJoinSession = function () {
+
 			$scope.view = 1;
+			$scope.name = '';
+			$scope.spectator = false;
+			$scope.shareURL = $window.location.host + '/#/' + $scope.sessionID;
+			$scope.isFlipped = false;
+
+			if (!storyFactory.isLoggedIn()) {
+				$scope.view = 2;
+			} else if (!storyFactory.user.redirect) {
+				if ($scope.authUser().account) {
+					accountFactory.getUserName().once('value', function (snap) {
+						var user = snap.val();
+						if (!user) {
+							return;
+						}
+						storyFactory.joinSession(sessionID, user.name, false);
+					});
+				} else {
+					storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
+				}
+			}
+
+			session = storyFactory.getSession(sessionID);
+
+			$scope.user = storyFactory.user;
+			$scope.participants = session.participants;
+			$scope.session = session.session;
+			$scope.newName = storyFactory.user.name;
+
+			$scope.statistics = storyFactory.getVoteStatistics;
+
+			$scope.$watch('statistics()', function (data) {
+				$scope.stats.data = data.data;
+			});
+
+			$scope.storypoints = storyFactory.getStoryPointSet();
+		};
+
+		$scope.joinSession = function () {
+			if ($scope.passcodeNeeded) {
+
+				storyFactory.joinSessionWithPasscode(sessionID).once('value', function (snapshot) {
+					if (snapshot.val()) {
+						if (snapshot.val().passcode === parseInt($scope.passcode)) {
+							$timeout(function () {
+								$scope.autoJoinSession();
+							});
+						} else {
+							console.log('you shall NOT pass');
+							$scope.$apply(function () {
+								viewFactory.setErrors('wrongPasscode', true);
+							});
+						}
+					} else {
+						$scope.$apply(function () {
+							viewFactory.setErrors('noSessionJoin', true);
+						});
+					}
+				});
+			} else {
+				storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
+				$scope.view = 1;
+			}
 		};
 
 		$scope.vote = function (points) {
@@ -118,5 +149,26 @@ angular.module('pointoApp')
 		$scope.flip = function () {
 			$scope.isFlipped = !$scope.isFlipped;
 		};
+
+		exists = storyFactory.sessionExists(sessionID).once('value', function (snapshot) {
+			if (snapshot.val()) {
+				if (!snapshot.child(sessionID).exists()) {
+					$window.location.assign('#/');
+				} else {
+					if (snapshot.child(sessionID).val().passcode) {
+						$scope.$apply(function () {
+							$scope.passcodeNeeded = true;
+							$scope.view = 2;
+						});
+					} else {
+						$scope.autoJoinSession();
+					}
+				}
+			}
+		});
+
+		//overwrite chart colours
+		Chart.defaults.global.colours[0] = '#16a085';
+		Chart.defaults.global.colours[1] = '#1abc9c';
 
 	});

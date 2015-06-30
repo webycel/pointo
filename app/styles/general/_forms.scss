@@ -13,3 +13,13 @@ input[type="text"], input[type="number"], input[type="password"], input[type="em
         border-color: $green;
     }
 }
+form {
+    .info {
+        display: inline-block;
+        width: 100%;
+        margin: 3px 0 5px;
+        font-size: 0.75em;
+        color: $grey737;
+        text-align: left;
+    }
+}
