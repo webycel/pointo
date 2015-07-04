@@ -12,7 +12,8 @@ angular.module('pointoApp')
 			points: {},
 			'new': false,
 			leader: false,
-			spectator: false
+			spectator: false,
+			redirect: false
 		};
 
 		storyFactory.storyPointSet = [{

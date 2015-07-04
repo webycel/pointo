@@ -18,7 +18,7 @@ angular.module('pointoApp')
 	.controller('StoryCtrl', function ($scope, $routeParams, $window, $timeout, storyFactory, accountFactory, viewFactory) {
 
 		var sessionID = $routeParams.sessionID,
-			session, exists;
+			session;
 
 		if (sessionID < 100000 || sessionID > 999999) {
 			$window.location.assign('#/');
@@ -162,16 +162,15 @@ angular.module('pointoApp')
 			$scope.isFlipped = !$scope.isFlipped;
 		};
 
-		exists = storyFactory.sessionExists(sessionID).once('value', function (snapshot) {
+		storyFactory.sessionExists(sessionID).once('value', function (snapshot) {
 			if (snapshot.val()) {
 				if (!snapshot.child(sessionID).exists()) {
 					$window.location.assign('#/');
 				} else {
-					var session = snapshot.child(sessionID).val();
-					if (typeof session.passcode !== 'undefined' && ($scope.authUser().data === null || session.owner !== $scope.authUser().data.uid)) {
+					var sessionSnap = snapshot.child(sessionID).val();
+					if (typeof sessionSnap.passcode !== 'undefined' && ($scope.authUser().data === null || sessionSnap.owner !== $scope.authUser().data.uid) && !storyFactory.user.redirect) {
 						$timeout(function () {
 							$scope.passcodeNeeded = true;
-							console.log($scope.authUser());
 							$scope.view = 2;
 						});
 					} else {
