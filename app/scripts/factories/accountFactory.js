@@ -19,11 +19,15 @@ angular.module('pointoApp')
 
 		//public
 		accountFactory.init = function () {
-			ref.onAuth(accountFactory.authDataCallback);
+			if (!accountFactory.inited) {
+				ref.onAuth(accountFactory.authDataCallback);
 
-			accountFactory.user.data = ref.getAuth();
-			accountFactory.user.logout = accountFactory.logout;
-			accountFactory.user.account = accountFactory.user.data !== null && accountFactory.user.data.auth.provider === 'password' ? true : false;
+				accountFactory.user.data = ref.getAuth();
+				accountFactory.user.logout = accountFactory.logout;
+				accountFactory.user.account = accountFactory.user.data !== null && accountFactory.user.data.auth.provider === 'password' ? true : false;
+
+				accountFactory.inited = true;
+			}
 		};
 
 		accountFactory.getUser = function () {
@@ -80,45 +84,40 @@ angular.module('pointoApp')
 		accountFactory.authDataCallback = function (authData) {
 			if (authData) {
 
-				if (!accountFactory.inited) {
+				userRef = ref.child('users').child(authData.uid);
+				userRef.once('value', function (snap) {
+					var user = snap.val();
+					if (!user) {
+						return;
+					}
 
-					userRef = ref.child('users').child(authData.uid);
-					userRef.once('value', function (snap) {
-						var user = snap.val();
-						if (!user) {
-							return;
-						}
-
-						console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
-						$timeout(function () {
-							accountFactory.setUser(authData, user);
-						});
+					console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
+					$timeout(function () {
+						accountFactory.setUser(authData, user);
 					});
+				});
 
-					sessionRef = ref.child('sessions');
-					sessionRef.on('value', function (snap) {
-						var sessions = snap.val();
-						if (!sessions) {
-							return;
-						}
+				sessionRef = ref.child('sessions');
+				sessionRef.on('value', function (snap) {
+					var sessions = snap.val();
+					if (!sessions) {
+						return;
+					}
 
+					$timeout(function () {
 						accountFactory.user.sessions = []; //reset
-
-						$timeout(function () {
-							angular.forEach(sessions, function (val, key) {
-								if (val.owner === authData.uid) {
-									val.sessionId = key;
-									accountFactory.user.sessions.push(val);
-								}
-							});
+						angular.forEach(sessions, function (val, key) {
+							if (val.owner === authData.uid) {
+								val.sessionId = key;
+								accountFactory.user.sessions.push(val);
+							}
 						});
 					});
-
-					accountFactory.inited = true;
-				}
+				});
 
 			} else {
 				console.log('User is logged out');
+				//accountFactory.anonymousLogin();
 				accountFactory.setUser(null, '');
 				accountFactory.inited = false;
 			}
@@ -141,6 +140,16 @@ angular.module('pointoApp')
 				accountFactory.setUser(authData, '');
 			}
 			viewFactory.setLoading('login', false);
+		};
+
+		accountFactory.anonymousLogin = function () {
+			ref.authAnonymously(function (error) {
+				if (error) {
+					console.log('Login Failed!', error);
+				} else {
+					console.log('Logged in as Anonymous');
+				}
+			});
 		};
 
 		accountFactory.getUserName = function () {

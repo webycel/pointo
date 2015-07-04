@@ -25,6 +25,7 @@ angular.module('pointoApp')
 		}
 
 		$scope.sessionID = sessionID;
+		$scope.view = 0;
 
 		accountFactory.init();
 
@@ -45,29 +46,12 @@ angular.module('pointoApp')
 		};
 
 		/* functions */
-		$scope.autoJoinSession = function () {
-
+		$scope.initSession = function () {
 			$scope.view = 1;
 			$scope.name = '';
 			$scope.spectator = false;
 			$scope.shareURL = $window.location.host + '/#/' + $scope.sessionID;
 			$scope.isFlipped = false;
-
-			if (!storyFactory.isLoggedIn()) {
-				$scope.view = 2;
-			} else if (!storyFactory.user.redirect) {
-				if ($scope.authUser().account) {
-					accountFactory.getUserName().once('value', function (snap) {
-						var user = snap.val();
-						if (!user) {
-							return;
-						}
-						storyFactory.joinSession(sessionID, user.name, false);
-					});
-				} else {
-					storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
-				}
-			}
 
 			session = storyFactory.getSession(sessionID);
 
@@ -85,30 +69,58 @@ angular.module('pointoApp')
 			$scope.storypoints = storyFactory.getStoryPointSet();
 		};
 
+		$scope.autoJoinSession = function () {
+
+			if (!storyFactory.isLoggedIn()) {
+				$timeout(function () {
+					console.log('oh yea');
+				});
+			} else if (!storyFactory.user.redirect) {
+				if ($scope.authUser().account) {
+					accountFactory.getUserName().once('value', function (snap) {
+						var user = snap.val();
+						if (!user) {
+							return;
+						}
+						storyFactory.joinSession(sessionID, user.name, false);
+					});
+				} else {
+					storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
+				}
+				$scope.initSession();
+			} else {
+				storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
+				$scope.initSession();
+			}
+
+		};
+
 		$scope.joinSession = function () {
 			if ($scope.passcodeNeeded) {
 
 				storyFactory.joinSessionWithPasscode(sessionID).once('value', function (snapshot) {
-					if (snapshot.val()) {
-						if (snapshot.val().passcode === parseInt($scope.passcode)) {
-							$timeout(function () {
-								$scope.autoJoinSession();
-							});
-						} else {
-							console.log('you shall NOT pass');
-							$scope.$apply(function () {
+					var snap = snapshot.val();
+					$timeout(function () {
+						if (snap) {
+							if (snap.passcode === parseInt($scope.passcode)) {
+								if (!$scope.authUser().account) {
+									storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
+									$scope.initSession();
+								} else {
+									$scope.autoJoinSession();
+								}
+							} else {
+								console.log('you shall NOT pass');
 								viewFactory.setErrors('wrongPasscode', true);
-							});
-						}
-					} else {
-						$scope.$apply(function () {
+							}
+						} else {
 							viewFactory.setErrors('noSessionJoin', true);
-						});
-					}
+						}
+					});
 				});
 			} else {
 				storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
-				$scope.view = 1;
+				$scope.initSession();
 			}
 		};
 
@@ -155,9 +167,11 @@ angular.module('pointoApp')
 				if (!snapshot.child(sessionID).exists()) {
 					$window.location.assign('#/');
 				} else {
-					if (snapshot.child(sessionID).val().passcode) {
+					var session = snapshot.child(sessionID).val();
+					if (typeof session.passcode !== 'undefined' && ($scope.authUser().data === null || session.owner !== $scope.authUser().data.uid)) {
 						$timeout(function () {
 							$scope.passcodeNeeded = true;
+							console.log($scope.authUser());
 							$scope.view = 2;
 						});
 					} else {

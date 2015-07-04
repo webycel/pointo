@@ -94,8 +94,8 @@ angular.module('pointoApp')
 			ref.child('sessions').once('value', function (snapshot) {
 				if (!snapshot.child(id).exists()) {
 					viewFactory.setErrors('noSession', true);
-					viewFactory.setErrors('join', false);
-					viewFactory.setErrors('joinSpectator', false);
+					viewFactory.setLoading('join', false);
+					viewFactory.setLoading('joinSpectator', false);
 				} else {
 					viewFactory.setErrors('noSession', false);
 					storyFactory.joinSession(id, name, spectator, redirect);
@@ -114,6 +114,7 @@ angular.module('pointoApp')
 						if (error) {
 							console.log('Login Failed!', error);
 						} else {
+							console.log('Logged in as Anonymous');
 							storyFactory.addUser(id, name, spectator, authData.uid, redirect);
 						}
 					});
@@ -249,6 +250,16 @@ angular.module('pointoApp')
 			}
 		};
 
+		storyFactory.anonymousLogin = function () {
+			ref.authAnonymously(function (error) {
+				if (error) {
+					console.log('Login Failed!', error);
+				} else {
+					console.log('Logged in as Anonymous');
+				}
+			});
+		};
+
 		storyFactory.getSession = function (id) {
 			storyFactory.session = $firebaseObject(ref.child('sessions').child(id));
 			storyFactory.participants = $firebaseArray(ref.child('sessions').child(id).child('users'));
@@ -339,6 +350,7 @@ angular.module('pointoApp')
 			sessionExists: storyFactory.sessionExists,
 			getSession: storyFactory.getSession,
 			isLoggedIn: storyFactory.isLoggedIn,
+			anonymousLogin: storyFactory.anonymousLogin,
 			setVote: storyFactory.setVote,
 			revealVotes: storyFactory.revealVotes,
 			clearVotes: storyFactory.clearVotes,
