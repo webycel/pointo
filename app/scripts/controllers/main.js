@@ -83,7 +83,7 @@ angular.module('pointoApp')
 									}
 								} else {
 									// check entered passcode
-									if (parseInt($scope.passcode) === session.passcode) {
+									if (parseInt($scope.passcode) === parseInt(session.passcode)) {
 										$scope.enterSession(sid);
 									} else {
 										viewFactory.setErrors('wrongPasscode', true);

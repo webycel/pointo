@@ -10,7 +10,8 @@ angular.module('pointoApp')
 			noSessionJoin: false,
 			registerError: false,
 			updateAccount: false,
-			wrongPasscode: false
+			wrongPasscode: false,
+			changePasscode: false
 		};
 
 		viewFactory.loading = {
@@ -19,7 +20,8 @@ angular.module('pointoApp')
 			joinSpectator: false,
 			login: false,
 			register: false,
-			updateAccount: false
+			updateAccount: false,
+			changePasscode: false
 		};
 
 		//public

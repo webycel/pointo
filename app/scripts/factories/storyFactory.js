@@ -80,7 +80,6 @@ angular.module('pointoApp')
 						passcode: options.passcode
 					}, function (error) {
 						if (!error) {
-							console.log(options);
 							storyFactory.joinSession(id, options.name, false, true);
 						} else {
 							console.log(error);
@@ -141,7 +140,6 @@ angular.module('pointoApp')
 					value: -1
 				};
 
-			console.log(spectator);
 			usersRef.child(uid).set({
 				name: name,
 				points: points,
@@ -318,6 +316,18 @@ angular.module('pointoApp')
 			}
 		};
 
+		storyFactory.changePasscode = function (passcode) {
+			var session = ref.child('sessions').child(storyFactory.sessionID);
+			session.update({
+				passcode: passcode
+			}, function () {
+				$timeout(function () {
+					viewFactory.setErrors('changePasscode', true);
+					viewFactory.setLoading('changePasscode', false);
+				});
+			});
+		};
+
 		storyFactory.leadSession = function () {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			storyFactory.user.leader = !storyFactory.user.leader;
@@ -358,6 +368,7 @@ angular.module('pointoApp')
 			revealVotes: storyFactory.revealVotes,
 			clearVotes: storyFactory.clearVotes,
 			changeName: storyFactory.changeName,
+			changePasscode: storyFactory.changePasscode,
 			leadSession: storyFactory.leadSession,
 			participateStatus: storyFactory.participateStatus,
 			getVoteStatistics: storyFactory.getVoteStatistics,

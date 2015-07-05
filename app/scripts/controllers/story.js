@@ -59,6 +59,7 @@ angular.module('pointoApp')
 			$scope.participants = session.participants;
 			$scope.session = session.session;
 			$scope.newName = storyFactory.user.name;
+			$scope.newPasscode = '';
 
 			$scope.statistics = storyFactory.getVoteStatistics;
 
@@ -102,7 +103,7 @@ angular.module('pointoApp')
 					var snap = snapshot.val();
 					$timeout(function () {
 						if (snap) {
-							if (snap.passcode === parseInt($scope.passcode)) {
+							if (parseInt(snap.passcode) === parseInt($scope.passcode)) {
 								if (!$scope.authUser().account) {
 									storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
 									$scope.initSession();
@@ -148,6 +149,12 @@ angular.module('pointoApp')
 
 		$scope.changeName = function () {
 			storyFactory.changeName($scope.newName);
+		};
+
+		$scope.changePasscode = function () {
+			viewFactory.setErrors('changePasscode', false);
+			viewFactory.setLoading('changePasscode', true);
+			storyFactory.changePasscode($scope.newPasscode);
 		};
 
 		$scope.leadSession = function () {
