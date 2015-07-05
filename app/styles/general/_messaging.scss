@@ -11,6 +11,10 @@
         border-color: $orangeLight;
         color: $orange;
     }
+    &.success {
+        border-color: $turquoise;
+        color: $green;
+    }
 }
 
 .fakelink {

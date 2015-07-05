@@ -18,13 +18,14 @@ angular.module('pointoApp')
 	.controller('StoryCtrl', function ($scope, $routeParams, $window, $timeout, storyFactory, accountFactory, viewFactory) {
 
 		var sessionID = $routeParams.sessionID,
-			session, exists;
+			session;
 
 		if (sessionID < 100000 || sessionID > 999999) {
 			$window.location.assign('#/');
 		}
 
 		$scope.sessionID = sessionID;
+		$scope.view = 0;
 
 		accountFactory.init();
 
@@ -45,16 +46,36 @@ angular.module('pointoApp')
 		};
 
 		/* functions */
-		$scope.autoJoinSession = function () {
-
+		$scope.initSession = function () {
 			$scope.view = 1;
 			$scope.name = '';
 			$scope.spectator = false;
 			$scope.shareURL = $window.location.host + '/#/' + $scope.sessionID;
 			$scope.isFlipped = false;
 
+			session = storyFactory.getSession(sessionID);
+
+			$scope.user = storyFactory.user;
+			$scope.participants = session.participants;
+			$scope.session = session.session;
+			$scope.newName = storyFactory.user.name;
+			$scope.newPasscode = '';
+
+			$scope.statistics = storyFactory.getVoteStatistics;
+
+			$scope.$watch('statistics()', function (data) {
+				$scope.stats.data = data.data;
+			});
+
+			$scope.storypoints = storyFactory.getStoryPointSet();
+		};
+
+		$scope.autoJoinSession = function () {
+
 			if (!storyFactory.isLoggedIn()) {
-				$scope.view = 2;
+				$timeout(function () {
+					$scope.view = 2;
+				});
 			} else if (!storyFactory.user.redirect) {
 				if ($scope.authUser().account) {
 					accountFactory.getUserName().once('value', function (snap) {
@@ -67,48 +88,40 @@ angular.module('pointoApp')
 				} else {
 					storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
 				}
+				$scope.initSession();
+			} else {
+				//storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
+				$scope.initSession();
 			}
 
-			session = storyFactory.getSession(sessionID);
-
-			$scope.user = storyFactory.user;
-			$scope.participants = session.participants;
-			$scope.session = session.session;
-			$scope.newName = storyFactory.user.name;
-
-			$scope.statistics = storyFactory.getVoteStatistics;
-
-			$scope.$watch('statistics()', function (data) {
-				$scope.stats.data = data.data;
-			});
-
-			$scope.storypoints = storyFactory.getStoryPointSet();
 		};
 
 		$scope.joinSession = function () {
 			if ($scope.passcodeNeeded) {
 
 				storyFactory.joinSessionWithPasscode(sessionID).once('value', function (snapshot) {
-					if (snapshot.val()) {
-						if (snapshot.val().passcode === parseInt($scope.passcode)) {
-							$timeout(function () {
-								$scope.autoJoinSession();
-							});
-						} else {
-							console.log('you shall NOT pass');
-							$scope.$apply(function () {
+					var snap = snapshot.val();
+					$timeout(function () {
+						if (snap) {
+							if (parseInt(snap.passcode) === parseInt($scope.passcode)) {
+								if (!$scope.authUser().account) {
+									storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
+									$scope.initSession();
+								} else {
+									$scope.autoJoinSession();
+								}
+							} else {
+								console.log('you shall NOT pass');
 								viewFactory.setErrors('wrongPasscode', true);
-							});
-						}
-					} else {
-						$scope.$apply(function () {
+							}
+						} else {
 							viewFactory.setErrors('noSessionJoin', true);
-						});
-					}
+						}
+					});
 				});
 			} else {
 				storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
-				$scope.view = 1;
+				$scope.initSession();
 			}
 		};
 
@@ -138,6 +151,12 @@ angular.module('pointoApp')
 			storyFactory.changeName($scope.newName);
 		};
 
+		$scope.changePasscode = function () {
+			viewFactory.setErrors('changePasscode', false);
+			viewFactory.setLoading('changePasscode', true);
+			storyFactory.changePasscode($scope.newPasscode);
+		};
+
 		$scope.leadSession = function () {
 			storyFactory.leadSession();
 		};
@@ -150,12 +169,13 @@ angular.module('pointoApp')
 			$scope.isFlipped = !$scope.isFlipped;
 		};
 
-		exists = storyFactory.sessionExists(sessionID).once('value', function (snapshot) {
+		storyFactory.sessionExists(sessionID).once('value', function (snapshot) {
 			if (snapshot.val()) {
 				if (!snapshot.child(sessionID).exists()) {
 					$window.location.assign('#/');
 				} else {
-					if (snapshot.child(sessionID).val().passcode) {
+					var sessionSnap = snapshot.child(sessionID).val();
+					if (typeof sessionSnap.passcode !== 'undefined' && ($scope.authUser().data === null || sessionSnap.owner !== $scope.authUser().data.uid) && !storyFactory.user.redirect) {
 						$timeout(function () {
 							$scope.passcodeNeeded = true;
 							$scope.view = 2;

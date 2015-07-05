@@ -30,13 +30,18 @@
         }
     }
 
-    .name, .join_id {
+    .name, .join_id, .passcode {
         padding: 0 12px;
         font-size: 1.1em;
     }
 
     .join_id {
-        margin-top: 3px;
+        margin: 3px 0;
+    }
+
+    .passcode-required {
+        margin-bottom: 15px;
+        color: $orange;
     }
 
     input, button {

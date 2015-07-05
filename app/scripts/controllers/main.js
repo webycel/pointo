@@ -8,7 +8,7 @@
  * Controller of the pointoApp
  */
 angular.module('pointoApp')
-	.controller('MainCtrl', function ($scope, viewFactory, accountFactory, storyFactory) {
+	.controller('MainCtrl', function ($scope, $timeout, viewFactory, accountFactory, storyFactory) {
 
 		accountFactory.init();
 
@@ -16,6 +16,7 @@ angular.module('pointoApp')
 		$scope.name = $scope.authUser;
 		$scope.joinName = $scope.authUser;
 		$scope.passcode = null;
+		$scope.passcodeNeeded = false;
 		$scope.sessionID = null;
 		$scope.spectator = false;
 		$scope.errors = viewFactory.getErrors;
@@ -44,7 +45,7 @@ angular.module('pointoApp')
 		$scope.createSession = function () {
 			if (!$scope.loading().create) {
 				$scope.loading().create = true;
-				var name = $scope.authUser().account ? $scope.authUser().name : $scope.name;
+				var name = $scope.authUser().account ? $scope.authUser().name : $scope.name().name;
 				storyFactory.createSession({
 					name: name,
 					passcode: $scope.passcode
@@ -52,7 +53,7 @@ angular.module('pointoApp')
 			}
 		};
 
-		$scope.joinSession = function (id) {
+		$scope.joinSession = function (id, passcodeEntered) {
 			if (!$scope.loading().join) {
 				if ($scope.spectator) {
 					viewFactory.setLoading('joinSpectator', true);
@@ -61,24 +62,67 @@ angular.module('pointoApp')
 				}
 
 				viewFactory.setErrors('noSession', false);
+				viewFactory.setErrors('wrongPasscode', false);
 
-				var name = $scope.authUser().account ? $scope.authUser().name : $scope.joinName;
-				storyFactory.joinSession(id || $scope.sessionID, name, $scope.spectator, true);
+				var sid = id || $scope.sessionID;
 
-				setTimeout(function () {
-					$scope.$apply();
-				}, 1000);
+				storyFactory.sessionExists(sid).once('value', function (snapshot) {
+					if (snapshot.val()) {
+						$timeout(function () {
+
+							if (snapshot.child(sid).exists()) { // a session exists with this ID
+								var session = snapshot.child(sid).val();
+								if (!passcodeEntered) {
+									if (typeof session.passcode !== 'undefined' && ($scope.authUser().data === null || session.owner !== $scope.authUser().data.uid)) {
+										$scope.passcodeNeeded = true;
+										$scope.$broadcast('passcodeIsNeeded');
+										viewFactory.setLoading('join', false);
+										viewFactory.setLoading('joinSpectator', false);
+									} else {
+										$scope.enterSession(sid);
+									}
+								} else {
+									// check entered passcode
+									if (parseInt($scope.passcode) === parseInt(session.passcode)) {
+										$scope.enterSession(sid);
+									} else {
+										viewFactory.setErrors('wrongPasscode', true);
+										viewFactory.setLoading('join', false);
+										viewFactory.setLoading('joinSpectator', false);
+									}
+								}
+							} else {
+								viewFactory.setErrors('noSession', true);
+								viewFactory.setLoading('join', false);
+								viewFactory.setLoading('joinSpectator', false);
+							}
+
+						});
+					}
+				});
 			}
+		};
+
+		$scope.enterSession = function (id) {
+			var name = $scope.authUser().account ? $scope.authUser().name : $scope.joinName().name;
+			storyFactory.joinSession(id, name, $scope.spectator, true);
+
+			setTimeout(function () {
+				$scope.$apply();
+				// what's this for? check if can remove
+			}, 1000);
 		};
 
 		$scope.formLogin = function () {
 			$scope.auth.state.login = true;
 			$scope.auth.state.register = false;
+			$scope.$broadcast('enterLogin');
 		};
 
 		$scope.formRegister = function () {
 			$scope.auth.state.register = true;
 			$scope.auth.state.login = false;
+			$scope.$broadcast('enterRegister');
 		};
 
 		$scope.login = function () {
