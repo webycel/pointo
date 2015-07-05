@@ -113,6 +113,10 @@ angular.module('pointoApp')
 			}, 1000);
 		};
 
+		$scope.cancelPasscodeJoining = function () {
+			$scope.passcodeNeeded = false;
+		};
+
 		$scope.formLogin = function () {
 			$scope.auth.state.login = true;
 			$scope.auth.state.register = false;

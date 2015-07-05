@@ -39,6 +39,7 @@
                 </div>
                 <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="passcode" focus-on="passcodeIsNeeded"  />
                 <button type="submit" class="join-btn" ng-class="{loading: loading().join, disabled: loading().join}"><span class="glyphicon glyphicon-transfer"></span> Enter Session</button>
+                <button class="btn-light" ng-click="cancelPasscodeJoining()"><span class="glyphicon glyphicon-menu-left"></span> Cancel</button>
                 <div class="error warning" ng-show="errors().wrongPasscode">Sorry, you entered an invalid passcode. Please try again.</div>
             </div>
 
