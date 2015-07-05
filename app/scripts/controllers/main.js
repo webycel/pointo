@@ -75,7 +75,6 @@ angular.module('pointoApp')
 								if (!passcodeEntered) {
 									if (typeof session.passcode !== 'undefined' && ($scope.authUser().data === null || session.owner !== $scope.authUser().data.uid)) {
 										$scope.passcodeNeeded = true;
-										console.log('need code');
 										$scope.$broadcast('passcodeIsNeeded');
 										viewFactory.setLoading('join', false);
 										viewFactory.setLoading('joinSpectator', false);
@@ -116,11 +115,13 @@ angular.module('pointoApp')
 		$scope.formLogin = function () {
 			$scope.auth.state.login = true;
 			$scope.auth.state.register = false;
+			$scope.$broadcast('enterLogin');
 		};
 
 		$scope.formRegister = function () {
 			$scope.auth.state.register = true;
 			$scope.auth.state.login = false;
+			$scope.$broadcast('enterRegister');
 		};
 
 		$scope.login = function () {

@@ -52,7 +52,7 @@
         <!-- LOGIN -->
         <form ng-submit="login()">
             <div class="form-group" ng-show="auth.state.login">
-                <input type="text" class="name" placeholder="Your email" ng-model="auth.login.email" required />
+                <input type="text" class="name" placeholder="Your email" ng-model="auth.login.email" focus-on="enterLogin" required />
                 <input type="password" class="join_id" placeholder="Your password" ng-model="auth.login.password" required />
                 
                 <button type="submit" ng-class="{loading: loading().login, disabled: loading().login}" ng-click="spectator = false">Login</button>
@@ -66,7 +66,7 @@
         <!-- REGISTER -->
         <form ng-submit="register()">
             <div class="form-group" ng-show="auth.state.register">
-                <input type="email" class="name" placeholder="Your email" ng-model="auth.register.email" required />
+                <input type="email" class="name" placeholder="Your email" ng-model="auth.register.email" focus-on="enterRegister" required />
                 <input type="password" class="join_id" placeholder="Your password" ng-model="auth.register.password" required />
                 
                 <button type="submit" class="btn-action join-btn" ng-class="{loading: loading().register, disabled: loading().register}" ng-click="spectator = false">Register</button>
