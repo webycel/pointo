@@ -80,6 +80,7 @@ angular.module('pointoApp')
 						passcode: options.passcode
 					}, function (error) {
 						if (!error) {
+							console.log(options);
 							storyFactory.joinSession(id, options.name, false, true);
 						} else {
 							console.log(error);
@@ -110,7 +111,7 @@ angular.module('pointoApp')
 				if (accountFactory.getUser().account) {
 					storyFactory.addUser(id, accountFactory.getUser().name, spectator, accountFactory.getUser().data.uid, redirect);
 				} else {
-					ref.unauth();
+					//ref.unauth();
 					ref.authAnonymously(function (error, authData) {
 						if (error) {
 							console.log('Login Failed!', error);
@@ -140,6 +141,7 @@ angular.module('pointoApp')
 					value: -1
 				};
 
+			console.log(spectator);
 			usersRef.child(uid).set({
 				name: name,
 				points: points,

@@ -45,7 +45,7 @@ angular.module('pointoApp')
 		$scope.createSession = function () {
 			if (!$scope.loading().create) {
 				$scope.loading().create = true;
-				var name = $scope.authUser().account ? $scope.authUser().name : $scope.name;
+				var name = $scope.authUser().account ? $scope.authUser().name : $scope.name().name;
 				storyFactory.createSession({
 					name: name,
 					passcode: $scope.passcode
@@ -82,7 +82,7 @@ angular.module('pointoApp')
 										$scope.enterSession(sid);
 									}
 								} else {
-									// check enterd passcode
+									// check entered passcode
 									if (parseInt($scope.passcode) === session.passcode) {
 										$scope.enterSession(sid);
 									} else {
@@ -109,6 +109,7 @@ angular.module('pointoApp')
 
 			setTimeout(function () {
 				$scope.$apply();
+				// what's this for? check if can remove
 			}, 1000);
 		};
 

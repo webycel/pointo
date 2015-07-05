@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-	.factory('accountFactory', function ($firebaseObject, $rootScope, $timeout, FIREBASE_URL, viewFactory) {
+	.factory('accountFactory', function ($firebaseObject, $rootScope, $window, $timeout, FIREBASE_URL, viewFactory) {
 
 		var accountFactory = {
 				user: {
@@ -71,6 +71,7 @@ angular.module('pointoApp')
 		accountFactory.logout = function () {
 			ref.unauth();
 			accountFactory.user.account = false;
+			$window.location.assign('#/');
 		};
 
 		//private

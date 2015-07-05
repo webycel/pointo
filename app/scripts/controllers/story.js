@@ -73,7 +73,7 @@ angular.module('pointoApp')
 
 			if (!storyFactory.isLoggedIn()) {
 				$timeout(function () {
-					console.log('oh yea');
+					$scope.view = 2;
 				});
 			} else if (!storyFactory.user.redirect) {
 				if ($scope.authUser().account) {
@@ -89,7 +89,7 @@ angular.module('pointoApp')
 				}
 				$scope.initSession();
 			} else {
-				storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
+				//storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
 				$scope.initSession();
 			}
 
