@@ -74,25 +74,22 @@ angular.module('pointoApp')
 								var session = snapshot.child(sid).val();
 								if (!passcodeEntered) {
 									if (typeof session.passcode !== 'undefined' && ($scope.authUser().data === null || session.owner !== $scope.authUser().data.uid)) {
-										console.log('gimme passcode');
 										$scope.passcodeNeeded = true;
+										console.log('need code');
+										$scope.$broadcast('passcodeIsNeeded');
 										viewFactory.setLoading('join', false);
 										viewFactory.setLoading('joinSpectator', false);
 									} else {
-										console.log('join w/o passcode');
 										$scope.enterSession(sid);
 									}
 								} else {
 									// check enterd passcode
 									if (parseInt($scope.passcode) === session.passcode) {
-										$scope.passcodeNeeded = false;
-										console.log('correct passcode');
 										$scope.enterSession(sid);
 									} else {
 										viewFactory.setErrors('wrongPasscode', true);
 										viewFactory.setLoading('join', false);
 										viewFactory.setLoading('joinSpectator', false);
-										console.log('wrong passcode');
 									}
 								}
 							} else {

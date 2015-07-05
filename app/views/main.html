@@ -34,8 +34,10 @@
         <form ng-submit="joinSession(sessionID, true)">
 
             <div class="form-group" ng-show="passcodeNeeded">
-                <div class="passcode-required">This session requires a passcode for joining.</div>
-                <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="passcode"  />
+                <div class="passcode-required">
+                    <span class="glyphicon glyphicon-info-sign"></span> This session requires a passcode for joining.
+                </div>
+                <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="passcode" focus-on="passcodeIsNeeded"  />
                 <button type="submit" class="join-btn" ng-class="{loading: loading().join, disabled: loading().join}"><span class="glyphicon glyphicon-transfer"></span> Enter Session</button>
                 <div class="error warning" ng-show="errors().wrongPasscode">Sorry, you entered an invalid passcode. Please try again.</div>
             </div>
