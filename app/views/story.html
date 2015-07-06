@@ -72,8 +72,7 @@
                             <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
                         </div>
                     </form>
-
-                    <form ng-submit="changePasscode()">
+                    <form ng-submit="changePasscode()" ng-show="session.owner === authUser().data.uid">
                         <div class="form-group">
                             <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="newPasscode" required />
                             <input type="submit" value="Change passcode" ng-class="{loading: loading().changePasscode, disabled: newPasscode.length === 0}" />

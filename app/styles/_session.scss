@@ -171,7 +171,7 @@
         }
     }
     .settings {
-        .col {
+        .col, &.col {
             padding-left: 0;
         }
     }
