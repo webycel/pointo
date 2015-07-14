@@ -70,6 +70,19 @@
         .timer-start {
             width: 61px;
         }
+
+        .countdown {
+            position: relative;
+            margin-top: 20px;
+
+            .countdown-time {
+                position: absolute;
+                top: 29px;
+                width: 100%;
+                font-size: 1.5em;
+                text-align: center;
+            }
+        }
     }
 
 

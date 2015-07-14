@@ -48,7 +48,18 @@ angular.module('pointoApp')
 			labels: [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100],
 			data: [
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			]
+			],
+			colours: ['#16a085', '#1abc9c']
+		};
+
+		$scope.countdown = {
+			labels: ['', ''],
+			data: [0, 100],
+			options: {
+				animationEasing: 'linear',
+				percentageInnerCutout: 85
+			},
+			colours: ['#16a085', '#e5e5e5']
 		};
 
 		/* functions */
@@ -72,7 +83,7 @@ angular.module('pointoApp')
 			$scope.timer = {
 				value: 15,
 				counter: 15,
-				unit: 'sec',
+				unit: 's',
 				running: false
 			};
 			$scope.timerStarted = false;
@@ -86,6 +97,15 @@ angular.module('pointoApp')
 					// start timer
 					timerInterval = setInterval(function () {
 						$scope.timer.counter--; // count down
+
+						$scope.countdown.data[1] = (100 / ($scope.timer.value - 2)) * ($scope.timer.counter - 2);
+
+						if ($scope.countdown.data[1] > 0) {
+							$scope.countdown.data[0] = 100 - $scope.countdown.data[1];
+						} else {
+							$scope.countdown.data[0] = 100;
+							$scope.countdown.data[1] = 0;
+						}
 
 						if ($scope.timer.counter <= 0) {
 							$scope.stopTimer(true);
@@ -196,6 +216,7 @@ angular.module('pointoApp')
 			$timeout(function () {
 				clearInterval(timerInterval);
 				$scope.timerStarted = false;
+				$scope.countdown.data = [0, 100];
 
 				if (ended) { // when timer reached 0
 
@@ -261,9 +282,5 @@ angular.module('pointoApp')
 				}
 			}
 		});
-
-		//overwrite chart colours
-		Chart.defaults.global.colours[0] = '#16a085';
-		Chart.defaults.global.colours[1] = '#1abc9c';
 
 	});
