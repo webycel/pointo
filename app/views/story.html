@@ -40,11 +40,11 @@
                 <span class="hint"><span class="glyphicon glyphicon-info-sign"></span> You can only use these actions if you are the leader.</span>
             </div>
 
-            <div class="col-md-9 col-sm-8 col-xs-12">
+            <div class="col-md-6 col-sm-8 col-xs-12">
                 <h2>Participants</h2>
 
                 <div class="row participants">
-                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
+                    <div class="col-md-3 col-sm-3 col-xs-4 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
                         <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-show="p.leader"></span>  {{p.name}}</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1, 'flipped': isFlipped}">
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
@@ -72,6 +72,17 @@
                         <canvas class="chart chart-bar" data="stats.data" labels="stats.labels" options="stats.options" colours="stats.colours"></canvas>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-md-3 col-sm-12 stories">
+                <h2>Stories</h2>
+                <div class="list-group">
+                    <a href="#" class="list-group-item" ng-repeat="story in stories.list"><span class="badge" ng-show="story.points !== -999">{{story.points}}</span> {{story.text}}</a>
+                </div>
+                <form name="storyForm" ng-submit="addStory()">
+                    <input type="text" placeholder="Story" ng-model="stories.newStory" required />
+                    <button type="submit" ng-class="{disabled: !storyForm.$valid}">Add story</button>
+                </form>
             </div>
 
         </div>

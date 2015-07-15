@@ -79,6 +79,11 @@ angular.module('pointoApp')
 			$scope.newName = storyFactory.user.name;
 			$scope.newPasscode = '';
 
+			$scope.stories = {
+				newStory: '',
+				list: {}
+			};
+
 			// init timer
 			$scope.timer = {
 				value: 15,
@@ -125,6 +130,11 @@ angular.module('pointoApp')
 
 			$scope.$watch('statistics()', function (data) {
 				$scope.stats.data = data.data;
+			});
+
+			// get story lists
+			storyFactory.getStories(sessionID).on('value', function (snap) {
+				$scope.stories.list = snap.val();
 			});
 
 			// get all voted storypoints
@@ -241,6 +251,11 @@ angular.module('pointoApp')
 				$scope.stopTimer();
 			}
 			storyFactory.setTimer($scope.timer);
+		};
+
+		$scope.addStory = function () {
+			storyFactory.addStory($scope.stories.newStory);
+			$scope.stories.newStory = '';
 		};
 
 		$scope.changeName = function () {

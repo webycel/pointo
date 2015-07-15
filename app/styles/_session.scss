@@ -159,6 +159,21 @@
             border: none;
         }
     }
+    
+    .stories {
+        padding: 0;
+    
+        .list-group {
+            margin-bottom: 5px;
+        }
+        .list-group-item {
+            font-size: 0.9em;
+        }
+        button, input {
+            width: 100%;
+            margin-top: 5px;
+        }
+    }
 
     .options {
         margin-bottom: 10px;
