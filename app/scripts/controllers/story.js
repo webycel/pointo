@@ -18,8 +18,9 @@ angular.module('pointoApp')
 	.controller('StoryCtrl', function ($scope, $routeParams, $window, $timeout, storyFactory, accountFactory, viewFactory) {
 
 		var sessionID = $routeParams.sessionID,
-			session;
+			session, timerInterval;
 
+		// go back to main screen if session ID is invalid
 		if (sessionID < 100000 || sessionID > 999999) {
 			$window.location.assign('#/');
 		}
@@ -27,12 +28,17 @@ angular.module('pointoApp')
 		$scope.sessionID = sessionID;
 		$scope.view = 0;
 
+		// init account data
 		accountFactory.init();
 
+		// init errors & loading view
 		$scope.errors = viewFactory.getErrors;
 		$scope.loading = viewFactory.getLoading;
+
+		// get user data
 		$scope.authUser = accountFactory.getUser;
 
+		// init statistics
 		$scope.stats = {
 			options: {
 				scaleShowVerticalLines: false,
@@ -42,11 +48,23 @@ angular.module('pointoApp')
 			labels: [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100],
 			data: [
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			]
+			],
+			colours: ['#16a085', '#1abc9c']
+		};
+
+		$scope.countdown = {
+			labels: ['', ''],
+			data: [0, 100],
+			options: {
+				animationEasing: 'linear',
+				percentageInnerCutout: 85
+			},
+			colours: ['#16a085', '#e5e5e5']
 		};
 
 		/* functions */
 		$scope.initSession = function () {
+			// init vars
 			$scope.view = 1;
 			$scope.name = '';
 			$scope.spectator = false;
@@ -61,23 +79,68 @@ angular.module('pointoApp')
 			$scope.newName = storyFactory.user.name;
 			$scope.newPasscode = '';
 
+			// init timer
+			$scope.timer = {
+				value: 15,
+				counter: 15,
+				unit: 's',
+				running: false
+			};
+			$scope.timerStarted = false;
+
+			// listen to timer changes
+			storyFactory.getTimer($scope.sessionID).on('value', function (snap) {
+				$scope.timer = snap.val();
+
+				if (!$scope.timerStarted && $scope.timer.running && $scope.timer.counter > 0) {
+
+					// start timer
+					timerInterval = setInterval(function () {
+						$scope.timer.counter--; // count down
+
+						$scope.countdown.data[1] = (100 / ($scope.timer.value - 2)) * ($scope.timer.counter - 2);
+
+						if ($scope.countdown.data[1] > 0) {
+							$scope.countdown.data[0] = 100 - $scope.countdown.data[1];
+						} else {
+							$scope.countdown.data[0] = 100;
+							$scope.countdown.data[1] = 0;
+						}
+
+						if ($scope.timer.counter <= 0) {
+							$scope.stopTimer(true);
+						}
+
+						$scope.timerStarted = true;
+						$scope.$apply();
+					}, 1000);
+
+				} else {
+					//$scope.stopTimer(false);
+				}
+			});
+
+			// get the vote statistics
 			$scope.statistics = storyFactory.getVoteStatistics;
 
 			$scope.$watch('statistics()', function (data) {
 				$scope.stats.data = data.data;
 			});
 
+			// get all voted storypoints
 			$scope.storypoints = storyFactory.getStoryPointSet();
 		};
 
 		$scope.autoJoinSession = function () {
 
 			if (!storyFactory.isLoggedIn()) {
+				// if not logged in (account or anonymous), show join session screen
 				$timeout(function () {
 					$scope.view = 2;
 				});
-			} else if (!storyFactory.user.redirect) {
+			} else if (!storyFactory.user.redirect) { // if not coming from main screen
 				if ($scope.authUser().account) {
+					// if is logged in with account, get account data and join session
 					accountFactory.getUserName().once('value', function (snap) {
 						var user = snap.val();
 						if (!user) {
@@ -86,10 +149,12 @@ angular.module('pointoApp')
 						storyFactory.joinSession(sessionID, user.name, false);
 					});
 				} else {
+					// if not logged in with account, join session (anonymous session will be created)
 					storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
 				}
 				$scope.initSession();
 			} else {
+				// if coming from mains screen, init session - already joined
 				//storyFactory.joinSession(sessionID, storyFactory.user.name, storyFactory.user.spectator);
 				$scope.initSession();
 			}
@@ -147,6 +212,37 @@ angular.module('pointoApp')
 			}
 		};
 
+		$scope.stopTimer = function (ended) {
+			$timeout(function () {
+				clearInterval(timerInterval);
+				$scope.timerStarted = false;
+				$scope.countdown.data = [0, 100];
+
+				if (ended) { // when timer reached 0
+
+					// reveal votes automatically
+					if ($scope.session.voteStatus === 0) {
+						$scope.revealed = true;
+						$scope.flip();
+						storyFactory.revealVotes();
+					}
+
+					$scope.timer.running = false;
+					storyFactory.setTimer($scope.timer);
+				}
+			});
+		};
+
+		$scope.toggleTimer = function () {
+			$scope.timer.running = !$scope.timer.running;
+			if ($scope.timer.running) {
+				$scope.timer.counter = $scope.timer.value;
+			} else {
+				$scope.stopTimer();
+			}
+			storyFactory.setTimer($scope.timer);
+		};
+
 		$scope.changeName = function () {
 			storyFactory.changeName($scope.newName);
 		};
@@ -186,9 +282,5 @@ angular.module('pointoApp')
 				}
 			}
 		});
-
-		//overwrite chart colours
-		Chart.defaults.global.colours[0] = '#16a085';
-		Chart.defaults.global.colours[1] = '#1abc9c';
 
 	});

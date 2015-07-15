@@ -336,6 +336,16 @@ angular.module('pointoApp')
 			});
 		};
 
+		storyFactory.setTimer = function (timer) {
+			return ref.child('sessions').child(storyFactory.sessionID).update({
+				timer: timer
+			});
+		};
+
+		storyFactory.getTimer = function (id) {
+			return ref.child('sessions').child(id).child('timer');
+		};
+
 		storyFactory.participateStatus = function () {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			storyFactory.user.spectator = !storyFactory.user.spectator;
@@ -367,6 +377,8 @@ angular.module('pointoApp')
 			setVote: storyFactory.setVote,
 			revealVotes: storyFactory.revealVotes,
 			clearVotes: storyFactory.clearVotes,
+			setTimer: storyFactory.setTimer,
+			getTimer: storyFactory.getTimer,
 			changeName: storyFactory.changeName,
 			changePasscode: storyFactory.changePasscode,
 			leadSession: storyFactory.leadSession,

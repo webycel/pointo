@@ -58,6 +58,35 @@
         }
     }
 
+    .timer {
+        .timer-input {
+            width: 80px;
+            text-align: center;
+        }
+        .timer-unit {
+            display: inline-block;
+            padding: 6px 5px;
+        }
+        .timer-start {
+            width: 61px;
+        }
+
+        .countdown {
+            position: relative;
+            margin-top: 20px;
+
+            .countdown-time {
+                position: absolute;
+                top: 29px;
+                width: 100%;
+                font-size: 1.5em;
+                text-align: center;
+            }
+        }
+    }
+
+
+
     .participant {
         margin: 0 5px 10px;
         padding: 10px 0;
@@ -171,7 +200,7 @@
         }
     }
     .settings {
-        .col, &.col {
+        .col {
             padding-left: 0;
         }
     }

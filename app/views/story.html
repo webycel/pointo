@@ -19,6 +19,21 @@
                     </li>
                 </ul>
                 
+                <div class="timer" ng-show="user.leader || timer.running">
+                    <h3>Timer</h3>
+                    <form ng-submit="toggleTimer()" ng-show="user.leader">
+                        <input type="number" class="timer-input" ng-model="timer.value" ng-disabled="timer.running" />
+                        <span class="timer-unit">sec</span>
+                        <button type="submit" class="btn-action timer-start" ng-class="{disabled: timer.value <= 0, 'btn-secondary': timer.running}">
+                            <span class="glyphicon" ng-class="{'glyphicon-hourglass': !timer.running, 'glyphicon-stop': timer.running}"></span>
+                        </button>
+                    </form>
+                    <div class="countdown" ng-show="timer.running">
+                        <canvas class="chart chart-doughnut" data="countdown.data" labels="countdown.labels" options="countdown.options" colours="countdown.colours"></canvas>
+                        <div class="countdown-time">{{timer.counter + timer.unit}}</div>
+                    </div>
+                </div>
+                
                 <h3>Actions</h3>
                 <button class="btn-action options" ng-class="{disabled: session.voteStatus == 1 || !user.leader}" ng-click="revealVotes()">Reveal all votes</button>
                 <button class="btn-light options" ng-class="{disabled: session.voteStatus == 0 || !user.leader}" ng-click="clearVotes()">Clear all votes</button>
@@ -54,7 +69,7 @@
 
                 <div class="row stats" ng-class="{hidden: session.voteStatus == 0 || statistics().participants <= 1}">
                     <div class="col-md-10 col-sm-11 col-xs-12">
-                        <canvas class="chart chart-bar" data="stats.data" labels="stats.labels" options="stats.options"></canvas>
+                        <canvas class="chart chart-bar" data="stats.data" labels="stats.labels" options="stats.options" colours="stats.colours"></canvas>
                     </div>
                 </div>
             </div>
