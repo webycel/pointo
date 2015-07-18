@@ -162,14 +162,41 @@
     
     .stories {
         padding: 0;
-    
+
+        .edit-story-link {
+            float: right;
+            margin-top: 4px;
+            font-size: 0.9em;
+        }
+        .edit-option {
+            display: none;
+            position: absolute;
+            top: 1px;
+            right: -26px;
+            width: 26px;
+            text-align: right;
+
+            a {
+                color: $green;
+                margin-bottom: 9px;
+            }
+        }
         .list-group {
             margin-bottom: 5px;
         }
         .list-group-item {
             font-size: 0.9em;
+            word-break: break-word;
+            cursor: pointer;
+
+            &:not(.active):hover {
+                background-color: $greyF5;
+            }
+            &:hover .edit-option, &.edit-mode .edit-option {
+                display: block;
+            }
         }
-        button, input {
+        button, input[type="submit"] {
             width: 100%;
             margin-top: 5px;
         }

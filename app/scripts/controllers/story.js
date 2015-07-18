@@ -81,7 +81,8 @@ angular.module('pointoApp')
 
 			$scope.stories = {
 				newStory: '',
-				list: {}
+				list: {},
+				editMode: false
 			};
 
 			// init timer
@@ -200,12 +201,19 @@ angular.module('pointoApp')
 			}
 		};
 
+
+
+		/*
+			VOTING
+		*/
+		// set individual vote
 		$scope.vote = function (points) {
 			if (!$scope.user.spectator) {
 				storyFactory.setVote(points);
 			}
 		};
 
+		// reveal all votes to participants
 		$scope.revealVotes = function () {
 			if ($scope.session.voteStatus === 0 && $scope.user.leader) {
 				$scope.revealed = true;
@@ -214,6 +222,7 @@ angular.module('pointoApp')
 			}
 		};
 
+		// clear votes of all participants
 		$scope.clearVotes = function () {
 			if ($scope.session.voteStatus === 1 && $scope.user.leader) {
 				$scope.revealed = false;
@@ -222,6 +231,9 @@ angular.module('pointoApp')
 			}
 		};
 
+		/*
+			STORIES
+		*/
 		$scope.stopTimer = function (ended) {
 			$timeout(function () {
 				clearInterval(timerInterval);
@@ -243,6 +255,7 @@ angular.module('pointoApp')
 			});
 		};
 
+		// start or stop timer
 		$scope.toggleTimer = function () {
 			$scope.timer.running = !$scope.timer.running;
 			if ($scope.timer.running) {
@@ -253,11 +266,47 @@ angular.module('pointoApp')
 			storyFactory.setTimer($scope.timer);
 		};
 
+
+
+		/* 
+			STORIES
+		*/
 		$scope.addStory = function () {
 			storyFactory.addStory($scope.stories.newStory);
 			$scope.stories.newStory = '';
 		};
 
+		$scope.setActiveStory = function (e, story, edit) {
+			e.preventDefault();
+			if (!edit) {
+				storyFactory.setActiveStory(story);
+			}
+		};
+
+		$scope.saveStoryEdit = function (e, id, story) {
+			e.preventDefault();
+			story.editMode = false;
+			storyFactory.saveStory(id, story);
+		};
+
+		$scope.deleteStory = function (e, id) {
+			e.preventDefault();
+			storyFactory.deleteStory(id);
+		};
+
+		// keyPress event on edit story text input
+		$scope.editStoryKeyPress = function(e, id, story) {
+			if (e.which === 13 || e.which === 27) { // enter key
+				story.editMode = false;
+				$scope.saveStoryEdit(e, id, story);
+			}
+		};
+
+
+
+		/*
+			SETTINGS
+		*/
 		$scope.changeName = function () {
 			storyFactory.changeName($scope.newName);
 		};
@@ -276,6 +325,11 @@ angular.module('pointoApp')
 			storyFactory.participateStatus();
 		};
 
+
+
+		/*
+			OTHERS
+		*/
 		$scope.flip = function () {
 			$scope.isFlipped = !$scope.isFlipped;
 		};

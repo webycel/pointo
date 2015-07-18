@@ -74,11 +74,23 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-12 stories">
+            <div class="col-md-3 col-sm-12 col-xs-12 stories">
                 <h2>Stories</h2>
+
                 <div class="list-group">
-                    <a href="#" class="list-group-item" ng-repeat="story in stories.list"><span class="badge" ng-show="story.points !== -999">{{story.points}}</span> {{story.text}}</a>
+                    <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode}">
+                        <div ng-click="setActiveStory($event, id, story.editMode)" ng-dblclick="story.editMode = true" ng-hide="stories.editMode">
+                            <span ng-hide="story.editMode"><span class="badge" ng-show="story.points !== -999">{{story.points}}</span> {{story.name}}</span>
+                            <input type="text" class="edit-input" ng-model="story.name" ng-show="story.editMode" ng-keyup="editStoryKeyPress($event, id, story)" />
+                        </div>
+                        <div class="edit-option">
+                            <a href class="glyphicon glyphicon-edit fakelink" ng-hide="story.editMode" ng-click="story.editMode = true"></a>
+                            <a href class="glyphicon glyphicon-ok fakelink" ng-show="story.editMode" ng-click="saveStoryEdit($event, id, story)"></a>
+                            <a href class="glyphicon glyphicon-trash fakelink" ng-click="deleteStory($event, id)"></a>
+                        </div>
+                    </div>
                 </div>
+
                 <form name="storyForm" ng-submit="addStory()">
                     <input type="text" placeholder="Story" ng-model="stories.newStory" required />
                     <button type="submit" ng-class="{disabled: !storyForm.$valid}">Add story</button>
