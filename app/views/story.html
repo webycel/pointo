@@ -78,8 +78,8 @@
                 <h2>Stories</h2>
 
                 <div class="list-group">
-                    <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode}">
-                        <div ng-click="setActiveStory($event, id, story.editMode)" ng-dblclick="story.editMode = true" ng-hide="stories.editMode">
+                    <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
+                        <div ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
                             <span ng-hide="story.editMode"><span class="badge" ng-show="story.points !== -999">{{story.points}}</span> {{story.name}}</span>
                             <input type="text" class="edit-input" ng-model="story.name" ng-show="story.editMode" ng-keyup="editStoryKeyPress($event, id, story)" />
                         </div>
@@ -91,7 +91,7 @@
                     </div>
                 </div>
 
-                <form name="storyForm" ng-submit="addStory()">
+                <form name="storyForm" ng-submit="addStory()" ng-show="session.owner === authUser().data.uid">
                     <input type="text" placeholder="Story" ng-model="stories.newStory" required />
                     <button type="submit" ng-class="{disabled: !storyForm.$valid}">Add story</button>
                 </form>

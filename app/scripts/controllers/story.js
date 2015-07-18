@@ -272,33 +272,41 @@ angular.module('pointoApp')
 			STORIES
 		*/
 		$scope.addStory = function () {
-			storyFactory.addStory($scope.stories.newStory);
-			$scope.stories.newStory = '';
+			if($scope.session.owner === $scope.authUser().data.uid) {
+				storyFactory.addStory($scope.stories.newStory);
+				$scope.stories.newStory = '';
+			}
 		};
 
 		$scope.setActiveStory = function (e, story, edit) {
 			e.preventDefault();
-			if (!edit) {
+			if (!edit && $scope.session.owner === $scope.authUser().data.uid) {
 				storyFactory.setActiveStory(story);
 			}
 		};
 
 		$scope.saveStoryEdit = function (e, id, story) {
 			e.preventDefault();
-			story.editMode = false;
-			storyFactory.saveStory(id, story);
+			if($scope.session.owner === $scope.authUser().data.uid) {
+				story.editMode = false;
+				storyFactory.saveStory(id, story);
+			}
 		};
 
 		$scope.deleteStory = function (e, id) {
 			e.preventDefault();
-			storyFactory.deleteStory(id);
+			if($scope.session.owner === $scope.authUser().data.uid) {
+				storyFactory.deleteStory(id);
+			}
 		};
 
 		// keyPress event on edit story text input
 		$scope.editStoryKeyPress = function(e, id, story) {
 			if (e.which === 13 || e.which === 27) { // enter key
 				story.editMode = false;
-				$scope.saveStoryEdit(e, id, story);
+				if($scope.session.owner === $scope.authUser().data.uid) {
+					$scope.saveStoryEdit(e, id, story);
+				}
 			}
 		};
 
