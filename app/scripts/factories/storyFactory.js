@@ -408,6 +408,7 @@ angular.module('pointoApp')
 		};
 
 		storyFactory.saveStory = function (id, story) {
+			story.points = parseFloat(story.points, 10); // convert points to Integer
 			ref.child('sessions').child(storyFactory.sessionID).child('stories').child(id).set(story);
 		};
 

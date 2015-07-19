@@ -190,12 +190,14 @@
             word-break: break-word;
 
             &.edit-mode {
-                padding: 8px 10px;
                 background-color: $greyF5;
 
                 .edit-input {
                     border-color: $white;
                 }
+            }
+            &.owner .item-content {
+                margin-right: 50px;
             }
             &.owner:not(.active):hover {
                 background-color: $greyF5;
@@ -218,11 +220,17 @@
         }
         .item-content {
             padding: 10px 15px;
+            margin-right: 30px;
         }
         .badge {
             position: absolute;
             right: 6px;
             background-color: $green;
+        }
+        select {
+            position: absolute;
+            top: 11px;
+            right: 6px;
         }
         button, input[type="submit"] {
             width: 100%;

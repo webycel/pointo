@@ -286,8 +286,10 @@ angular.module('pointoApp')
 		};
 
 		$scope.saveStoryEdit = function (e, id, story) {
-			e.preventDefault();
-			if($scope.session.owner === $scope.authUser().data.uid) {
+			if (typeof e !== 'undefined') {
+				e.preventDefault();
+			}
+			if ($scope.session.owner === $scope.authUser().data.uid) {
 				story.editMode = false;
 				storyFactory.saveStory(id, story);
 			}
@@ -295,7 +297,7 @@ angular.module('pointoApp')
 
 		$scope.deleteStory = function (e, id) {
 			e.preventDefault();
-			if($scope.session.owner === $scope.authUser().data.uid) {
+			if ($scope.session.owner === $scope.authUser().data.uid) {
 				storyFactory.deleteStory(id);
 			}
 		};
