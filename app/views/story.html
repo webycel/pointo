@@ -79,7 +79,7 @@
 
                 <div class="list-group">
                     <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
-                        <div ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
+                        <div class="item-content" ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
                             <span ng-hide="story.editMode"><span class="badge" ng-show="story.points !== -999">{{story.points}}</span> {{story.name}}</span>
                             <input type="text" class="edit-input" ng-model="story.name" ng-show="story.editMode" ng-keyup="editStoryKeyPress($event, id, story)" />
                         </div>
