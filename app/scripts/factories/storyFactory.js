@@ -64,6 +64,10 @@ angular.module('pointoApp')
 		storyFactory.statistics = {};
 		storyFactory.sessionID = null;
 
+		/*
+			SESSION
+		*/
+
 		storyFactory.createSession = function (options) {
 			var id = utilsFactory.randomID(100000, 999999);
 			var sessionsRef = ref.child('sessions').child(id);
@@ -271,6 +275,23 @@ angular.module('pointoApp')
 			};
 		};
 
+		storyFactory.participateStatus = function () {
+			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
+			storyFactory.user.spectator = !storyFactory.user.spectator;
+			user.update({
+				spectator: storyFactory.user.spectator,
+				points: {
+					text: -1,
+					value: -1
+				}
+			});
+		};
+
+
+
+		/*
+			VOTING
+		*/
 		storyFactory.setVote = function (points) {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			user.update({
@@ -305,6 +326,19 @@ angular.module('pointoApp')
 			storyFactory.user.points = points;
 		};
 
+		storyFactory.getVoteStatistics = function () {
+			return storyFactory.statistics;
+		};
+
+		storyFactory.getStoryPointSet = function () {
+			return storyFactory.storyPointSet;
+		};
+
+
+
+		/*
+			SETTINGS
+		*/
 		storyFactory.changeName = function (name) {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			user.update({
@@ -336,6 +370,11 @@ angular.module('pointoApp')
 			});
 		};
 
+
+
+		/*
+			TIMER
+		*/
 		storyFactory.setTimer = function (timer) {
 			return ref.child('sessions').child(storyFactory.sessionID).update({
 				timer: timer
@@ -346,25 +385,39 @@ angular.module('pointoApp')
 			return ref.child('sessions').child(id).child('timer');
 		};
 
-		storyFactory.participateStatus = function () {
-			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
-			storyFactory.user.spectator = !storyFactory.user.spectator;
-			user.update({
-				spectator: storyFactory.user.spectator,
-				points: {
-					text: -1,
-					value: -1
-				}
-			});
+
+
+		/*
+			STORIES
+		*/
+		storyFactory.addStory = function (story) {
+			var newStory = {
+				name: story,
+				points: -999
+			};
+
+			ref.child('sessions').child(storyFactory.sessionID).child('stories').push(newStory);
 		};
 
-		storyFactory.getVoteStatistics = function () {
-			return storyFactory.statistics;
+		storyFactory.getStories = function (id) {
+			return ref.child('sessions').child(id).child('stories');
 		};
 
-		storyFactory.getStoryPointSet = function () {
-			return storyFactory.storyPointSet;
+		storyFactory.setActiveStory = function (story) {
+			ref.child('sessions').child(storyFactory.sessionID).update({ activeStory: story });
 		};
+
+		storyFactory.saveStory = function (id, story) {
+			story.points = parseFloat(story.points, 10); // convert points to Integer
+			ref.child('sessions').child(storyFactory.sessionID).child('stories').child(id).set(story);
+		};
+
+		storyFactory.deleteStory = function (id) {
+			ref.child('sessions').child(storyFactory.sessionID).child('stories').child(id).remove();
+		};
+
+
+
 
 		return {
 			createSession: storyFactory.createSession,
@@ -374,18 +427,28 @@ angular.module('pointoApp')
 			getSession: storyFactory.getSession,
 			isLoggedIn: storyFactory.isLoggedIn,
 			anonymousLogin: storyFactory.anonymousLogin,
+			user: storyFactory.user,
+
 			setVote: storyFactory.setVote,
 			revealVotes: storyFactory.revealVotes,
 			clearVotes: storyFactory.clearVotes,
+			getVoteStatistics: storyFactory.getVoteStatistics,
+			getStoryPointSet: storyFactory.getStoryPointSet,
+
 			setTimer: storyFactory.setTimer,
 			getTimer: storyFactory.getTimer,
+
+			addStory: storyFactory.addStory,
+			getStories: storyFactory.getStories,
+			setActiveStory: storyFactory.setActiveStory,
+			saveStory: storyFactory.saveStory,
+			deleteStory: storyFactory.deleteStory,
+
 			changeName: storyFactory.changeName,
 			changePasscode: storyFactory.changePasscode,
 			leadSession: storyFactory.leadSession,
-			participateStatus: storyFactory.participateStatus,
-			getVoteStatistics: storyFactory.getVoteStatistics,
-			getStoryPointSet: storyFactory.getStoryPointSet,
-			user: storyFactory.user
+
+			participateStatus: storyFactory.participateStatus
 		};
 
 	});

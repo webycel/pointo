@@ -40,11 +40,11 @@
                 <span class="hint"><span class="glyphicon glyphicon-info-sign"></span> You can only use these actions if you are the leader.</span>
             </div>
 
-            <div class="col-md-9 col-sm-8 col-xs-12">
+            <div class="col-md-6 col-sm-8 col-xs-12">
                 <h2>Participants</h2>
 
                 <div class="row participants">
-                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
+                    <div class="col-md-3 col-sm-3 col-xs-4 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
                         <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-show="p.leader"></span>  {{p.name}}</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1, 'flipped': isFlipped}">
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
@@ -72,6 +72,36 @@
                         <canvas class="chart chart-bar" data="stats.data" labels="stats.labels" options="stats.options" colours="stats.colours"></canvas>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-md-3 col-sm-12 col-xs-12 stories">
+                <h2>Stories</h2>
+
+                <div class="list-group">
+                    <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
+                        <div class="item-content" ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
+                            <span ng-hide="story.editMode">
+                                <span class="badge" ng-show="story.points !== -999 && session.owner !== authUser().data.uid">{{story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
+                            </span>
+                            
+                            <select ng-model="story.points" ng-change="saveStoryEdit($event, id, story)" ng-show="session.owner === authUser().data.uid">
+                                <option value="-999">-</option>
+                                <option ng-repeat="point in storypoints | filter:'!X'" value="{{point.value}}" ng-selected="story.points === point.value">{{point.text}}</option>
+                            </select>
+                            <input type="text" class="edit-input" ng-model="story.name" ng-show="story.editMode" ng-keyup="editStoryKeyPress($event, id, story)" />
+                        </div>
+                        <div class="edit-option">
+                            <a href class="glyphicon glyphicon-edit fakelink" ng-hide="story.editMode" ng-click="story.editMode = true"></a>
+                            <a href class="glyphicon glyphicon-ok fakelink" ng-show="story.editMode" ng-click="saveStoryEdit($event, id, story)"></a>
+                            <a href class="glyphicon glyphicon-trash fakelink" ng-click="deleteStory($event, id)"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <form name="storyForm" ng-submit="addStory()" ng-show="session.owner === authUser().data.uid">
+                    <input type="text" placeholder="Story" ng-model="stories.newStory" required />
+                    <button type="submit" ng-class="{disabled: !storyForm.$valid}">Add story</button>
+                </form>
             </div>
 
         </div>

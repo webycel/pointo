@@ -39,4 +39,8 @@ angular.module('pointoApp')
       templateUrl: '../views/_header.html'
     };
 
-});
+}).filter('num', function() {
+    return function(input) {
+      return parseInt(input, 10);
+    }
+});;
