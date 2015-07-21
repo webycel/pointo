@@ -69,20 +69,28 @@ angular.module('pointoApp')
 		*/
 
 		storyFactory.createSession = function (options) {
-			var id = utilsFactory.randomID(100000, 999999);
-			var sessionsRef = ref.child('sessions').child(id);
+			var id = utilsFactory.randomID(100000, 999999),
+				sessionsRef = ref.child('sessions').child(id),
+				sessionOptions;
 
 			ref.child('sessions').once('value', function (snapshot) {
 				if (snapshot.child(id).exists()) {
 					storyFactory.createSession(options);
 				} else {
-					sessionsRef.set({
+					sessionOptions = {
 						users: '',
 						voteStatus: 0,
 						score: 0,
-						owner: accountFactory.getUser().data.uid,
+						//owner: accountFactory.getUser().data.uid,
+						owner: null,
 						passcode: options.passcode
-					}, function (error) {
+					};
+
+					if(accountFactory.getUser().data !== null && accountFactory.getUser().data.provider !== 'anonymous') {
+						sessionOptions.owner = accountFactory.getUser().data.uid;
+					}
+
+					sessionsRef.set(sessionOptions, function (error) {
 						if (!error) {
 							storyFactory.joinSession(id, options.name, false, true);
 						} else {
