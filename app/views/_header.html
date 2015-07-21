@@ -3,6 +3,10 @@
 <div class="account" ng-show="authUser().account">
 
     <div class="account-settings" ng-controller="AccountCtrl">
+    <div class="permission-error error" ng-show="errors().permission">
+        PERMISSION DENIED - please contact admin
+    </div>
+
         <a href="/account" class="glyphicon glyphicon-cog fakelink" ng-click="toggleAccount($event)"></a>
 
         <div class="account-settings-panel" ng-show="accountView">

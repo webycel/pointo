@@ -170,7 +170,7 @@ angular.module('pointoApp')
 							ref.child('sessions').child(id).update({
 								voteStatus: 0,
 								score: 0
-							});
+							}, storyFactory.errorCallback);
 						}
 					});
 
@@ -182,7 +182,7 @@ angular.module('pointoApp')
 									text: -1,
 									value: -1
 								}
-							});
+							}, storyFactory.errorCallback);
 						}
 					});
 
@@ -286,7 +286,7 @@ angular.module('pointoApp')
 					text: -1,
 					value: -1
 				}
-			});
+			}, storyFactory.errorCallback);
 		};
 
 
@@ -301,7 +301,7 @@ angular.module('pointoApp')
 					text: points.text.toString(),
 					value: parseFloat(points.value)
 				}
-			});
+			}, storyFactory.errorCallback);
 			storyFactory.user.points = points;
 		};
 
@@ -310,7 +310,7 @@ angular.module('pointoApp')
 
 			session.update({
 				voteStatus: 1
-			});
+			}, storyFactory.errorCallback);
 		};
 
 		storyFactory.clearVotes = function () {
@@ -321,10 +321,10 @@ angular.module('pointoApp')
 				};
 			session.update({
 				voteStatus: 0
-			});
+			}, storyFactory.errorCallback);
 			session.child('users').child(storyFactory.user.key).update({
 				points: points
-			});
+			}, storyFactory.errorCallback);
 			storyFactory.user.points = points;
 		};
 
@@ -346,7 +346,7 @@ angular.module('pointoApp')
 			name = name.toString();
 			user.update({
 				name: name
-			});
+			}, storyFactory.errorCallback);
 			storyFactory.user.name = name;
 			if (utilsFactory.hasStorage()) {
 				localStorage[storyFactory.user.key] = name;
@@ -357,11 +357,12 @@ angular.module('pointoApp')
 			var session = ref.child('sessions').child(storyFactory.sessionID);
 			session.update({
 				passcode: passcode
-			}, function () {
+			}, function (error) {
 				$timeout(function () {
 					viewFactory.setErrors('changePasscode', true);
 					viewFactory.setLoading('changePasscode', false);
 				});
+				storyFactory.errorCallback(error);
 			});
 		};
 
@@ -370,7 +371,7 @@ angular.module('pointoApp')
 			storyFactory.user.leader = !storyFactory.user.leader;
 			user.update({
 				leader: storyFactory.user.leader
-			});
+			}, storyFactory.errorCallback);
 		};
 
 
@@ -381,7 +382,7 @@ angular.module('pointoApp')
 		storyFactory.setTimer = function (timer) {
 			return ref.child('sessions').child(storyFactory.sessionID).update({
 				timer: timer
-			});
+			}, storyFactory.errorCallback);
 		};
 
 		storyFactory.getTimer = function (id) {
@@ -407,7 +408,7 @@ angular.module('pointoApp')
 		};
 
 		storyFactory.setActiveStory = function (story) {
-			ref.child('sessions').child(storyFactory.sessionID).update({ activeStory: story });
+			ref.child('sessions').child(storyFactory.sessionID).update({ activeStory: story }, storyFactory.errorCallback);
 		};
 
 		storyFactory.saveStory = function (id, story) {
@@ -417,6 +418,15 @@ angular.module('pointoApp')
 
 		storyFactory.deleteStory = function (id) {
 			ref.child('sessions').child(storyFactory.sessionID).child('stories').child(id).remove();
+		};
+
+
+
+		/* OTHER */
+		storyFactory.errorCallback = function(error) {
+			if(error !== null && error.code === 'PERMISSION_DENIED') {
+				viewFactory.setErrors('permission', true);
+			}
 		};
 
 
