@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "dependencies": {
     "express": "*",
-    "gzippo": "*"
+    "gzippo": "*",
+    "compression": "*",
+    "connect-timeout": "*",
+    "body-parser": "*"
   },
   "repository": {},
   "devDependencies": {
