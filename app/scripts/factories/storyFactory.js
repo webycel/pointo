@@ -144,8 +144,10 @@ angular.module('pointoApp')
 					value: -1
 				};
 
+			name = name.toString();
+
 			usersRef.child(uid).set({
-				name: name,
+				name: name.toString(),
 				points: points,
 				spectator: spectator
 			}, function (error) {
@@ -296,8 +298,8 @@ angular.module('pointoApp')
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			user.update({
 				points: {
-					text: points.text,
-					value: points.value
+					text: points.text.toString(),
+					value: parseFloat(points.value)
 				}
 			});
 			storyFactory.user.points = points;
@@ -341,6 +343,7 @@ angular.module('pointoApp')
 		*/
 		storyFactory.changeName = function (name) {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
+			name = name.toString();
 			user.update({
 				name: name
 			});
