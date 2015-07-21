@@ -259,7 +259,7 @@ angular.module('pointoApp')
 		$scope.toggleTimer = function () {
 			$scope.timer.running = !$scope.timer.running;
 			if ($scope.timer.running) {
-				$scope.timer.counter = $scope.timer.value;
+				$scope.timer.counter = parseInt($scope.timer.value);
 			} else {
 				$scope.stopTimer();
 			}
