@@ -2,7 +2,7 @@
   "name": "pointo",
   "version": "0.0.0",
   "dependencies": {
-    "express": "^4.13.1",
+    "express": "*",
     "gzippo": "^0.2.0"
   },
   "repository": {},
