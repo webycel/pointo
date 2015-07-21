@@ -6,7 +6,8 @@
     "gzippo": "*",
     "compression": "*",
     "connect-timeout": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "logger": "*"
   },
   "repository": {},
   "devDependencies": {
