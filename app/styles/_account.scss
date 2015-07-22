@@ -3,6 +3,12 @@
     position: relative;
     margin-top: 22px;
     
+    .permission-error {
+        position: absolute;
+        top: -12px;
+        left: -330px;
+        font-size: 0.9em;
+    }
     .account-settings {
         display: inline-block;
         margin-right: 8px;
@@ -27,5 +33,16 @@
     .logout {
         font-size: 0.75em;
         cursor: pointer;
+    }
+}
+
+
+@media screen and (max-width: 690px) {
+    .account {
+        .permission-error {
+            top: 42px;
+            left: -149px;
+            font-size: 0.75em;
+        }
     }
 }

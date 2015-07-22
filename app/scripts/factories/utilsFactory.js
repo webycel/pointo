@@ -30,7 +30,7 @@ angular.module('pointoApp')
                 }
             }
 
-            return closest;
+            return parseFloat(closest);
         };
 
         return {

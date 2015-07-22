@@ -11,7 +11,8 @@ angular.module('pointoApp')
 			registerError: false,
 			updateAccount: false,
 			wrongPasscode: false,
-			changePasscode: false
+			changePasscode: false,
+			permission: false
 		};
 
 		viewFactory.loading = {
