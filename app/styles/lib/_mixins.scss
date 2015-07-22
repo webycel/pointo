@@ -1,0 +1,179 @@
+
+/* BREAKPOINTS */
+@mixin bp-large {
+	@media only screen and (max-width: 1200) {
+    	@content;
+  	}
+}
+@mixin bp-min-large {
+	@media only screen and (min-width: 1200) {
+    	@content;
+  	}
+}
+
+@mixin bp-medium {
+  	@media only screen and (max-width: 992px) {
+    	@content;
+  	}
+}
+@mixin bp-min-medium {
+  	@media only screen and (min-width: 992px) {
+    	@content;
+  	}
+}
+
+@mixin bp-min-small {
+  	@media only screen and (min-width: 768px) {
+    	@content;
+  	}
+}
+@mixin bp-small {
+  	@media only screen and (max-width: 768px) {
+    	@content;
+  	}
+}
+/*
+	USAGE
+
+	.sidebar {
+  		width: 60%;
+  		@include bp-small {
+    		width: 100%;
+  		}
+	}
+*/
+
+
+
+
+/* Animations and keyframes */
+@mixin keyframes($animation-name) {
+ 	@-webkit-keyframes $animation-name {
+    	@content;
+  	}
+  	@-moz-keyframes $animation-name {
+    	@content;
+  	}  
+  	@-ms-keyframes $animation-name {
+    	@content;
+  	}
+  	@-o-keyframes $animation-name {
+    	@content;
+  	}  
+ 	@keyframes $animation-name {
+    	@content;
+  	}
+}
+
+@mixin animation($str) {
+	-webkit-animation: #{$str};
+	-moz-animation: #{$str};
+	-ms-animation: #{$str};
+	-o-animation: #{$str};
+	animation: #{$str};      
+}
+/*
+	USAGE
+
+	@include keyframes(slide-down) {
+  		0% { opacity: 1; }
+  		90% { opacity: 0; }
+	}
+
+	.element {
+  		width: 100px;
+		height: 100px;
+		background: black;
+		@include animation('slide-down 5s 3');
+	}
+*/
+
+
+
+
+
+/* TRANSITIONS */
+@mixin transition($args...) {
+	-webkit-transition: $args;
+	-moz-transition: $args;
+	-ms-transition: $args;
+	-o-transition: $args;
+	transition: $args;
+}
+/*
+	USAGE
+
+	a {
+  		color: gray;
+  		@include transition(color .3s ease);
+  		&:hover {
+    		color: black;
+  		}
+	}
+*/
+
+
+
+
+
+/*  Cross browser opacity */
+@mixin opacity($opacity) {
+	opacity: $opacity;
+	$opacity-ie: $opacity * 100;
+	filter: alpha(opacity=$opacity-ie); //IE8
+}
+/*
+	USAGE
+
+	.faded-text {
+  		@include opacity(0.8);
+	}
+*/
+
+
+
+
+/* Clearfix */
+%clearfix {
+	*zoom: 1;
+	&:before, &:after {
+		content: " ";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+/*
+	USAGE
+
+	.container-with-floated-children {
+  		@extend %clearfix;
+	}
+*/
+
+
+
+/* Visually hide an element (hidden, but accessible for screen readers) */
+%visuallyhidden {
+	margin: -1px;
+	padding: 0;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip: rect(0, 0, 0, 0);
+	position: absolute;
+}
+/*
+	USAGE
+
+	<button class="mobile-navigation-trigger">
+  		<b class="visually-hidden">Open the navigation</b>
+  		<img src="img/mobile-navigation-icon.svg">
+	</button>
+
+	.visually-hidden {
+		extend %visuallyhidden;
+	}
+*/
