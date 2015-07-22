@@ -9,10 +9,10 @@
  */
 
 /*
-	$scope.view =
-	view = 0 -> loading screen
-	view = 1 -> session screen
-	view = 2 -> enter name & passcode screen
+    $scope.view =
+    view = 0 -> loading screen
+    view = 1 -> session screen
+    view = 2 -> enter name & passcode screen
  */
 angular.module('pointoApp')
     .controller('StoryCtrl', function($scope, $routeParams, $window, $timeout, storyFactory, accountFactory, viewFactory) {
@@ -98,7 +98,6 @@ angular.module('pointoApp')
                 $scope.timer = snap.val() !== null ? snap.val() : $scope.timer;
 
                 if ($scope.timer !== null && !$scope.timerStarted && $scope.timer.running && $scope.timer.counter > 0) {
-
                     // start timer
                     timerInterval = setInterval(function() {
                         $scope.timer.counter--; // count down
@@ -249,7 +248,10 @@ angular.module('pointoApp')
                     }
 
                     $scope.timer.running = false;
-                    storyFactory.setTimer($scope.timer);
+
+                    if ($scope.user.leader) {
+                        storyFactory.setTimer($scope.timer);
+                    }
                 }
             });
         };
@@ -258,7 +260,7 @@ angular.module('pointoApp')
         $scope.toggleTimer = function() {
             if (!$scope.timer.running) {
                 console.log($scope.timer.value);
-                if ($scope.timer.value >= 5) {
+                if ($scope.timer.value >= 5 && $scope.user.leader) {
                     $scope.timer.running = true;
                     $scope.timer.counter = parseInt($scope.timer.value);
                     storyFactory.setTimer($scope.timer);
@@ -266,7 +268,9 @@ angular.module('pointoApp')
             } else {
                 $scope.timer.running = false;
                 $scope.stopTimer();
-                storyFactory.setTimer($scope.timer);
+                if ($scope.user.leader) {
+                    storyFactory.setTimer($scope.timer);
+                }
             }
         };
 
@@ -326,9 +330,11 @@ angular.module('pointoApp')
         };
 
         $scope.changePasscode = function() {
-            viewFactory.setErrors('changePasscode', false);
-            viewFactory.setLoading('changePasscode', true);
-            storyFactory.changePasscode($scope.newPasscode);
+            if ($scope.session.owner === $scope.authUser().data.uid) {
+                viewFactory.setErrors('changePasscode', false);
+                viewFactory.setLoading('changePasscode', true);
+                storyFactory.changePasscode($scope.newPasscode);
+            }
         };
 
         $scope.leadSession = function() {

@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-12 col-xs-12 stories">
+            <div class="col-md-3 col-sm-12 col-xs-12 stories" ng-show="stories.list.length > 0 && session.owner !== authUser().data.uid">
                 <h2>Stories</h2>
 
                 <div class="list-group">
