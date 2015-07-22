@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-	.factory('storyFactory', function ($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory, viewFactory, accountFactory) {
+	.factory('storyFactory', function($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory, viewFactory, accountFactory) {
 
 		var storyFactory = {},
 			ref = new Firebase(FIREBASE_URL);
@@ -68,12 +68,12 @@ angular.module('pointoApp')
 			SESSION
 		*/
 
-		storyFactory.createSession = function (options) {
+		storyFactory.createSession = function(options) {
 			var id = utilsFactory.randomID(100000, 999999),
 				sessionsRef = ref.child('sessions').child(id),
 				sessionOptions;
 
-			ref.child('sessions').once('value', function (snapshot) {
+			ref.child('sessions').once('value', function(snapshot) {
 				if (snapshot.child(id).exists()) {
 					storyFactory.createSession(options);
 				} else {
@@ -86,11 +86,11 @@ angular.module('pointoApp')
 						passcode: options.passcode
 					};
 
-					if(accountFactory.getUser().data !== null && accountFactory.getUser().data.provider !== 'anonymous') {
+					if (accountFactory.getUser().data !== null && accountFactory.getUser().data.provider !== 'anonymous') {
 						sessionOptions.owner = accountFactory.getUser().data.uid;
 					}
 
-					sessionsRef.set(sessionOptions, function (error) {
+					sessionsRef.set(sessionOptions, function(error) {
 						if (!error) {
 							storyFactory.joinSession(id, options.name, false, true);
 						} else {
@@ -102,9 +102,9 @@ angular.module('pointoApp')
 
 		};
 
-		storyFactory.enterSession = function (id, name, spectator, redirect) {
+		storyFactory.enterSession = function(id, name, spectator, redirect) {
 
-			ref.child('sessions').once('value', function (snapshot) {
+			ref.child('sessions').once('value', function(snapshot) {
 				if (!snapshot.child(id).exists()) {
 					viewFactory.setErrors('noSession', true);
 					viewFactory.setLoading('join', false);
@@ -117,13 +117,15 @@ angular.module('pointoApp')
 
 		};
 
-		storyFactory.joinSession = function (id, name, spectator, redirect) {
-			if (!storyFactory.user.key) {
+		storyFactory.joinSession = function(id, name, spectator, redirect) {
+			var authData = ref.getAuth();
+
+			if (!storyFactory.user.key || authData === null) {
 				if (accountFactory.getUser().account) {
 					storyFactory.addUser(id, accountFactory.getUser().name, spectator, accountFactory.getUser().data.uid, redirect);
 				} else {
 					//ref.unauth();
-					ref.authAnonymously(function (error, authData) {
+					ref.authAnonymously(function(error, authData) {
 						if (error) {
 							console.log('Login Failed!', error);
 						} else {
@@ -133,19 +135,18 @@ angular.module('pointoApp')
 					});
 				}
 			} else {
-				var authData = ref.getAuth();
 				storyFactory.addUser(id, name, spectator, authData.uid, redirect);
 			}
 
 			storyFactory.sessionID = id;
 		};
 
-		storyFactory.joinSessionWithPasscode = function (id) {
+		storyFactory.joinSessionWithPasscode = function(id) {
 			viewFactory.setErrors('wrongPasscode', false);
 			return ref.child('sessions').child(id);
 		};
 
-		storyFactory.addUser = function (id, name, spectator, uid, redirect) {
+		storyFactory.addUser = function(id, name, spectator, uid, redirect) {
 			var usersRef = new Firebase(FIREBASE_URL + 'sessions/' + id + '/users'),
 				points = {
 					text: -1,
@@ -158,7 +159,7 @@ angular.module('pointoApp')
 				name: name.toString(),
 				points: points,
 				spectator: spectator
-			}, function (error) {
+			}, function(error) {
 				if (!error) {
 					storyFactory.user.key = uid;
 					storyFactory.user.name = name;
@@ -173,7 +174,7 @@ angular.module('pointoApp')
 					usersRef.child(uid).onDisconnect().remove();
 
 					//reset vote status if first user to join
-					ref.child('sessions').child(id).child('users').once('value', function (snap) {
+					ref.child('sessions').child(id).child('users').once('value', function(snap) {
 						if (snap.numChildren() <= 1) {
 							ref.child('sessions').child(id).update({
 								voteStatus: 0,
@@ -183,7 +184,7 @@ angular.module('pointoApp')
 					});
 
 					//on vote status change
-					ref.child('sessions').child(id).child('voteStatus').on('value', function (snap) {
+					ref.child('sessions').child(id).child('voteStatus').on('value', function(snap) {
 						if (snap.val() === 0) {
 							ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({
 								points: {
@@ -194,7 +195,7 @@ angular.module('pointoApp')
 						}
 					});
 
-					$timeout(function () {
+					$timeout(function() {
 						ref.child('sessions').child(id).once('value', storyFactory.onSessionChange);
 					}, 300);
 					ref.child('sessions').child(id).on('value', storyFactory.onSessionChange);
@@ -206,7 +207,7 @@ angular.module('pointoApp')
 			});
 		};
 
-		storyFactory.onSessionChange = function (snap) {
+		storyFactory.onSessionChange = function(snap) {
 			var users = snap.val().users,
 				s, points, i,
 				stats = {
@@ -248,12 +249,12 @@ angular.module('pointoApp')
 			storyFactory.statistics = stats;
 		};
 
-		storyFactory.sessionExists = function () {
+		storyFactory.sessionExists = function() {
 			var text = ref.child('sessions');
 			return text;
 		};
 
-		storyFactory.isLoggedIn = function () {
+		storyFactory.isLoggedIn = function() {
 			var authData = ref.getAuth();
 			if (authData && utilsFactory.hasStorage()) {
 				storyFactory.user.key = authData.uid;
@@ -265,8 +266,8 @@ angular.module('pointoApp')
 			}
 		};
 
-		storyFactory.anonymousLogin = function () {
-			ref.authAnonymously(function (error) {
+		storyFactory.anonymousLogin = function() {
+			ref.authAnonymously(function(error) {
 				if (error) {
 					console.log('Login Failed!', error);
 				} else {
@@ -275,7 +276,7 @@ angular.module('pointoApp')
 			});
 		};
 
-		storyFactory.getSession = function (id) {
+		storyFactory.getSession = function(id) {
 			storyFactory.session = $firebaseObject(ref.child('sessions').child(id));
 			storyFactory.participants = $firebaseArray(ref.child('sessions').child(id).child('users'));
 
@@ -285,7 +286,7 @@ angular.module('pointoApp')
 			};
 		};
 
-		storyFactory.participateStatus = function () {
+		storyFactory.participateStatus = function() {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			storyFactory.user.spectator = !storyFactory.user.spectator;
 			user.update({
@@ -302,7 +303,7 @@ angular.module('pointoApp')
 		/*
 			VOTING
 		*/
-		storyFactory.setVote = function (points) {
+		storyFactory.setVote = function(points) {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			user.update({
 				points: {
@@ -313,7 +314,7 @@ angular.module('pointoApp')
 			storyFactory.user.points = points;
 		};
 
-		storyFactory.revealVotes = function () {
+		storyFactory.revealVotes = function() {
 			var session = ref.child('sessions').child(storyFactory.sessionID);
 
 			session.update({
@@ -321,7 +322,7 @@ angular.module('pointoApp')
 			}, storyFactory.errorCallback);
 		};
 
-		storyFactory.clearVotes = function () {
+		storyFactory.clearVotes = function() {
 			var session = ref.child('sessions').child(storyFactory.sessionID),
 				points = {
 					text: -1,
@@ -336,11 +337,11 @@ angular.module('pointoApp')
 			storyFactory.user.points = points;
 		};
 
-		storyFactory.getVoteStatistics = function () {
+		storyFactory.getVoteStatistics = function() {
 			return storyFactory.statistics;
 		};
 
-		storyFactory.getStoryPointSet = function () {
+		storyFactory.getStoryPointSet = function() {
 			return storyFactory.storyPointSet;
 		};
 
@@ -349,7 +350,7 @@ angular.module('pointoApp')
 		/*
 			SETTINGS
 		*/
-		storyFactory.changeName = function (name) {
+		storyFactory.changeName = function(name) {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			name = name.toString();
 			user.update({
@@ -361,12 +362,12 @@ angular.module('pointoApp')
 			}
 		};
 
-		storyFactory.changePasscode = function (passcode) {
+		storyFactory.changePasscode = function(passcode) {
 			var session = ref.child('sessions').child(storyFactory.sessionID);
 			session.update({
 				passcode: passcode
-			}, function (error) {
-				$timeout(function () {
+			}, function(error) {
+				$timeout(function() {
 					viewFactory.setErrors('changePasscode', true);
 					viewFactory.setLoading('changePasscode', false);
 				});
@@ -374,7 +375,7 @@ angular.module('pointoApp')
 			});
 		};
 
-		storyFactory.leadSession = function () {
+		storyFactory.leadSession = function() {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			storyFactory.user.leader = !storyFactory.user.leader;
 			user.update({
@@ -387,13 +388,13 @@ angular.module('pointoApp')
 		/*
 			TIMER
 		*/
-		storyFactory.setTimer = function (timer) {
+		storyFactory.setTimer = function(timer) {
 			return ref.child('sessions').child(storyFactory.sessionID).update({
 				timer: timer
 			}, storyFactory.errorCallback);
 		};
 
-		storyFactory.getTimer = function (id) {
+		storyFactory.getTimer = function(id) {
 			return ref.child('sessions').child(id).child('timer');
 		};
 
@@ -402,7 +403,7 @@ angular.module('pointoApp')
 		/*
 			STORIES
 		*/
-		storyFactory.addStory = function (story) {
+		storyFactory.addStory = function(story) {
 			var newStory = {
 				name: story,
 				points: -999
@@ -411,20 +412,22 @@ angular.module('pointoApp')
 			ref.child('sessions').child(storyFactory.sessionID).child('stories').push(newStory);
 		};
 
-		storyFactory.getStories = function (id) {
+		storyFactory.getStories = function(id) {
 			return ref.child('sessions').child(id).child('stories');
 		};
 
-		storyFactory.setActiveStory = function (story) {
-			ref.child('sessions').child(storyFactory.sessionID).update({ activeStory: story }, storyFactory.errorCallback);
+		storyFactory.setActiveStory = function(story) {
+			ref.child('sessions').child(storyFactory.sessionID).update({
+				activeStory: story
+			}, storyFactory.errorCallback);
 		};
 
-		storyFactory.saveStory = function (id, story) {
+		storyFactory.saveStory = function(id, story) {
 			story.points = parseFloat(story.points, 10); // convert points to Integer
 			ref.child('sessions').child(storyFactory.sessionID).child('stories').child(id).set(story);
 		};
 
-		storyFactory.deleteStory = function (id) {
+		storyFactory.deleteStory = function(id) {
 			ref.child('sessions').child(storyFactory.sessionID).child('stories').child(id).remove();
 		};
 
@@ -432,11 +435,10 @@ angular.module('pointoApp')
 
 		/* OTHER */
 		storyFactory.errorCallback = function(error) {
-			if(error !== null && error.code === 'PERMISSION_DENIED') {
+			if (error !== null && error.code === 'PERMISSION_DENIED') {
 				viewFactory.setErrors('permission', true);
 			}
 		};
-
 
 
 
