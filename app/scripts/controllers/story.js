@@ -326,9 +326,11 @@ angular.module('pointoApp')
         };
 
         $scope.changePasscode = function() {
-            viewFactory.setErrors('changePasscode', false);
-            viewFactory.setLoading('changePasscode', true);
-            storyFactory.changePasscode($scope.newPasscode);
+            if ($scope.session.owner === $scope.authUser().data.uid) {
+                viewFactory.setErrors('changePasscode', false);
+                viewFactory.setLoading('changePasscode', true);
+                storyFactory.changePasscode($scope.newPasscode);
+            }
         };
 
         $scope.leadSession = function() {
