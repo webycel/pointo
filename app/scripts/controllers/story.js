@@ -59,7 +59,7 @@ angular.module('pointoApp')
                 animationEasing: 'linear',
                 percentageInnerCutout: 85
             },
-            colours: ['#16a085', '#e5e5e5']
+            colours: ['#16a085', '#ffffff']
         };
 
         /* functions */
@@ -259,7 +259,6 @@ angular.module('pointoApp')
         // start or stop timer
         $scope.toggleTimer = function() {
             if (!$scope.timer.running) {
-                console.log($scope.timer.value);
                 if ($scope.timer.value >= 5 && $scope.user.leader) {
                     $scope.timer.running = true;
                     $scope.timer.counter = parseInt($scope.timer.value);
