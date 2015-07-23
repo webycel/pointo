@@ -19,7 +19,7 @@
                     </li>
                 </ul>
                 
-                <div class="timer" ng-show="user.leader || timer.running">
+                <div class="timer" ng-if="user.leader || timer.running">
                     <h3>Timer</h3>
                     <form ng-submit="toggleTimer()" ng-show="user.leader">
                         <input type="number" class="timer-input" ng-model="timer.value" min="5" ng-disabled="timer.running" />
