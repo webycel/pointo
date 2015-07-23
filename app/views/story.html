@@ -28,7 +28,7 @@
                             <span class="glyphicon" ng-class="{'glyphicon-hourglass': !timer.running, 'glyphicon-stop': timer.running}"></span>
                         </button>
                     </form>
-                    <div class="countdown" ng-show="timer.running">
+                    <div class="countdown" ng-if="timer.running">
                         <canvas class="chart chart-doughnut" data="countdown.data" labels="countdown.labels" options="countdown.options" colours="countdown.colours"></canvas>
                         <div class="countdown-time">{{timer.counter + timer.unit}}</div>
                     </div>
