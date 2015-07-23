@@ -19,16 +19,16 @@
                     </li>
                 </ul>
                 
-                <div class="timer" ng-show="user.leader || timer.running">
+                <div class="timer" ng-if="user.leader || timer.running">
                     <h3>Timer</h3>
                     <form ng-submit="toggleTimer()" ng-show="user.leader">
-                        <input type="number" class="timer-input" ng-model="timer.value" ng-disabled="timer.running" />
+                        <input type="number" class="timer-input" ng-model="timer.value" min="5" ng-disabled="timer.running" />
                         <span class="timer-unit">sec</span>
                         <button type="submit" class="btn-action timer-start" ng-class="{disabled: timer.value <= 0, 'btn-secondary': timer.running}">
                             <span class="glyphicon" ng-class="{'glyphicon-hourglass': !timer.running, 'glyphicon-stop': timer.running}"></span>
                         </button>
                     </form>
-                    <div class="countdown" ng-show="timer.running">
+                    <div class="countdown" ng-if="timer.running">
                         <canvas class="chart chart-doughnut" data="countdown.data" labels="countdown.labels" options="countdown.options" colours="countdown.colours"></canvas>
                         <div class="countdown-time">{{timer.counter + timer.unit}}</div>
                     </div>
@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-12 col-xs-12 stories">
+            <div class="col-md-3 col-sm-12 col-xs-12 stories" ng-show="stories.list || session.owner === authUser().data.uid">
                 <h2>Stories</h2>
 
                 <div class="list-group">
