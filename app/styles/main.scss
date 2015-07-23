@@ -1,4 +1,5 @@
 @import 'lib/_bootstrap';
+@import 'lib/_mixins';
 
 body {
   padding: 0;
@@ -42,7 +43,7 @@ footer {
 }
 
 /* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
+@include bp-min-small {
   .container {
     max-width: 890px;
   }
@@ -88,6 +89,7 @@ $orange:        #e67e22;
 @import 'general/_buttons';
 @import 'general/_messaging';
 @import 'general/_forms';
+@import 'general/_feedback';
 
 @import 'start';
 @import 'session';
