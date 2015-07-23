@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-	.factory('viewFactory', function () {
+	.factory('viewFactory', function() {
 
 		var viewFactory = {};
 
@@ -22,22 +22,23 @@ angular.module('pointoApp')
 			login: false,
 			register: false,
 			updateAccount: false,
-			changePasscode: false
+			changePasscode: false,
+			feedback: false
 		};
 
 		//public
-		viewFactory.getErrors = function () {
+		viewFactory.getErrors = function() {
 			return viewFactory.errors;
 		};
 
-		viewFactory.setErrors = function (e, v) {
+		viewFactory.setErrors = function(e, v) {
 			viewFactory.errors[e] = v;
 		};
 
-		viewFactory.getLoading = function () {
+		viewFactory.getLoading = function() {
 			return viewFactory.loading;
 		};
-		viewFactory.setLoading = function (t, v) {
+		viewFactory.setLoading = function(t, v) {
 			viewFactory.loading[t] = v;
 		};
 

@@ -26,12 +26,12 @@
 		padding: 20px;
 		width: 280px;
 		background-color: $white;
-		border: 1px solid $green;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 		z-index: 10;
 
 		.arrow {
 			position: absolute;
-			top: -11px;
+			top: -10px;
 			left: -1px;
 			border-left: 10px solid transparent;
 			border-right: 10px solid transparent;
@@ -46,5 +46,11 @@
 			font-size: 0.9em;
 			resize: none;
 		}
+		strong {
+			font-size: 1.5em;
+		}
+	}
+	.heart {
+		color: $red;
 	}
 }
