@@ -156,7 +156,7 @@ angular.module('pointoApp')
 			name = name.toString();
 
 			usersRef.child(uid).set({
-				name: name.toString(),
+				name: name,
 				points: points,
 				spectator: spectator
 			}, function(error) {

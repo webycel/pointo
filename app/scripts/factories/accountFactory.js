@@ -168,7 +168,7 @@ angular.module('pointoApp')
 			}, 250);
 		};
 
-		accountFactory.sendFeedback = function(feedback) {
+		accountFactory.sendFeedback = function() {
 			return ref.child('feedback');
 		};
 

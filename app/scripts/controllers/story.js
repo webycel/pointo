@@ -193,6 +193,7 @@ angular.module('pointoApp')
                         }
                     });
                 });
+
             } else {
                 storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
                 $scope.initSession();
