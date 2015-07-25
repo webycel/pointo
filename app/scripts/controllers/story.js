@@ -344,6 +344,14 @@ angular.module('pointoApp')
             storyFactory.participateStatus();
         };
 
+        $scope.resetSession = function(e) {
+            e.preventDefault();
+
+            if ($scope.user.leader && window.confirm('Do you really want to reset the session? All votes and stories will be gone')) {
+                storyFactory.resetSession();
+            }
+        };
+
 
 
         /*

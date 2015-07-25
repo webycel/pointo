@@ -200,6 +200,8 @@ angular.module('pointoApp')
 					}, 300);
 					ref.child('sessions').child(id).on('value', storyFactory.onSessionChange);
 
+					ref.child('sessions').child(id).child('users').child(storyFactory.user.key).on('value', storyFactory.onParticipantChange);
+
 					$window.location.assign('#/' + id);
 				} else {
 					console.log(error);
@@ -298,6 +300,17 @@ angular.module('pointoApp')
 			}, storyFactory.errorCallback);
 		};
 
+		storyFactory.onParticipantChange = function(snap) {
+			var participant = snap.val();
+			if (!participant) {
+				return false;
+			}
+
+			if (participant.resetSession) {
+				$window.location.reload();
+			}
+		};
+
 
 
 		/*
@@ -380,6 +393,23 @@ angular.module('pointoApp')
 			storyFactory.user.leader = !storyFactory.user.leader;
 			user.update({
 				leader: storyFactory.user.leader
+			}, storyFactory.errorCallback);
+		};
+
+		storyFactory.resetSession = function() {
+			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key),
+				session = ref.child('sessions').child(storyFactory.sessionID);
+
+			user.update({
+				resetSession: true
+			}, storyFactory.errorCallback);
+
+			session.update({
+				activeStory: null,
+				score: 0,
+				stories: null,
+				timer: null,
+				voteStatus: 0
 			}, storyFactory.errorCallback);
 		};
 
@@ -470,6 +500,7 @@ angular.module('pointoApp')
 			changeName: storyFactory.changeName,
 			changePasscode: storyFactory.changePasscode,
 			leadSession: storyFactory.leadSession,
+			resetSession: storyFactory.resetSession,
 
 			participateStatus: storyFactory.participateStatus
 		};
