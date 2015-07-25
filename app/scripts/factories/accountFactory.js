@@ -9,6 +9,7 @@ angular.module('pointoApp')
 					name: '',
 					logout: null,
 					account: false,
+					resetSession: false,
 					sessions: []
 				},
 				inited: false

@@ -133,6 +133,11 @@
                     <button ng-click="participateStatus()" class="btn-light">
                         <span class="glyphicon" ng-class="{'glyphicon-briefcase': user.spectator, 'glyphicon-sunglasses': !user.spectator}"></span> {{ user.spectator ? 'Participate' : 'Spectate' }}
                     </button>
+
+                    <div ng-if="user.leader" class="reset-session">
+                        <a href="" ng-click="resetSession($event)" ng-if="user.leader">Reset session</a>
+                        <p><span class="glyphicon glyphicon-info-sign"></span> Use this to reset the session if any (weird) errors occur.</p>
+                    </div>
                 </div>
             </div>
             
