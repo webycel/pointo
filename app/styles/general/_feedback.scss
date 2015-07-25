@@ -20,6 +20,10 @@
 		}
 	}
 
+	form {
+		position: relative;
+	}
+
 	.popup {
 		position: absolute;
 		margin-top: 10px;
@@ -42,8 +46,8 @@
 		}
 		textarea {
 			padding: 6px;
-			border-color: $green;
 			font-size: 0.9em;
+			border: none;
 			resize: none;
 		}
 		strong {
@@ -52,5 +56,21 @@
 	}
 	.heart {
 		color: $red;
+	}
+	.message {
+		margin-bottom: 5px;
+		border: 1px solid $green;
+	}
+	.image-upload {
+		width: 100%;
+		padding: 4px 6px 1px 6px;
+		margin: -7px 0 0;
+
+		input {
+			display: inline-block;
+			width: 180px;
+			font-size: 0.8em;
+			vertical-align: super;
+		}
 	}
 }

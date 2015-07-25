@@ -10,7 +10,16 @@
         <div class="arrow"></div>
         <div class="content">
             <form ng-submit="sendFeedback()" ng-if="view === 1">
-                <textarea ng-model="feedback.message" rows="5" placeholder="Give some feedback or ask for help"></textarea>
+                <div class="message">
+                    <textarea ng-model="feedback.message" rows="5" placeholder="Give some feedback or ask for help"></textarea>
+                    <div class="image-upload">
+                        <a href="" class="fakelink glyphicon glyphicon-camera" ng-click="selectImageMode = !selectImageMode"></a>
+                        <input type="file" ng-show="selectImageMode" file-select="onFileSelect($files)" />
+                    </div>
+                </div>
+
+                <p class="permission-error error" ng-show="errors().feedbackImage">Image size too big, max 5mb allowed</p>
+
                 <button ng-class="{disabled: !feedback.message, loading: loading().feedback}" type="submit">Send feedback</button>
             </form>
 

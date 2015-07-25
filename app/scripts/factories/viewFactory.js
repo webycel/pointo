@@ -12,7 +12,8 @@ angular.module('pointoApp')
 			updateAccount: false,
 			wrongPasscode: false,
 			changePasscode: false,
-			permission: false
+			permission: false,
+			feedbackImage: false
 		};
 
 		viewFactory.loading = {

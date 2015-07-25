@@ -8,7 +8,7 @@
  * Controller of the pointoApp
  */
 angular.module('pointoApp')
-	.controller('FeedbackCtrl', function($scope, $timeout, viewFactory, accountFactory) {
+	.controller('FeedbackCtrl', function($scope, $timeout, viewFactory, accountFactory, utilsFactory) {
 
 		accountFactory.init();
 
@@ -17,10 +17,40 @@ angular.module('pointoApp')
 		$scope.loading = viewFactory.getLoading;
 
 		$scope.open = false;
+		$scope.selectImageMode = false;
 		$scope.view = 1;
 		$scope.feedback = {
-			message: null
+			message: null,
+			image: null
 		};
+
+		$scope.selectImage = function(e) {
+			e.preventDefault();
+
+			$scope.selectImageMode = !$scope.selectImageMode;
+		};
+
+		$scope.getFile = function(file) {
+
+			$timeout(function() {
+				if (file.size < 5000000) { // 5mb
+					viewFactory.setLoading('feedback', true);
+
+					utilsFactory.fileReader.readAsDataURL(file, $scope)
+						.then(function(result) {
+							$scope.feedback.image = result;
+							viewFactory.setLoading('feedback', false);
+						});
+				} else {
+					viewFactory.setErrors('feedbackImage', true);
+				}
+			});
+		};
+
+
+		$scope.$on("fileProgress", function(e, progress) {
+			$scope.progress = progress.loaded / progress.total;
+		});
 
 		$scope.sendFeedback = function() {
 			if ($scope.authUser().data) {
