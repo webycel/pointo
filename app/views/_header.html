@@ -43,19 +43,34 @@
             <a href="/account" class="glyphicon glyphicon-cog fakelink" ng-click="toggleAccount($event)"></a>
 
             <div class="account-settings-panel" ng-show="accountView">
-                <form name="accountUpdateForm" class="form-horizontal" ng-submit="updateAccount()">
+                <form name="accountUpdateForm" ng-submit="updateAccount()">
 
                     <div class="form-group">
-                        <label for="accountSettingsName" class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="accountSettingsName" placeholder="Name" ng-model="accountForm.name" required />
-                        </div>
+                        <label for="accountSettingsName">Change name</label>
+                        <input type="text" id="accountSettingsName" placeholder="Name" maxlength="20" ng-model="accountForm.name" />
+                        <p class="error" ng-if="account.errors.name">{{account.errors.name}}</p>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default" ng-class="{loading: loading().updateAccount, disabled: loading().updateAccount, disabled: accountUpdateForm.$error.required}">Update</button>
-                        </div>
+                        <label for="accountSettingsEmail">Change email</label>
+                        <input type="email" id="accountSettingsEmail" placeholder="Email" ng-model="accountForm.email" />
+                        <input type="password" placeholder="Confirm password" ng-model="accountForm.emailPassword" />
+                        <p class="error" ng-if="account.errors.email">{{account.errors.email}}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountSettingsPassword">Change password</label>
+                        <input type="password" id="accountSettingsPassword" placeholder="Old password" ng-model="accountForm.passwordOld" />
+                        <input type="password" placeholder="New password" ng-model="accountForm.passwordNew" />
+                        <p class="error" ng-if="account.errors.password">{{account.errors.password}}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default" ng-class="{loading: loading().updateAccount, disabled: loading().updateAccount, disabled: accountUpdateForm.$error.required}">Update</button>
+                        <p class="error success" ng-if="account.updateSuccess">{{account.updateSuccess}}</p>
+                        <p class="info">
+                            <span class="glyphicon glyphicon-info-sign"></span> Leave the fields which you do not want to change blank.
+                        </p>
                     </div>
                 </form>
             </div>

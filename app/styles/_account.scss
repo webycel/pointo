@@ -23,11 +23,13 @@
         background-color: $white;
         z-index: 10;
 
-        input {
+        input, button {
             width: 100%;
+            margin-bottom: 5px;
         }
-        button {
-            width: 74px;
+        .error {
+            margin-top: 5px;
+            width: 100%;
         }
     }
     .logout {
