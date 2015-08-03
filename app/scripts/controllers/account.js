@@ -18,15 +18,19 @@ angular.module('pointoApp')
 			errors: {}
 		};
 		$scope.loading = viewFactory.getLoading;
-		$scope.accountView = true;
-
-		$scope.accountForm = {
-			name: ''
-		};
+		$scope.accountView = false;
 
 		$scope.toggleAccount = function(e) {
 			e.preventDefault();
 			$scope.accountView = !$scope.accountView;
+
+			// reset form
+			$scope.accountForm = {
+				name: '',
+				oldEmail: $scope.authUser().data.password.email
+			};
+			$scope.account.errors = {};
+			$scope.account.updateSuccess = null;
 		};
 
 		$scope.updateAccount = function() {
@@ -39,16 +43,17 @@ angular.module('pointoApp')
 				$scope.account.errors.name = null;
 				$scope.account.errors.email = null;
 				$scope.account.errors.password = null;
+				$scope.account.updateSuccess = null;
 
 				$scope.account.updates = 0;
 				$scope.account.updateCounter = 0;
 
-				console.log($scope.accountForm);
 				var newData = {};
 
 				// name validation
 				if ($scope.accountForm.name.length > 20) {
 					$scope.account.errors.name = 'Name is too long, max 20 characters';
+					$scope.account.updating = false;
 					return false;
 				} else if ($scope.accountForm.name) {
 					newData.name = $scope.accountForm.name;
@@ -56,14 +61,21 @@ angular.module('pointoApp')
 				}
 
 				// email validation
-				if ($scope.accountForm.email && !$scope.accountForm.emailPassword) {
+				if ($scope.accountForm.oldEmail && $scope.accountForm.newEmail && !$scope.accountForm.emailPassword) {
 					$scope.account.errors.email = 'Please confirm your email change with your current password';
+					$scope.account.updating = false;
 					return false;
-				} else if (!$scope.accountForm.email && $scope.accountForm.emailPassword) {
-					$scope.account.errors.email = 'Please enter an email address';
+				} else if (!$scope.accountForm.newEmail && $scope.accountForm.emailPassword) {
+					$scope.account.errors.email = 'Please enter your current email address';
+					$scope.account.updating = false;
 					return false;
-				} else if ($scope.accountForm.email && $scope.accountForm.emailPassword) {
-					newData.email = $scope.accountForm.email;
+				} else if ($scope.accountForm.oldEmail && !$scope.accountForm.newEmail && $scope.accountForm.emailPassword) {
+					$scope.account.errors.email = 'Please enter your new email address';
+					$scope.account.updating = false;
+					return false;
+				} else if ($scope.accountForm.oldEmail && $scope.accountForm.newEmail && $scope.accountForm.emailPassword) {
+					newData.oldEmail = $scope.accountForm.oldEmail;
+					newData.newEmail = $scope.accountForm.newEmail;
 					newData.emailPassword = $scope.accountForm.emailPassword;
 					$scope.account.updates++;
 				}
@@ -71,9 +83,11 @@ angular.module('pointoApp')
 				// password change validation
 				if ($scope.accountForm.passwordOld && !$scope.accountForm.passwordNew) {
 					$scope.account.errors.password = 'Please enter your new password';
+					$scope.account.updating = false;
 					return false;
 				} else if (!$scope.accountForm.passwordOld && $scope.accountForm.passwordNew) {
 					$scope.account.errors.password = 'Please confirm your password change with your current password';
+					$scope.account.updating = false;
 					return false;
 				} else if ($scope.accountForm.passwordOld && $scope.accountForm.passwordNew) {
 					newData.passwordOld = $scope.accountForm.passwordOld;
@@ -81,6 +95,10 @@ angular.module('pointoApp')
 					$scope.account.updates++;
 				}
 
+
+				if ($scope.account.updates === 0) {
+					return false;
+				}
 
 				// UPDATE ON DATABASE
 				viewFactory.setLoading('updateAccount', true);
@@ -103,16 +121,17 @@ angular.module('pointoApp')
 				}
 
 				// update email
-				if (newData.email && newData.emailPassword) {
-					console.log('email change');
+				if (newData.oldEmail && newData.newEmail && newData.emailPassword) {
+					console.log('email change, old mail: '+$scope.authUser().data.password.email);
 					console.log($scope.authUser().data.password.email);
 
 					accountFactory.updateAccount(false).changeEmail({
-						oldEmail: $scope.authUser().data.password.email,
-						newEmail: newData.email,
+						oldEmail: newData.oldEmail,
+						newEmail: newData.newEmail,
 						password: newData.emailPassword
 					}, function(error) {
 						$timeout(function() {
+							$scope.account.updateCounter++;
 							if (error) {
 								console.log(error);
 								switch (error.code) {
@@ -120,13 +139,17 @@ angular.module('pointoApp')
 										$scope.account.errors.email = 'The specified password is incorrect.';
 										break;
 									case 'INVALID_USER':
-										$scope.account.errors.email = 'The specified password is incorrect.';
+										$scope.account.errors.email = 'The specified user does not exist.';
 										break;
 									default:
 										$scope.account.errors.email = error.message;
 								}
+								$scope.updateAccountError();
 							} else {
 								console.log('email success');
+								$scope.authUser().data.password.email = newData.email;
+								$scope.account.updating = false;
+								$scope.checkUpdateAccountFinished();
 							}
 						});
 					});
@@ -140,10 +163,23 @@ angular.module('pointoApp')
 		};
 
 		$scope.checkUpdateAccountFinished = function() {
+			console.log($scope.account.updateCounter, $scope.account.updates);
 			if ($scope.account.updateCounter === $scope.account.updates) {
-				viewFactory.setLoading('updateAccount', false);
-				$scope.account.updateSuccess = 'Your account data has been updated!';
+				$timeout(function() {
+					viewFactory.setLoading('updateAccount', false);
+					$scope.account.updating = false;
+					$scope.account.updateSuccess = 'Your account data has been updated!';
+					// reinit account data
+					accountFactory.init();
+				});
 			}
+		};
+		
+		$scope.updateAccountError = function() {
+			$timeout(function() {
+				viewFactory.setLoading('updateAccount', false);
+				$scope.account.updating = false;
+			});
 		};
 
 		$scope.closeAccountPanel = function() {

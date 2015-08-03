@@ -84,6 +84,7 @@ angular.module('pointoApp')
 			});
 		};
 		accountFactory.authDataCallback = function(authData) {
+			console.log('auth update', authData);
 			if (authData) {
 
 				userRef = ref.child('users').child(authData.uid);

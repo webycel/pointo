@@ -53,7 +53,8 @@
 
                     <div class="form-group">
                         <label for="accountSettingsEmail">Change email</label>
-                        <input type="email" id="accountSettingsEmail" placeholder="Email" ng-model="accountForm.email" />
+                        <input type="email" id="accountSettingsEmail" placeholder="Current email" ng-model="accountForm.oldEmail" />
+                        <input type="email" id="accountSettingsNewEmail" placeholder="New email" ng-model="accountForm.newEmail" />
                         <input type="password" placeholder="Confirm password" ng-model="accountForm.emailPassword" />
                         <p class="error" ng-if="account.errors.email">{{account.errors.email}}</p>
                     </div>
