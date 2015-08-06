@@ -193,6 +193,7 @@ angular.module('pointoApp')
                         }
                     });
                 });
+
             } else {
                 storyFactory.joinSession(sessionID, $scope.name, $scope.spectator);
                 $scope.initSession();
@@ -342,6 +343,14 @@ angular.module('pointoApp')
 
         $scope.participateStatus = function() {
             storyFactory.participateStatus();
+        };
+
+        $scope.resetSession = function(e) {
+            e.preventDefault();
+
+            if ($scope.user.leader && window.confirm('Do you really want to reset the session? All votes and stories will be gone')) {
+                storyFactory.resetSession();
+            }
         };
 
 

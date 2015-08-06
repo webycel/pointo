@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pointoApp')
-    .factory('utilsFactory', function($q, $log) {
+    .factory('utilsFactory', function($q) {
 
         var utilsFactory = {};
 
@@ -57,7 +57,7 @@ angular.module('pointoApp')
 
         var onProgress = function(reader, scope) {
             return function(event) {
-                scope.$broadcast("fileProgress", {
+                scope.$broadcast('fileProgress', {
                     total: event.total,
                     loaded: event.loaded
                 });

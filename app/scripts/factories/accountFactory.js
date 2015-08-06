@@ -9,6 +9,7 @@ angular.module('pointoApp')
 					name: '',
 					logout: null,
 					account: false,
+					resetSession: false,
 					sessions: []
 				},
 				inited: false
@@ -83,6 +84,7 @@ angular.module('pointoApp')
 			});
 		};
 		accountFactory.authDataCallback = function(authData) {
+			console.log('auth update', authData);
 			if (authData) {
 
 				userRef = ref.child('users').child(authData.uid);
@@ -157,17 +159,19 @@ angular.module('pointoApp')
 			return ref.child('users').child(accountFactory.user.data.uid);
 		};
 
-		accountFactory.updateAccount = function(data) {
-			ref.child('users').child(accountFactory.user.data.uid).set({
-				name: data.name
-			});
-			$timeout(function() {
-				accountFactory.user.name = data.name;
-				viewFactory.setLoading('updateAccount', false);
-			}, 250);
+		accountFactory.setLocalUserName = function(name) {
+			accountFactory.user.name = name;
 		};
 
-		accountFactory.sendFeedback = function(feedback) {
+		accountFactory.updateAccount = function(userName) {
+			if (userName) {
+				return ref.child('users').child(accountFactory.user.data.uid);
+			} else {
+				return ref;
+			}
+		};
+
+		accountFactory.sendFeedback = function() {
 			return ref.child('feedback');
 		};
 
@@ -176,6 +180,7 @@ angular.module('pointoApp')
 			init: accountFactory.init,
 			getUser: accountFactory.getUser,
 			getUserName: accountFactory.getUserName,
+			setUserName: accountFactory.setLocalUserName,
 			login: accountFactory.login,
 			register: accountFactory.register,
 			updateAccount: accountFactory.updateAccount,

@@ -45,7 +45,7 @@
 
                 <div class="row participants">
                     <div class="col-md-3 col-sm-3 col-xs-4 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
-                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-show="p.leader"></span>  {{p.name}}</span>
+                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-if="p.leader"></span>  {{p.name}}</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1, 'flipped': isFlipped}">
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
                         </span>
@@ -59,11 +59,11 @@
                     </div> -->
                 </div>
 
-                <div class="row participants spectators" ng-show="filteredSpectators.length > 0">
+                <div class="row participants spectators" ng-if="filteredSpectators.length > 0">
                     <h3>Spectators</h3>
 
                     <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredSpectators = (participants | filter: {spectator: true})" ng-class="{active: p.$id == user.key, leader: p.leader}">
-                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-show="p.leader"></span> {{p.name}}</span>                       
+                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-if="p.leader"></span> {{p.name}}</span>                       
                     </div>
                 </div>
 
@@ -74,14 +74,14 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-12 col-xs-12 stories" ng-show="stories.list || session.owner === authUser().data.uid">
+            <div class="col-md-3 col-sm-12 col-xs-12 stories" ng-if="stories.list || session.owner === authUser().data.uid">
                 <h2>Stories</h2>
 
                 <div class="list-group">
                     <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
                         <div class="item-content" ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
                             <span ng-hide="story.editMode">
-                                <span class="badge" ng-show="story.points !== -999 && session.owner !== authUser().data.uid">{{story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
+                                <span class="badge" ng-if="story.points !== -999 && session.owner !== authUser().data.uid">{{story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
                             </span>
                             
                             <select ng-model="story.points" ng-change="saveStoryEdit($event, id, story)" ng-show="session.owner === authUser().data.uid">
@@ -98,7 +98,7 @@
                     </div>
                 </div>
 
-                <form name="storyForm" ng-submit="addStory()" ng-show="session.owner === authUser().data.uid">
+                <form name="storyForm" ng-submit="addStory()" ng-if="session.owner === authUser().data.uid">
                     <input type="text" placeholder="Story" ng-model="stories.newStory" required />
                     <button type="submit" ng-class="{disabled: !storyForm.$valid}">Add story</button>
                 </form>
@@ -117,7 +117,7 @@
                             <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
                         </div>
                     </form>
-                    <form ng-submit="changePasscode()" ng-show="session.owner === authUser().data.uid">
+                    <form ng-submit="changePasscode()" ng-if="session.owner === authUser().data.uid">
                         <div class="form-group">
                             <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="newPasscode" required />
                             <input type="submit" value="Change passcode" ng-class="{loading: loading().changePasscode, disabled: newPasscode.length === 0}" />
@@ -133,6 +133,11 @@
                     <button ng-click="participateStatus()" class="btn-light">
                         <span class="glyphicon" ng-class="{'glyphicon-briefcase': user.spectator, 'glyphicon-sunglasses': !user.spectator}"></span> {{ user.spectator ? 'Participate' : 'Spectate' }}
                     </button>
+
+                    <div ng-if="user.leader" class="reset-session">
+                        <a href="" ng-click="resetSession($event)" ng-if="user.leader">Reset session</a>
+                        <p><span class="glyphicon glyphicon-info-sign"></span> Use this to reset the session if any (weird) errors occur.</p>
+                    </div>
                 </div>
             </div>
             
