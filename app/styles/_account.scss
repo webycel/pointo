@@ -1,4 +1,4 @@
-.account {
+.account, .password-reset {
     form {
         width: 100%;
         max-width: 320px;
@@ -8,6 +8,12 @@
             width: 100%;
             margin-bottom: 5px;
         }
+    }
+}
+
+.password-reset {
+    .hint {
+        font-size: 0.9em;
     }
 }
 

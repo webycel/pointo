@@ -181,7 +181,6 @@ angular.module('pointoApp')
 		};
 
 		$scope.checkUpdateAccountFinished = function() {
-			console.log($scope.account.updateCounter, $scope.account.updates);
 			if ($scope.account.updateCounter === $scope.account.updates) {
 				$timeout(function() {
 					viewFactory.setLoading('updateAccount', false);
@@ -193,8 +192,6 @@ angular.module('pointoApp')
 						$scope.account.emailChange = false;
 						// reinit account data
 						accountFactory.updateAccount(false).unauth();
-
-						console.log(newData.newEmail, newData.emailPassword);
 
 						accountFactory.updateAccount(false).authWithPassword({
 							email: newData.newEmail,

@@ -57,10 +57,10 @@
                 <input type="password" class="join_id" placeholder="Your password" ng-model="auth.login.password" required />
                 
                 <button type="submit" ng-class="{loading: loading().login, disabled: loading().login}" ng-click="spectator = false">Login</button>
+                <a href="#/forgotpassword" class="forgot-pwd">Forgot password?</a>
             </div>
             <div class="btn btn-primary" ng-hide="auth.state.login" ng-click="formLogin()">Login</div>
         </form>
-
 
         <span class="or">or</span>
 
