@@ -8,7 +8,7 @@
  * Controller of the pointoApp
  */
 angular.module('pointoApp')
-	.controller('FeedbackCtrl', function($scope, $timeout, viewFactory, accountFactory, utilsFactory) {
+	.controller('FeedbackCtrl', function($scope, $timeout, $document, viewFactory, accountFactory, utilsFactory) {
 
 		accountFactory.init();
 
@@ -71,5 +71,23 @@ angular.module('pointoApp')
 				}
 			});
 		};
+
+		$scope.closePopup = function() {
+			$timeout(function() {
+				$scope.open = false;
+			});
+		};
+
+		$document.bind('keyup', function(e) {
+			if (e.which === 27) {
+				$scope.closePopup();
+			}
+		});
+
+		$document.bind('click', function(e) {
+			if (e.target.closest('.feedback .popup') === null && e.target.closest('.feedback a') === null) {
+				$scope.closePopup();
+			}
+		});
 
 	});

@@ -1,7 +1,11 @@
 {
   "name": "pointo",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "express": "*",
+    "gzippo": "*",
+    "logger": "*"
+  },
   "repository": {},
   "devDependencies": {
     "grunt": "~0.4.5",
