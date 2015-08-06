@@ -1,49 +1,24 @@
 .account {
-    float: right;
-    position: relative;
-    margin-top: 22px;
-    
-    .permission-error {
-        position: absolute;
-        top: -12px;
-        left: -330px;
-        font-size: 0.9em;
-    }
-    .account-settings {
-        display: inline-block;
-        margin-right: 8px;
-    }
-    .account-settings-panel {
-        position: absolute;
-        top: 37px;
-        right: 0;
-        padding: 10px;
-        width: 300px;
-        border: 1px solid $greyCCC;
-        background-color: $white;
-        z-index: 10;
+    form {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
 
         input, button {
             width: 100%;
             margin-bottom: 5px;
         }
-        .error {
-            margin-top: 5px;
-            width: 100%;
-        }
-    }
-    .logout {
-        font-size: 0.75em;
-        cursor: pointer;
     }
 }
 
+.account-menu {
+    float: right;
+    position: relative;
+    margin-top: 22px;
 
-@media screen and (max-width: 690px) {
-    .account {
-        .permission-error {
-            position: relative;
-            left: 0;
-        }
+    .logout {
+        margin-left: 10px;
+        font-size: 0.75em;
+        cursor: pointer;
     }
 }
