@@ -17,7 +17,7 @@ angular
     'chart.js'
   ])
   .constant('FIREBASE_URL', 'https://pointo.firebaseio.com/')
-  .config(function ($routeProvider) {
+  .config(function($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -26,6 +26,10 @@ angular
       .when('/account', {
         templateUrl: 'views/account.html',
         controller: 'AccountCtrl'
+      })
+      .when('/forgotpassword', {
+        templateUrl: 'views/forgotpassword.html',
+        controller: 'PasswordResetCtrl'
       })
       .when('/:sessionID', {
         templateUrl: 'views/story.html',
@@ -43,8 +47,8 @@ angular.module('pointoApp')
       templateUrl: '../views/_header.html'
     };
 
-}).filter('num', function() {
+  }).filter('num', function() {
     return function(input) {
       return parseInt(input, 10);
     };
-});
+  });
