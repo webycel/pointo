@@ -15,7 +15,7 @@
     view = 2 -> enter name & passcode screen
  */
 angular.module('pointoApp')
-    .controller('StoryCtrl', function($scope, $routeParams, $window, $timeout, storyFactory, accountFactory, viewFactory) {
+    .controller('StoryCtrl', function($scope, $routeParams, $window, $timeout, $route, storyFactory, accountFactory, viewFactory) {
 
         var sessionID = $routeParams.sessionID,
             session, timerInterval;
@@ -30,6 +30,33 @@ angular.module('pointoApp')
 
         // init account data
         accountFactory.init();
+
+        // offline status
+        $scope.isOffline = false;
+
+        Offline.options = {
+            checkOnLoad: true,
+            reconnect: {
+                initialDelay: 20,
+                delay: 1.5
+            }
+        };
+
+        Offline.on('confirmed-down', function() {
+            $timeout(function() {
+                $scope.isOffline = true;
+            });
+        });
+
+        Offline.on('confirmed-up', function() {
+            $timeout(function() {
+                if ($scope.isOffline) {
+                    $scope.isOffline = false;
+                    $route.reload();
+                    $scope.autoJoinSession();
+                }
+            });
+        });
 
         // init errors & loading view
         $scope.errors = viewFactory.getErrors;
