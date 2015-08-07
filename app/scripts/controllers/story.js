@@ -31,6 +31,23 @@ angular.module('pointoApp')
         // init account data
         accountFactory.init();
 
+        // offline status
+        Offline.options = {
+            checkOnLoad: true,
+            reconnect: {
+                initialDelay: 20,
+                delay: 1.5
+            }
+        };
+
+        Offline.on('confirmed-down', function() {
+            console.log('offline');
+        });
+
+        Offline.on('confirmed-up', function() {
+            console.log('online');
+        });
+
         // init errors & loading view
         $scope.errors = viewFactory.getErrors;
         $scope.loading = viewFactory.getLoading;
