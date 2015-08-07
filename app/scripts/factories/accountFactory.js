@@ -128,7 +128,7 @@ angular.module('pointoApp')
 
 		accountFactory.authHandler = function(error, authData) {
 			if (error) {
-				console.log('Login Failed!', error);
+				viewFactory.setErrors('loginError', error.message);
 				accountFactory.setUser(null, '');
 			} else {
 				console.log('Authenticated successfully with payload:', authData);
