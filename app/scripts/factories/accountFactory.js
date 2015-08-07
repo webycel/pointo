@@ -42,17 +42,14 @@ angular.module('pointoApp')
 			ref.createUser({
 				email: email,
 				password: pwd
-			}, function(error, userData) {
+			}, function(error) {
 				if (error) {
-					console.log('Error creating user: ', error);
 					viewFactory.setErrors('registerError', error.message);
 				} else {
 					ref.authWithPassword({
 						email: email,
 						password: pwd
 					}, accountFactory.authHandler);
-
-					console.log('Successfully created user with uid: ', userData.uid);
 				}
 
 				$rootScope.$apply(function() {
@@ -84,7 +81,6 @@ angular.module('pointoApp')
 			});
 		};
 		accountFactory.authDataCallback = function(authData) {
-			console.log('auth update', authData);
 			if (authData) {
 
 				userRef = ref.child('users').child(authData.uid);
@@ -94,7 +90,6 @@ angular.module('pointoApp')
 						return;
 					}
 
-					console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
 					$timeout(function() {
 						accountFactory.setUser(authData, user);
 					});
@@ -119,7 +114,6 @@ angular.module('pointoApp')
 				});
 
 			} else {
-				console.log('User is logged out');
 				//accountFactory.anonymousLogin();
 				accountFactory.setUser(null, '');
 				accountFactory.inited = false;
@@ -131,8 +125,6 @@ angular.module('pointoApp')
 				viewFactory.setErrors('loginError', error.message);
 				accountFactory.setUser(null, '');
 			} else {
-				console.log('Authenticated successfully with payload:', authData);
-
 				if (isNewUser) {
 					ref.child('users').child(authData.uid).set({
 						name: authData.password.email.replace(/@.*/, '')
@@ -148,9 +140,9 @@ angular.module('pointoApp')
 		accountFactory.anonymousLogin = function() {
 			ref.authAnonymously(function(error) {
 				if (error) {
-					console.log('Login Failed!', error);
+					// console.log('Login Failed!', error);
 				} else {
-					console.log('Logged in as Anonymous');
+					// console.log('Logged in as Anonymous');
 				}
 			});
 		};
