@@ -8,7 +8,7 @@
  * Controller of the pointoApp
  */
 angular.module('pointoApp')
-	.controller('MainCtrl', function ($scope, $timeout, viewFactory, accountFactory, storyFactory) {
+	.controller('MainCtrl', function($scope, $timeout, viewFactory, accountFactory, storyFactory) {
 
 		accountFactory.init();
 
@@ -42,7 +42,7 @@ angular.module('pointoApp')
 		viewFactory.setLoading('joinSpectator', false);
 		viewFactory.setErrors('noSession', false);
 
-		$scope.createSession = function () {
+		$scope.createSession = function() {
 			if (!$scope.loading().create) {
 				$scope.loading().create = true;
 				var name = $scope.authUser().account ? $scope.authUser().name : $scope.name().name;
@@ -53,7 +53,7 @@ angular.module('pointoApp')
 			}
 		};
 
-		$scope.joinSession = function (id, passcodeEntered) {
+		$scope.joinSession = function(id, passcodeEntered) {
 			if (!$scope.loading().join) {
 				if ($scope.spectator) {
 					viewFactory.setLoading('joinSpectator', true);
@@ -66,9 +66,9 @@ angular.module('pointoApp')
 
 				var sid = id || $scope.sessionID;
 
-				storyFactory.sessionExists(sid).once('value', function (snapshot) {
+				storyFactory.sessionExists(sid).once('value', function(snapshot) {
 					if (snapshot.val()) {
-						$timeout(function () {
+						$timeout(function() {
 
 							if (snapshot.child(sid).exists()) { // a session exists with this ID
 								var session = snapshot.child(sid).val();
@@ -103,42 +103,46 @@ angular.module('pointoApp')
 			}
 		};
 
-		$scope.enterSession = function (id) {
+		$scope.enterSession = function(id) {
 			var name = $scope.authUser().account ? $scope.authUser().name : $scope.joinName().name;
 			storyFactory.joinSession(id, name, $scope.spectator, true);
 
-			setTimeout(function () {
+			setTimeout(function() {
 				$scope.$apply();
 				// what's this for? check if can remove
 			}, 1000);
 		};
 
-		$scope.cancelPasscodeJoining = function () {
+		$scope.cancelPasscodeJoining = function() {
 			$scope.passcodeNeeded = false;
 		};
 
-		$scope.formLogin = function () {
+		$scope.formLogin = function() {
 			$scope.auth.state.login = true;
 			$scope.auth.state.register = false;
 			$scope.$broadcast('enterLogin');
 		};
 
-		$scope.formRegister = function () {
+		$scope.formRegister = function() {
 			$scope.auth.state.register = true;
 			$scope.auth.state.login = false;
 			$scope.$broadcast('enterRegister');
 		};
 
-		$scope.login = function () {
-			viewFactory.setLoading('login', true);
-			viewFactory.setErrors('registerError', false);
-			accountFactory.login($scope.auth.login.email, $scope.auth.login.password);
+		$scope.login = function() {
+			if (!$scope.loading().login) {
+				viewFactory.setLoading('login', true);
+				viewFactory.setErrors('registerError', false);
+				accountFactory.login($scope.auth.login.email, $scope.auth.login.password);
+			}
 		};
 
-		$scope.register = function () {
-			viewFactory.setLoading('register', true);
-			viewFactory.setErrors('registerError', false);
-			accountFactory.register($scope.auth.register.email, $scope.auth.register.password);
+		$scope.register = function() {
+			if (!$scope.loading().register) {
+				viewFactory.setLoading('register', true);
+				viewFactory.setErrors('registerError', false);
+				accountFactory.register($scope.auth.register.email, $scope.auth.register.password);
+			}
 		};
 
 	});
