@@ -107,37 +107,46 @@
         </div>
 
         <div class="row settings-container">
-            <div class="col-md-9 col-sm-8 col-xs-12 settings">
+            <div class="col-md-9 col-sm-8 col-xs-12">
                 <h3>Settings</h3>
-                
-                <div class="col col-md-4 col-sm-5 col-xs-12">
-                    <form ng-submit="changeName()">
-                        <div class="form-group">
-                            <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="newName" required />
-                            <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
-                        </div>
-                    </form>
-                    <form ng-submit="changePasscode()" ng-if="session.owner === authUser().data.uid">
-                        <div class="form-group">
-                            <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="newPasscode" required />
-                            <input type="submit" value="Change passcode" ng-class="{loading: loading().changePasscode, disabled: newPasscode.length === 0}" />
-                            <div class="error success" ng-show="errors().changePasscode">Passcode has been changed!</div>
-                        </div>
-                    </form>
-                </div>
-                
-                <div class="col col-md-4 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1">
-                    <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}">
-                        <span class="glyphicon glyphicon-king"></span> {{ user.leader ? 'Leading session' : 'Lead session' }}
-                    </button>
-                    <button ng-click="participateStatus()" class="btn-light">
-                        <span class="glyphicon" ng-class="{'glyphicon-briefcase': user.spectator, 'glyphicon-sunglasses': !user.spectator}"></span> {{ user.spectator ? 'Participate' : 'Spectate' }}
-                    </button>
 
-                    <div ng-if="user.leader" class="reset-session">
-                        <a href="" ng-click="resetSession($event)" ng-if="user.leader">Reset session</a>
-                        <p><span class="glyphicon glyphicon-info-sign"></span> Use this to reset the session if any (weird) errors occur.</p>
+                <div class="settings">
+                
+                    <div class="col col-md-4 col-sm-5 col-xs-12 main-settings">
+                        <form ng-submit="changeName()">
+                            <div class="form-group">
+                                <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="newName" required />
+                                <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
+                            </div>
+                        </form>
+                        <form ng-submit="changePasscode()" ng-if="session.owner === authUser().data.uid">
+                            <div class="form-group">
+                                <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="newPasscode" required />
+                                <input type="submit" value="Change passcode" ng-class="{loading: loading().changePasscode, disabled: newPasscode.length === 0}" />
+                                <div class="error success" ng-show="errors().changePasscode">Passcode has been changed!</div>
+                            </div>
+                        </form>
+                        <form class="leader-settings checkbox" ng-if="session.owner === authUser().data.uid">
+                            <label>
+                                <input type="checkbox" ng-model="session.settings.allLeader" ng-change="changeLeaderSettings()" /> Everybody can be a leader
+                            </label>
+                        </form>
                     </div>
+                    
+                    <div class="col col-md-4 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1">
+                        <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}" ng-if="session.settings.allLeader || session.owner === authUser().data.uid">
+                            <span class="glyphicon glyphicon-king"></span> {{ user.leader ? 'Leading session' : 'Lead session' }}
+                        </button>
+                        <button ng-click="participateStatus()" class="btn-light">
+                            <span class="glyphicon" ng-class="{'glyphicon-briefcase': user.spectator, 'glyphicon-sunglasses': !user.spectator}"></span> {{ user.spectator ? 'Participate' : 'Spectate' }}
+                        </button>
+
+                        <div ng-if="user.leader" class="reset-session">
+                            <a href="" ng-click="resetSession($event)" ng-if="user.leader">Reset session</a>
+                            <p><span class="glyphicon glyphicon-info-sign"></span> Use this to reset the session if any (weird) errors occur.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             
