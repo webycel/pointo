@@ -282,8 +282,21 @@
         }
     }
     .settings {
+        display: flex;
+        flex-direction: row;
+
+        @media (max-width: $break-x-small) {
+            flex-direction: column-reverse;
+
+            .main-settings {
+                margin-top: 25px;
+            }
+        }
         .col {
             padding-left: 0;
+        }
+        form {
+            width: 100%;
         }
     }
 
