@@ -204,14 +204,6 @@ angular.module('pointoApp')
 								leader: false
 							});
 						}
-						// if (snap.val() === 0) {
-						// 	ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({
-						// 		points: {
-						// 			text: -1,
-						// 			value: -1
-						// 		}
-						// 	}, storyFactory.errorCallback);
-						// }
 					});
 
 					$timeout(function() {
