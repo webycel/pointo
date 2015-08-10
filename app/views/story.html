@@ -126,10 +126,15 @@
                                 <div class="error success" ng-show="errors().changePasscode">Passcode has been changed!</div>
                             </div>
                         </form>
+                        <form class="leader-settings checkbox" ng-if="session.owner === authUser().data.uid">
+                            <label>
+                                <input type="checkbox" ng-model="session.settings.allLeader" ng-change="changeLeaderSettings()" /> Everybody can be a leader
+                            </label>
+                        </form>
                     </div>
                     
                     <div class="col col-md-4 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1">
-                        <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}">
+                        <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}" ng-if="session.settings.allLeader || session.owner === authUser().data.uid">
                             <span class="glyphicon glyphicon-king"></span> {{ user.leader ? 'Leading session' : 'Lead session' }}
                         </button>
                         <button ng-click="participateStatus()" class="btn-light">

@@ -364,8 +364,18 @@ angular.module('pointoApp')
             }
         };
 
+        $scope.changeLeaderSettings = function() {
+            if ($scope.session.owner === $scope.authUser().data.uid) {
+                storyFactory.getSessionRef(sessionID).child('settings').update({
+                    allLeader: $scope.session.settings.allLeader
+                });
+            }
+        };
+
         $scope.leadSession = function() {
-            storyFactory.leadSession();
+            if ($scope.session.settings.allLeader || $scope.session.owner === $scope.authUser().data.uid) {
+                storyFactory.leadSession();
+            }
         };
 
         $scope.participateStatus = function() {

@@ -195,6 +195,25 @@ angular.module('pointoApp')
 						}
 					});
 
+					//on session settings
+					ref.child('sessions').child(id).child('settings').on('value', function(snap) {
+						console.log(storyFactory.session.owner, accountFactory.getUser().data.uid);
+						var sessionSettings = snap.val();
+						if (!sessionSettings.allLeader && storyFactory.session.owner !== accountFactory.getUser().data.uid) {
+							ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({
+								leader: false
+							});
+						}
+						// if (snap.val() === 0) {
+						// 	ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({
+						// 		points: {
+						// 			text: -1,
+						// 			value: -1
+						// 		}
+						// 	}, storyFactory.errorCallback);
+						// }
+					});
+
 					$timeout(function() {
 						ref.child('sessions').child(id).once('value', storyFactory.onSessionChange);
 					}, 300);
@@ -308,6 +327,14 @@ angular.module('pointoApp')
 
 			if (participant.resetSession) {
 				$window.location.reload();
+			}
+		};
+
+		storyFactory.getSessionRef = function(id) {
+			if (id) {
+				return ref.child('sessions').child(id);
+			} else {
+				return ref;
 			}
 		};
 
@@ -481,6 +508,8 @@ angular.module('pointoApp')
 			isLoggedIn: storyFactory.isLoggedIn,
 			anonymousLogin: storyFactory.anonymousLogin,
 			user: storyFactory.user,
+
+			getSessionRef: storyFactory.getSessionRef,
 
 			setVote: storyFactory.setVote,
 			revealVotes: storyFactory.revealVotes,

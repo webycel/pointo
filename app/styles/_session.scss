@@ -281,6 +281,7 @@
             font-size: 0.85em;
         }
     }
+
     .settings {
         display: flex;
         flex-direction: row;
@@ -297,6 +298,10 @@
         }
         form {
             width: 100%;
+        }
+
+        .leader-settings input {
+            width: auto;
         }
     }
 
