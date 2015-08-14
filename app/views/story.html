@@ -59,7 +59,7 @@
                     </div> -->
                 </div>
 
-                <div class="row participants spectators" ng-if="filteredSpectators.length > 0">
+                <div class="row participants spectators" ng-show="filteredSpectators.length > 0">
                     <h3>Spectators</h3>
 
                     <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredSpectators = (participants | filter: {spectator: true})" ng-class="{active: p.$id == user.key, leader: p.leader}">
