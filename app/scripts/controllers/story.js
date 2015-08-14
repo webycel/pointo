@@ -372,6 +372,14 @@ angular.module('pointoApp')
             }
         };
 
+        $scope.changeAutoRevealSettings = function() {
+            if ($scope.user.leader || $scope.session.owner === $scope.authUser().data.uid) {
+                storyFactory.getSessionRef(sessionID).child('settings').update({
+                    autoReveal: $scope.session.settings.autoReveal
+                });
+            }
+        };
+
         $scope.leadSession = function() {
             if ($scope.session.settings.allLeader || $scope.session.owner === $scope.authUser().data.uid) {
                 storyFactory.leadSession();
