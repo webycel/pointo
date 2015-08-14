@@ -197,7 +197,6 @@ angular.module('pointoApp')
 
 					//on session settings
 					ref.child('sessions').child(id).child('settings').on('value', function(snap) {
-						console.log(storyFactory.session.owner, accountFactory.getUser().data.uid);
 						var sessionSettings = snap.val();
 						if (!sessionSettings.allLeader && storyFactory.session.owner !== accountFactory.getUser().data.uid) {
 							ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({
@@ -230,7 +229,7 @@ angular.module('pointoApp')
 					participants: 0,
 					score: 0
 				},
-				data, x = 0,
+				data, x = 0, votes = 0,
 				total = 0;
 
 			//get statistics
@@ -239,7 +238,11 @@ angular.module('pointoApp')
 			for (s in users) {
 				points = users[s].points;
 
-				for (i = 0; i < storyFactory.storyPointSet.length - 2; i++) {
+				for (i = 0; i < storyFactory.storyPointSet.length - 1; i++) {
+					if(i === storyFactory.storyPointSet.length -2 && storyFactory.storyPointSet[i].value === points.value) {
+						votes++;
+						break;
+					}
 					if (storyFactory.storyPointSet[i].value === points.value) {
 						stats.data[0][i] += 1;
 					}
@@ -253,7 +256,16 @@ angular.module('pointoApp')
 			for (i = 0; i < data.length; i++) {
 				if (data[i] > 0) {
 					total += storyFactory.storyPointSet[i].value;
+					votes++;
 					x++;
+				}
+			}
+
+			// when everybody has voted
+			if(votes === stats.participants) {
+				if(storyFactory.session.voteStatus === 0 && (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader)) {
+					// auto reveal votes
+					storyFactory.revealVotes();
 				}
 			}
 

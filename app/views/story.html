@@ -126,9 +126,12 @@
                                 <div class="error success" ng-show="errors().changePasscode">Passcode has been changed!</div>
                             </div>
                         </form>
-                        <form class="leader-settings checkbox" ng-if="session.owner === authUser().data.uid">
-                            <label>
+                        <form class="session-settings checkbox">
+                            <label ng-if="session.owner === authUser().data.uid">
                                 <input type="checkbox" ng-model="session.settings.allLeader" ng-change="changeLeaderSettings()" /> Everybody can be a leader
+                            </label>
+                            <label ng-if="user.leader || session.owner === authUser().data.uid">
+                                <input type="checkbox" ng-model="session.settings.autoReveal" ng-change="changeAutoRevealSettings()" /> Auto reveal votes once everybody voted
                             </label>
                         </form>
                     </div>

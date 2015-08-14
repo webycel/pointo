@@ -300,8 +300,15 @@
             width: 100%;
         }
 
-        .leader-settings input {
-            width: auto;
+        .session-settings {
+            font-size: 0.9em;
+
+            label {
+                margin-bottom: 5px;
+            }
+            input {
+                width: auto;
+            }
         }
     }
 
