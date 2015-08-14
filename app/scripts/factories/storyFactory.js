@@ -372,15 +372,13 @@ angular.module('pointoApp')
 					text: -1,
 					value: -1
 				};
-			$timeout(function() {
-				session.update({
-					voteStatus: 0
-				}, storyFactory.errorCallback);
-				session.child('users').child(storyFactory.user.key).update({
-					points: points
-				}, storyFactory.errorCallback);
-				storyFactory.user.points = points;
-			});
+			session.update({
+				voteStatus: 0
+			}, storyFactory.errorCallback);
+			session.child('users').child(storyFactory.user.key).update({
+				points: points
+			}, storyFactory.errorCallback);
+			storyFactory.user.points = points;
 		};
 
 		storyFactory.getVoteStatistics = function() {
