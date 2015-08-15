@@ -10,6 +10,7 @@ angular.module('pointoApp')
 			key: null,
 			name: null,
 			points: {},
+			voteHistory: [],
 			'new': false,
 			leader: false,
 			spectator: false,
@@ -349,13 +350,23 @@ angular.module('pointoApp')
 		*/
 		storyFactory.setVote = function(points) {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
+
+			if (storyFactory.user.points.value !== -1) {
+				if (storyFactory.user.voteHistory.length === 3) {
+					storyFactory.user.voteHistory.shift();
+				}
+				storyFactory.user.voteHistory.push(storyFactory.user.points);
+			}
+
+			storyFactory.user.points = points;
+
 			user.update({
 				points: {
 					text: points.text.toString(),
 					value: parseFloat(points.value)
-				}
+				},
+				voteHistory: angular.copy(storyFactory.user.voteHistory)
 			}, storyFactory.errorCallback);
-			storyFactory.user.points = points;
 		};
 
 		storyFactory.revealVotes = function() {
@@ -372,13 +383,17 @@ angular.module('pointoApp')
 					text: -1,
 					value: -1
 				};
+
 			session.update({
 				voteStatus: 0
 			}, storyFactory.errorCallback);
+
 			session.child('users').child(storyFactory.user.key).update({
-				points: points
+				points: points, voteHistory: []
 			}, storyFactory.errorCallback);
+
 			storyFactory.user.points = points;
+			storyFactory.user.voteHistory = [];
 		};
 
 		storyFactory.getVoteStatistics = function() {
