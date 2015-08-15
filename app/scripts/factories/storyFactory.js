@@ -296,7 +296,7 @@ angular.module('pointoApp')
 				if (error) {
 					console.log('Login Failed!', error);
 				} else {
-					console.log('Logged in as Anonymous');
+					// console.log('Logged in as Anonymous');
 				}
 			});
 		};
