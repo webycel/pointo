@@ -116,7 +116,11 @@ angular.module('pointoApp')
 			} else {
 				//accountFactory.anonymousLogin();
 				accountFactory.setUser(null, '');
-				accountFactory.inited = false;
+				
+				if (accountFactory.inited) {
+					accountFactory.inited = false;
+					$window.location.assign('#/');
+				}
 			}
 		};
 
