@@ -41,13 +41,7 @@ angular
   });
 
 angular.module('pointoApp')
-  .directive('globalHeader', function() {
-
-    return {
-      templateUrl: '../views/_header.html'
-    };
-
-  }).filter('num', function() {
+  .filter('num', function() {
     return function(input) {
       return parseInt(input, 10);
     };
