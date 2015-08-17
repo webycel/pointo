@@ -14,7 +14,7 @@
             <div class="col-md-3 col-sm-4 col-xs-12 voting">
                 <h2>Vote</h2>
                 <ul>
-                    <li class="btn point" ng-repeat="point in storypoints | filter:'!X'" ng-click="vote(point)" ng-class="{active: session.users[user.key].points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2, disabled: user.spectator}">
+                    <li class="btn point" ng-repeat="point in storypoints | filter:'!X'" ng-click="vote(point)" ng-class="{active: session.users[user.key].points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2, disabled: user.spectator || (session.settings.disallowVotes && session.voteStatus === 1)}">
                         {{point.value !== -2 ? point.text : ''}}
                     </li>
                 </ul>
@@ -137,6 +137,9 @@
                             </label>
                             <label ng-if="user.leader || session.owner === authUser().data.uid">
                                 <input type="checkbox" ng-model="$parent.session.settings.autoReveal" ng-change="changeAutoRevealSettings()" /> Auto reveal votes once everybody voted
+                            </label>
+                            <label ng-if="user.leader || session.owner === authUser().data.uid">
+                                <input type="checkbox" ng-model="$parent.session.settings.disallowVotes" ng-change="changeVoteSettings()" /> Disallow votes after revealing them
                             </label>
                         </form>
                     </div>
