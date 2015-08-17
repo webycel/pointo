@@ -264,7 +264,7 @@ angular.module('pointoApp')
 
 			// when everybody has voted
 			if(votes === stats.participants) {
-				if(storyFactory.session.voteStatus === 0 && (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader)) {
+				if(storyFactory.session.voteStatus === 0 && storyFactory.session.settings.autoReveal && (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader)) {
 					// auto reveal votes
 					storyFactory.revealVotes();
 				}
