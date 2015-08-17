@@ -104,7 +104,6 @@ angular.module('pointoApp')
             $scope.participants = session.participants;
             $scope.session = session.session;
             $scope.newName = storyFactory.user.name;
-            $scope.newPasscode = '';
 
             $scope.stories = {
                 newStory: '',
@@ -423,6 +422,15 @@ angular.module('pointoApp')
                     }
                 }
             }
+        });
+
+        // observe user list, if the current user is not in it, add him to session
+        storyFactory.getSessionRef(sessionID).child('users').on('value', function(snapshot) {
+            var u = snapshot.val();
+            if (u === null || !u.hasOwnProperty($scope.authUser().data.uid)) {
+                $scope.view = 0;
+                $scope.autoJoinSession();
+            } 
         });
 
     });
