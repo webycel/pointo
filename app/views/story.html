@@ -22,7 +22,7 @@
                 <div class="timer" ng-if="user.leader || timer.running">
                     <h3>Timer</h3>
                     <form ng-submit="toggleTimer()" ng-show="user.leader">
-                        <input type="number" class="timer-input" ng-model="timer.value" min="5" ng-disabled="timer.running" />
+                        <input type="number" class="timer-input" ng-model="$parent.timer.value" min="5" ng-disabled="timer.running" />
                         <span class="timer-unit">sec</span>
                         <button type="submit" class="btn-action timer-start" ng-class="{disabled: timer.value <= 0, 'btn-secondary': timer.running}">
                             <span class="glyphicon" ng-class="{'glyphicon-hourglass': !timer.running, 'glyphicon-stop': timer.running}"></span>
@@ -121,17 +121,17 @@
                         </form>
                         <form ng-submit="changePasscode()" ng-if="session.owner === authUser().data.uid">
                             <div class="form-group">
-                                <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="newPasscode" required />
+                                <input type="text" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="$parent.newPasscode" required />
                                 <input type="submit" value="Change passcode" ng-class="{loading: loading().changePasscode, disabled: newPasscode.length === 0}" />
                                 <div class="error success" ng-show="errors().changePasscode">Passcode has been changed!</div>
                             </div>
                         </form>
                         <form class="session-settings checkbox">
                             <label ng-if="session.owner === authUser().data.uid">
-                                <input type="checkbox" ng-model="session.settings.allLeader" ng-change="changeLeaderSettings()" /> Everybody can be a leader
+                                <input type="checkbox" ng-model="$parent.session.settings.allLeader" ng-change="changeLeaderSettings()" /> Everybody can be a leader
                             </label>
                             <label ng-if="user.leader || session.owner === authUser().data.uid">
-                                <input type="checkbox" ng-model="session.settings.autoReveal" ng-change="changeAutoRevealSettings()" /> Auto reveal votes once everybody voted
+                                <input type="checkbox" ng-model="$parent.session.settings.autoReveal" ng-change="changeAutoRevealSettings()" /> Auto reveal votes once everybody voted
                             </label>
                         </form>
                     </div>
