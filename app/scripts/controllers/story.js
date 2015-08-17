@@ -104,7 +104,6 @@ angular.module('pointoApp')
             $scope.participants = session.participants;
             $scope.session = session.session;
             $scope.newName = storyFactory.user.name;
-            $scope.newPasscode = '';
 
             $scope.stories = {
                 newStory: '',
