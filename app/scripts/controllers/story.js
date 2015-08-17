@@ -233,7 +233,7 @@ angular.module('pointoApp')
 		*/
         // set individual vote
         $scope.vote = function(points) {
-            if (!$scope.user.spectator) {
+            if (!$scope.user.spectator && (!$scope.session.settings.disallowVotes || $scope.session.voteStatus === 0)) {
                 storyFactory.setVote(points);
             }
         };
@@ -363,6 +363,7 @@ angular.module('pointoApp')
             }
         };
 
+        // setting for: anybody can be leader or only session owner
         $scope.changeLeaderSettings = function() {
             if ($scope.session.owner === $scope.authUser().data.uid) {
                 storyFactory.getSessionRef(sessionID).child('settings').update({
@@ -371,6 +372,7 @@ angular.module('pointoApp')
             }
         };
 
+        // setting for: auto reveal votes after everybody has voted
         $scope.changeAutoRevealSettings = function() {
             if ($scope.user.leader || $scope.session.owner === $scope.authUser().data.uid) {
                 storyFactory.getSessionRef(sessionID).child('settings').update({
@@ -378,6 +380,16 @@ angular.module('pointoApp')
                 });
             }
         };
+
+        // setting for: disallow votes after they have been revlealed
+        $scope.changeVoteSettings = function() {
+            if ($scope.user.leader || $scope.session.owner === $scope.authUser().data.uid) {
+                storyFactory.getSessionRef(sessionID).child('settings').update({
+                    disallowVotes: $scope.session.settings.disallowVotes
+                });
+            }
+        };
+
 
         $scope.leadSession = function() {
             if ($scope.session.settings.allLeader || $scope.session.owner === $scope.authUser().data.uid) {
