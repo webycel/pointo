@@ -434,6 +434,12 @@ angular.module('pointoApp')
 			});
 		};
 
+		storyFactory.removePasscode = function() {
+			ref.child('sessions').child(storyFactory.sessionID).child('passcode').remove();
+			viewFactory.setErrors('removePasscode', true);
+			viewFactory.setLoading('removePasscode', false);
+		};
+
 		storyFactory.leadSession = function() {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 			storyFactory.user.leader = !storyFactory.user.leader;
@@ -547,6 +553,7 @@ angular.module('pointoApp')
 
 			changeName: storyFactory.changeName,
 			changePasscode: storyFactory.changePasscode,
+			removePasscode: storyFactory.removePasscode,
 			leadSession: storyFactory.leadSession,
 			resetSession: storyFactory.resetSession,
 

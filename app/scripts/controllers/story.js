@@ -358,8 +358,18 @@ angular.module('pointoApp')
         $scope.changePasscode = function() {
             if ($scope.session.owner === $scope.authUser().data.uid) {
                 viewFactory.setErrors('changePasscode', false);
+                viewFactory.setErrors('removePasscode', false);
                 viewFactory.setLoading('changePasscode', true);
                 storyFactory.changePasscode($scope.newPasscode);
+            }
+        };
+
+        $scope.removePasscode = function() {
+            if ($scope.session.owner === $scope.authUser().data.uid) {
+                viewFactory.setErrors('changePasscode', false);
+                viewFactory.setErrors('removePasscode', false);
+                viewFactory.setLoading('removePasscode', true);
+                storyFactory.removePasscode();
             }
         };
 
