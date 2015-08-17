@@ -47,7 +47,7 @@
                     <div class="col-md-3 col-sm-3 col-xs-4 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
                         <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-if="p.leader"></span>  {{p.name}}</span>
 
-                        <div class="history" ng-if="p.voteHistory" title="Last votes">
+                        <div class="history" ng-if="p.voteHistory && session.voteStatus === 1" title="Last votes">
                             <span ng-repeat="history in p.voteHistory">{{history.text}}</span>
                         </div>
                         

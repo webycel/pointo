@@ -351,7 +351,7 @@ angular.module('pointoApp')
 		storyFactory.setVote = function(points) {
 			var user = ref.child('sessions').child(storyFactory.sessionID).child('users').child(storyFactory.user.key);
 
-			if (storyFactory.user.points.value !== -1) {
+			if (storyFactory.user.points.value !== -1 && storyFactory.session.voteStatus === 1) {
 				if (storyFactory.user.voteHistory.length === 3) {
 					storyFactory.user.voteHistory.shift();
 				}
