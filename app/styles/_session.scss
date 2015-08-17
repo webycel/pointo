@@ -117,6 +117,16 @@
             border-bottom: 1px solid $greyCCC;
         }
 
+        .history {
+            margin: 7px 0 -16px;
+            font-size: 0.75em;
+            color: $green;
+
+            span {
+                padding: 0 6px;
+            }
+        }
+
         .rated {
             display: block;
             margin: 14px 0 6px;
