@@ -84,7 +84,12 @@ angular.module('pointoApp')
 						score: 0,
 						//owner: accountFactory.getUser().data.uid,
 						owner: null,
-						passcode: options.passcode
+						passcode: options.passcode,
+						settings: {
+							allLeader: true,
+							autoReveal: false,
+							disallowVotes: false
+						}
 					};
 
 					if (accountFactory.getUser().data !== null && accountFactory.getUser().data.provider !== 'anonymous') {
