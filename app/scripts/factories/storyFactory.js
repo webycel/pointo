@@ -261,7 +261,7 @@ angular.module('pointoApp')
 
 			for (i = 0; i < data.length; i++) {
 				if (data[i] > 0) {
-					total += storyFactory.storyPointSet[i].value;
+					total += storyFactory.storyPointSet[i].value * data[i];
 					votes += data[i];
 					x += data[i];
 				}
