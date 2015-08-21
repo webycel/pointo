@@ -235,10 +235,10 @@ angular.module('pointoApp')
 					participants: 0,
 					score: 0
 				},
-				data, x = 0, votes = 0,
-				total = 0;
+				data, x = 0, votes = 0, average, averageFirstDigit, isStoryPoint = false,
+				total = 0, firstVoteIndex = null, lastVoteIndex;
 
-			//get statistics
+			// get statistics
 			storyFactory.statistics = {};
 
 			for (s in users) {
@@ -256,14 +256,43 @@ angular.module('pointoApp')
 				stats.participants += 1;
 			}
 
-			//calculate average score
+			// get the total amount and number of votes
 			data = stats.data[0];
-
 			for (i = 0; i < data.length; i++) {
 				if (data[i] > 0) {
-					total += storyFactory.storyPointSet[i].value;
-					votes++;
-					x++;
+					total += storyFactory.storyPointSet[i].value * data[i];
+					votes += data[i];
+					x += data[i];
+
+					if(firstVoteIndex === null) {
+						firstVoteIndex = i;
+					}
+					lastVoteIndex = i;
+				}
+			}
+
+			if (lastVoteIndex - firstVoteIndex >= 3) {
+				// difference in votes is too big, team is not sure about story
+				stats.score = -666;
+			} else {
+				// calculate average
+				average = total / x;
+				averageFirstDigit = Math.floor(average);
+
+				// check if the average first digit is a storypoint
+				for (i = 0; i < storyFactory.storyPointValues.length; i++) {
+					if (storyFactory.storyPointValues[i] === averageFirstDigit) {
+						isStoryPoint = true;
+						break;
+					}
+				}
+
+				if (isStoryPoint) {
+					// score is the first digit
+					stats.score = averageFirstDigit;
+				} else {
+					// score is the closest number to the average
+					stats.score = x > 0 ? utilsFactory.getClosestNumber(storyFactory.storyPointValues, average) : -1;
 				}
 			}
 
@@ -275,9 +304,10 @@ angular.module('pointoApp')
 				}
 			}
 
-			stats.score = x > 0 ? utilsFactory.getClosestNumber(storyFactory.storyPointValues, total / x) : -1;
-
 			storyFactory.statistics = stats;
+
+			// save score to database
+			ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
 		};
 
 		storyFactory.sessionExists = function() {
