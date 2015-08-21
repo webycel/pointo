@@ -61,7 +61,7 @@
                         </span>
                     </div>
 
-                    <div class="col-md-12 col-sm-12 col-xs-12 error warning" ng-if="statistics().score == -666">
+                    <div class="col-md-12 col-sm-12 col-xs-12 error warning" ng-if="statistics().score == -666 && session.voteStatus == 1 && filteredParticipants.length > 1">
                         Difference in votes is too big, the team does not understand the story yet.
                     </div>
                 </div>

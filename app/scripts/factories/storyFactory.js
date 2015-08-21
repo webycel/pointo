@@ -196,7 +196,8 @@ angular.module('pointoApp')
 								points: {
 									text: -1,
 									value: -1
-								}
+								},
+								voteHistory: []
 							}, storyFactory.errorCallback);
 						}
 					});
