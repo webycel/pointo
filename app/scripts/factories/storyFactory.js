@@ -306,8 +306,10 @@ angular.module('pointoApp')
 
 			storyFactory.statistics = stats;
 
-			// save score to database
-			ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
+			if (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader) {
+				// save score to database
+				ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
+			}
 		};
 
 		storyFactory.sessionExists = function() {
