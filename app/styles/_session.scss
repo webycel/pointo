@@ -281,30 +281,23 @@
     }
 
     .settings-container {
-        margin-top: 35px;
-
-        input, button {
-            margin-top: 5px;
-            width: 100%;
-        }
-        .help-block {
-            font-size: 0.85em;
-        }
-    }
-
-    .settings {
         display: flex;
         flex-direction: row;
+        margin-top: 35px;
 
         @media (max-width: $break-x-small) {
-            flex-direction: column-reverse;
+            flex-direction: column;
 
             .main-settings {
                 margin-top: 25px;
+                order: 1;
             }
-        }
-        .col {
-            padding-left: 0;
+            .session-actions {
+                order: 0;
+            }
+            .share {
+                order: 3;
+            }
         }
         form {
             width: 100%;
@@ -319,6 +312,13 @@
             input {
                 width: auto;
             }
+        }
+        input, button {
+            margin-top: 5px;
+            width: 100%;
+        }
+        .help-block {
+            font-size: 0.85em;
         }
     }
 

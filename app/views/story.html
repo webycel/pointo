@@ -9,7 +9,7 @@
 
         <div class="row">
             
-            <div class="col-md-3 col-sm-4 col-xs-12 voting">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 voting">
                 <h2>Vote</h2>
                 <ul>
                     <li class="btn point" ng-repeat="point in storypoints | filter:'!X'" ng-click="vote(point)" ng-class="{active: session.users[user.key].points.value === point.value, 'glyphicon glyphicon-question-sign': point.value === -2, disabled: user.spectator || (session.settings.disallowVotes && session.voteStatus === 1)}">
@@ -38,11 +38,11 @@
                 <span class="hint"><span class="glyphicon glyphicon-info-sign"></span> You can only use these actions if you are the leader.</span>
             </div>
 
-            <div class="col-md-6 col-sm-8 col-xs-12">
+            <div class="col-lg-7 col-md-6 col-sm-8 col-xs-12">
                 <h2>Participants</h2>
 
                 <div class="row participants">
-                    <div class="col-md-3 col-sm-3 col-xs-4 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
+                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4 participant" ng-repeat="p in filteredParticipants = (participants | filter: {spectator: false})" ng-class="{active: p.$id == user.key, leader: p.leader}">
                         <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-if="p.leader"></span>  {{p.name}}</span>
 
                         <div class="history" ng-if="p.voteHistory && session.voteStatus === 1" title="Last votes">
@@ -54,14 +54,14 @@
                         </span>
                     </div>
 
-                    <div class="col-md-2 col-sm-2 col-xs-3 participant score" ng-show="session.voteStatus == 1 && filteredParticipants.length > 1">
+                    <div class="col-lg-1 col-md-2 col-sm-2 col-xs-3 participant score" ng-show="session.voteStatus == 1 && filteredParticipants.length > 1">
                         <span class="title">Score</span>
                         <span class="rated glyphicon" ng-class="{'glyphicon-remove': statistics().score == -1, 'glyphicon-flash': statistics().score == -666}">
                             {{ statistics().score >= 0 ? statistics().score : '' }}
                         </span>
                     </div>
 
-                    <div class="col-md-12 col-sm-12 col-xs-12 error warning" ng-if="statistics().score == -666 && session.voteStatus == 1 && filteredParticipants.length > 1">
+                    <div class="col-lg-4 col-lg-offset-6 col-md-12 col-sm-12 col-xs-12 error warning" ng-if="statistics().score == -666 && session.voteStatus == 1 && filteredParticipants.length > 1">
                         Difference in votes is too big, the team does not understand the story yet.
                     </div>
                 </div>
@@ -69,19 +69,19 @@
                 <div class="row participants spectators" ng-show="filteredSpectators.length > 0">
                     <h3>Spectators</h3>
 
-                    <div class="col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredSpectators = (participants | filter: {spectator: true})" ng-class="{active: p.$id == user.key, leader: p.leader}">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredSpectators = (participants | filter: {spectator: true})" ng-class="{active: p.$id == user.key, leader: p.leader}">
                         <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-if="p.leader"></span> {{p.name}}</span>                       
                     </div>
                 </div>
 
                 <div class="row stats" ng-class="{hidden: session.voteStatus == 0 || statistics().participants <= 1}">
-                    <div class="col-md-10 col-sm-11 col-xs-12">
+                    <div class="col-lg-10 col-md-10 col-sm-11 col-xs-12">
                         <canvas class="chart chart-bar" data="stats.data" labels="stats.labels" options="stats.options" colours="stats.colours"></canvas>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-12 col-xs-12 stories" ng-if="stories.list || session.owner === authUser().data.uid">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stories" ng-if="stories.list || session.owner === authUser().data.uid">
                 <h2>Stories</h2>
 
                 <div class="list-group">
@@ -114,58 +114,52 @@
         </div>
 
         <div class="row settings-container">
-            <div class="col-md-9 col-sm-8 col-xs-12">
+            <div class="col-lg-2 col-md-4 col-sm-5 col-xs-12 main-settings">
                 <h3>Settings</h3>
-
-                <div class="settings">
-                
-                    <div class="col col-md-4 col-sm-5 col-xs-12 main-settings">
-                        <form ng-submit="changeName()">
-                            <div class="form-group">
-                                <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="newName" required />
-                                <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
-                            </div>
-                        </form>
-                        <form ng-submit="changePasscode()" ng-if="session.owner === authUser().data.uid">
-                            <div class="form-group">
-                                <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="$parent.newPasscode" required />
-                                <input type="submit" value="Change passcode" ng-class="{loading: loading().changePasscode, disabled: $parent.newPasscode.length === 0}" />
-                                <input type="button" value="Remove passcode" class="btn btn-light" ng-class="{loading: loading().removePasscode, disabled: loading().removePasscode}" ng-click="removePasscode()" ng-if="session.passcode" />
-                                <div class="error success" ng-show="errors().changePasscode">Passcode has been changed!</div>
-                                <div class="error warning" ng-show="errors().removePasscode">Passcode has been removed!</div>
-                            </div>
-                        </form>
-                        <form class="session-settings checkbox">
-                            <label ng-if="session.owner === authUser().data.uid">
-                                <input type="checkbox" ng-model="$parent.session.settings.allLeader" ng-change="changeLeaderSettings()" /> Everybody can be a leader
-                            </label>
-                            <label ng-if="user.leader || session.owner === authUser().data.uid">
-                                <input type="checkbox" ng-model="$parent.session.settings.autoReveal" ng-change="changeAutoRevealSettings()" /> Auto reveal votes once everybody voted
-                            </label>
-                            <label ng-if="user.leader || session.owner === authUser().data.uid">
-                                <input type="checkbox" ng-model="$parent.session.settings.disallowVotes" ng-change="changeVoteSettings()" /> Disallow votes after revealing them
-                            </label>
-                        </form>
+                <form ng-submit="changeName()">
+                    <div class="form-group">
+                        <input type="text" class="name" placeholder="Your name" maxlength="20" ng-model="newName" required />
+                        <input type="submit" value="Change name" ng-class="{disabled: newName === user.name}" />
                     </div>
-                    
-                    <div class="col col-md-4 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1">
-                        <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}" ng-if="session.settings.allLeader || session.owner === authUser().data.uid">
-                            <span class="glyphicon glyphicon-king"></span> {{ user.leader ? 'Leading session' : 'Lead session' }}
-                        </button>
-                        <button ng-click="participateStatus()" class="btn-light">
-                            <span class="glyphicon" ng-class="{'glyphicon-briefcase': user.spectator, 'glyphicon-sunglasses': !user.spectator}"></span> {{ user.spectator ? 'Participate' : 'Spectate' }}
-                        </button>
-
-                        <div ng-if="user.leader" class="reset-session">
-                            <a href="" ng-click="resetSession($event)" ng-if="user.leader">Reset session</a>
-                            <p><span class="glyphicon glyphicon-info-sign"></span> Use this to reset the session if any (weird) errors occur.</p>
-                        </div>
+                </form>
+                <form ng-submit="changePasscode()" ng-if="session.owner === authUser().data.uid">
+                    <div class="form-group">
+                        <input type="password" pattern="[0-9]*" class="passcode" placeholder="Passcode" minlength="4" maxlength="4" ng-model="$parent.newPasscode" required />
+                        <input type="submit" value="Change passcode" ng-class="{loading: loading().changePasscode, disabled: $parent.newPasscode.length === 0}" />
+                        <input type="button" value="Remove passcode" class="btn btn-light" ng-class="{loading: loading().removePasscode, disabled: loading().removePasscode}" ng-click="removePasscode()" ng-if="session.passcode" />
+                        <div class="error success" ng-show="errors().changePasscode">Passcode has been changed!</div>
+                        <div class="error warning" ng-show="errors().removePasscode">Passcode has been removed!</div>
                     </div>
-
-                </div>
+                </form>
+                <form class="session-settings checkbox">
+                    <label ng-if="session.owner === authUser().data.uid">
+                        <input type="checkbox" ng-model="$parent.session.settings.allLeader" ng-change="changeLeaderSettings()" /> Everybody can be a leader
+                    </label>
+                    <label ng-if="user.leader || session.owner === authUser().data.uid">
+                        <input type="checkbox" ng-model="$parent.session.settings.autoReveal" ng-change="changeAutoRevealSettings()" /> Auto reveal votes once everybody voted
+                    </label>
+                    <label ng-if="user.leader || session.owner === authUser().data.uid">
+                        <input type="checkbox" ng-model="$parent.session.settings.disallowVotes" ng-change="changeVoteSettings()" /> Disallow votes after revealing them
+                    </label>
+                </form>
             </div>
             
-            <div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="col-lg-2 col-md-4 col-sm-5 col-xs-12 session-actions">
+                <h3>&nbsp;</h3>
+                <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}" ng-if="session.settings.allLeader || session.owner === authUser().data.uid">
+                    <span class="glyphicon glyphicon-king"></span> {{ user.leader ? 'Leading session' : 'Lead session' }}
+                </button>
+                <button ng-click="participateStatus()" class="btn-light">
+                    <span class="glyphicon" ng-class="{'glyphicon-briefcase': user.spectator, 'glyphicon-sunglasses': !user.spectator}"></span> {{ user.spectator ? 'Participate' : 'Spectate' }}
+                </button>
+
+                <div ng-if="user.leader" class="reset-session">
+                    <a href="" ng-click="resetSession($event)" ng-if="user.leader">Reset session</a>
+                    <p><span class="glyphicon glyphicon-info-sign"></span> Use this to reset the session if any (weird) errors occur.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 share">
                 <form>
                     <h3>Share</h3>
                     <div class="form-group">

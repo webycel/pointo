@@ -44,10 +44,6 @@ footer {
 
 /* Responsive: Portrait tablets and up */
 @include bp-min-small {
-  .container {
-    max-width: 890px;
-  }
-
   /* Remove the padding we set earlier */
   header,
   footer {
@@ -58,6 +54,10 @@ footer {
   header {
     margin-bottom: 30px;
   }
+}
+
+.container-fluid {
+  max-width: 1600px;
 }
 
 /* grid sizes */
