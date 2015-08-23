@@ -18,7 +18,7 @@ angular.module('pointoApp')
     .controller('StoryCtrl', function($scope, $routeParams, $window, $timeout, $route, storyFactory, accountFactory, viewFactory) {
 
         var sessionID = $routeParams.sessionID,
-            session, timerInterval;
+            session, timerInterval, chatbox;
 
         // go back to main screen if session ID is invalid
         if (sessionID < 100000 || sessionID > 999999) {
@@ -104,6 +104,8 @@ angular.module('pointoApp')
             $scope.participants = session.participants;
             $scope.session = session.session;
             $scope.newName = storyFactory.user.name;
+
+            chatbox = document.getElementById('chatlog');
 
             $scope.stories = {
                 newStory: '',
@@ -257,7 +259,7 @@ angular.module('pointoApp')
         };
 
         /*
-			STORIES
+			TIMER
 		*/
         $scope.stopTimer = function(ended) {
             $timeout(function() {
@@ -299,6 +301,28 @@ angular.module('pointoApp')
                 }
             }
         };
+
+
+
+
+        /*
+            CHAT
+        */
+        $scope.sendChatText = function() {
+            var message = $scope.chatInput.trim();
+
+            if (message.length > 0 && message.length <= 360) {
+                storyFactory.getSessionRef(sessionID).child('chat').push({
+                    user: storyFactory.user.name,
+                    message: message
+                }, function () {
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                });
+            }
+
+            $scope.chatInput = '';
+        };
+
 
 
 

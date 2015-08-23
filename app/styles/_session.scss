@@ -170,6 +170,25 @@
             border: none;
         }
     }
+
+    .chat {
+        .log {
+            padding: 4px 10px 3px;
+            margin-bottom: 5px;
+            height: 150px;
+            border: 1px solid $greyCCC;
+            overflow: scroll;
+            overflow-x: hidden;
+
+            p {
+                margin: 0;
+                font-size: 0.85em;
+            }
+        }
+        .input {
+            width: 100%;
+        }
+    }
     
     .stories {
         .edit-story-link {
