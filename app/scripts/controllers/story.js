@@ -106,6 +106,10 @@ angular.module('pointoApp')
             $scope.newName = storyFactory.user.name;
 
             chatbox = document.getElementById('chatlog');
+            
+            $timeout(function() {
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }, 500);
 
             $scope.stories = {
                 newStory: '',
