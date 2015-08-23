@@ -4,7 +4,8 @@ angular.module('pointoApp')
 	.factory('storyFactory', function($firebaseObject, $firebaseArray, $window, $timeout, FIREBASE_URL, utilsFactory, viewFactory, accountFactory) {
 
 		var storyFactory = {},
-			ref = new Firebase(FIREBASE_URL);
+			ref = new Firebase(FIREBASE_URL),
+				chatbox = document.getElementById('chatlog');
 
 		storyFactory.user = {
 			key: null,
@@ -304,6 +305,11 @@ angular.module('pointoApp')
 					storyFactory.revealVotes();
 				}
 			}
+
+			// scroll chatbox
+			$timeout(function() {
+            	chatbox.scrollTop = chatbox.scrollHeight;
+			}, 500);
 
 			storyFactory.statistics = stats;
 

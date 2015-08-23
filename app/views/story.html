@@ -81,34 +81,51 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stories" ng-if="stories.list || session.owner === authUser().data.uid">
-                <h2>Stories</h2>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 
-                <div class="list-group">
-                    <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
-                        <div class="item-content" ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
-                            <span ng-hide="story.editMode">
-                                <span class="badge" ng-if="story.points !== -999 && session.owner !== authUser().data.uid">{{story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
-                            </span>
-                            
-                            <select ng-model="story.points" ng-change="saveStoryEdit($event, id, story)" ng-show="session.owner === authUser().data.uid">
-                                <option value="-999">-</option>
-                                <option ng-repeat="point in storypoints | filter:'!X'" value="{{point.value}}" ng-selected="story.points === point.value">{{point.text}}</option>
-                            </select>
-                            <input type="text" class="edit-input" ng-model="story.name" ng-show="story.editMode" ng-keyup="editStoryKeyPress($event, id, story)" />
+                <div class="chat">
+                    <h2>Chat</h2>
+
+                    <form ng-submit="sendChatText()">
+                        <div id="chatlog" class="log">
+                            <p ng-repeat="msg in session.chat">
+                                <b>{{msg.user}}:</b> {{msg.message}}
+                            </p>
                         </div>
-                        <div class="edit-option">
-                            <a href class="glyphicon glyphicon-edit fakelink" ng-hide="story.editMode" ng-click="story.editMode = true"></a>
-                            <a href class="glyphicon glyphicon-ok fakelink" ng-show="story.editMode" ng-click="saveStoryEdit($event, id, story)"></a>
-                            <a href class="glyphicon glyphicon-trash fakelink" ng-click="deleteStory($event, id)"></a>
-                        </div>
-                    </div>
+                        <input type="text" class="input" placeholder="Type message and send with enter" maxlength="360" ng-model="chatInput" required />
+                    </form>
                 </div>
 
-                <form name="storyForm" ng-submit="addStory()" ng-if="session.owner === authUser().data.uid">
-                    <input type="text" placeholder="Story" ng-model="stories.newStory" required />
-                    <button type="submit" ng-class="{disabled: !storyForm.$valid}">Add story</button>
-                </form>
+                <div class="stories" ng-if="stories.list || session.owner === authUser().data.uid">
+                    <h2>Stories</h2>
+
+                    <div class="list-group">
+                        <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
+                            <div class="item-content" ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
+                                <span ng-hide="story.editMode">
+                                    <span class="badge" ng-if="story.points !== -999 && session.owner !== authUser().data.uid">{{story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
+                                </span>
+                                
+                                <select ng-model="$parent.story.points" ng-change="saveStoryEdit($event, id, story)" ng-show="session.owner === authUser().data.uid">
+                                    <option value="-999">-</option>
+                                    <option ng-repeat="point in storypoints | filter:'!X'" value="{{point.value}}" ng-selected="story.points === point.value">{{point.text}}</option>
+                                </select>
+                                <input type="text" class="edit-input" ng-model="$parent.story.name" ng-show="story.editMode" ng-keyup="editStoryKeyPress($event, id, story)" />
+                            </div>
+                            <div class="edit-option">
+                                <a href class="glyphicon glyphicon-edit fakelink" ng-hide="story.editMode" ng-click="story.editMode = true"></a>
+                                <a href class="glyphicon glyphicon-ok fakelink" ng-show="story.editMode" ng-click="saveStoryEdit($event, id, story)"></a>
+                                <a href class="glyphicon glyphicon-trash fakelink" ng-click="deleteStory($event, id)"></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form name="storyForm" ng-submit="addStory()" ng-if="session.owner === authUser().data.uid">
+                        <input type="text" placeholder="Story" ng-model="$parent.stories.newStory" required />
+                        <button type="submit" ng-class="{disabled: !storyForm.$valid}">Add story</button>
+                    </form>
+                </div>
+
             </div>
 
         </div>
