@@ -310,6 +310,9 @@ angular.module('pointoApp')
 			if (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader) {
 				// save score to database
 				ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
+				if (storyFactory.session.stories[storyFactory.session.activeStory].points === -999) {
+					ref.child('sessions').child(storyFactory.sessionID).child('stories').child(storyFactory.session.activeStory).update({ points: stats.score });
+				}
 			}
 		};
 
