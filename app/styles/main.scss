@@ -80,9 +80,9 @@ $turquoise:     #1abc9c;
 $blueLight:     #3498db;
 $blue:          #2980b9;
 $redLight:      #e74c3c;
-$red:           #c0392b; 
+$red:           #c0392b;
 $clouds:        #ecf0f1;
-$silver:        #bdc3c7;  
+$silver:        #bdc3c7;
 $orangeLight:   #f39c12;
 $orange:        #e67e22;
 
@@ -95,3 +95,4 @@ $orange:        #e67e22;
 @import 'session';
 @import 'account';
 @import 'lib/offline';
+@import 'general/_smiley-font';

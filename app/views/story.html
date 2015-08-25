@@ -8,7 +8,7 @@
     <div ng-show="view === 1">
 
         <div class="row">
-            
+
             <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 voting">
                 <h2>Vote</h2>
                 <ul>
@@ -16,7 +16,7 @@
                         {{point.value !== -2 ? point.text : ''}}
                     </li>
                 </ul>
-                
+
                 <div class="timer" ng-if="user.leader || timer.running">
                     <h3>Timer</h3>
                     <form ng-submit="toggleTimer()" ng-show="user.leader">
@@ -31,7 +31,7 @@
                         <div class="countdown-time">{{timer.counter + timer.unit}}</div>
                     </div>
                 </div>
-                
+
                 <h3>Actions</h3>
                 <button class="btn-action options" ng-class="{disabled: session.voteStatus == 1 || !user.leader}" ng-click="revealVotes()">Reveal all votes</button>
                 <button class="btn-light options" ng-class="{disabled: session.voteStatus == 0 || !user.leader}" ng-click="clearVotes()">Clear all votes</button>
@@ -48,7 +48,7 @@
                         <div class="history" ng-if="p.voteHistory && session.voteStatus === 1" title="Last votes">
                             <span ng-repeat="history in p.voteHistory">{{history.text}}</span>
                         </div>
-                        
+
                         <span class="rated glyphicon" ng-class="{'glyphicon-time': p.points.value === -1 && session.voteStatus === 0, 'glyphicon-ok': p.points.value !== -1 && session.voteStatus === 0, 'glyphicon-remove': p.points.value === -1 && session.voteStatus === 1, 'glyphicon-question-sign': p.points.value === -2 && session.voteStatus === 1, 'flipped': isFlipped}">
                             {{ session.voteStatus === 1 ? (p.points.value > -1 ? p.points.text : '') : '' }}
                         </span>
@@ -70,7 +70,7 @@
                     <h3>Spectators</h3>
 
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3 participant" ng-repeat="p in filteredSpectators = (participants | filter: {spectator: true})" ng-class="{active: p.$id == user.key, leader: p.leader}">
-                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-if="p.leader"></span> {{p.name}}</span>                       
+                        <span class="name"><span class="glyphicon glyphicon-king leader-icon" ng-if="p.leader"></span> {{p.name}}</span>
                     </div>
                 </div>
 
@@ -88,8 +88,8 @@
 
                     <form ng-submit="sendChatText()">
                         <div id="chatlog" class="log">
-                            <p ng-repeat="msg in session.chat">
-                                <b>{{msg.user}}:</b> {{msg.message}}
+                            <p ng-repeat="msg in chatLog()">
+                                <b>{{msg.user}}:</b> <span ng-bind-html="msg.message"></span>
                             </p>
                         </div>
                         <input type="text" class="input" placeholder="Type message and send with enter" maxlength="360" ng-model="chatInput" required />
@@ -105,7 +105,7 @@
                                 <span ng-hide="story.editMode">
                                     <span class="badge" ng-if="story.points !== -999 && session.owner !== authUser().data.uid">{{story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
                                 </span>
-                                
+
                                 <select ng-model="$parent.story.points" ng-change="saveStoryEdit($event, id, story)" ng-show="session.owner === authUser().data.uid">
                                     <option value="-999">-</option>
                                     <option ng-repeat="point in storypoints | filter:'!X'" value="{{point.value}}" ng-selected="story.points === point.value">{{point.text}}</option>
@@ -160,7 +160,7 @@
                     </label>
                 </form>
             </div>
-            
+
             <div class="col-lg-2 col-md-4 col-sm-5 col-xs-12 session-actions">
                 <h3>&nbsp;</h3>
                 <button ng-click="leadSession()" ng-class="{'btn-action': user.leader, 'btn-light': !user.leader}" ng-if="session.settings.allLeader || session.owner === authUser().data.uid">
@@ -218,6 +218,6 @@
             </form>
         </div>
 
-    </div>    
+    </div>
 
 </div>

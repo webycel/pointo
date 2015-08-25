@@ -105,6 +105,7 @@ angular.module('pointoApp')
             $scope.session = session.session;
             $scope.newName = storyFactory.user.name;
 
+            $scope.chatLog = storyFactory.getChatLog;
             chatbox = document.getElementById('chatlog');
 
             $timeout(function() {
