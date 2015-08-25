@@ -619,7 +619,9 @@ angular.module('pointoApp')
 
 				// scroll chatbox
 				$timeout(function() {
-					chatbox.scrollTop = chatbox.scrollHeight;
+					if(chatbox) {
+						chatbox.scrollTop = chatbox.scrollHeight;
+					}
 				}, 500);
 			}
 		};
