@@ -3,11 +3,10 @@
 	font-family: 'fontelico';
 	font-style: normal;
 	font-weight: normal;
-	src: url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.eot');
-	src: url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.eot?#iefix') format('eot'),
-	url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.woff') format('woff'),
-	url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.ttf') format('truetype'),
-	url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.svg#fontelico') format('svg');
+	src: url('/styles/fonts/fontelico.eot');
+	src: url('/styles/fonts/fontelico.eot?#iefix') format('eot'),
+	url('/styles/fonts/fontelico.woff') format('woff'),
+	url('/styles/fonts/fontelico.ttf') format('truetype');
 }
 .fontelico-emo-happy:before {content:'\e800'}
 .fontelico-emo-wink:before {content:'\e801'}
@@ -29,16 +28,16 @@
 .fontelico-emo-shoot:before {content:'\e810'}
 .fontelico-emo-squint:before {content:'\e811'}
 .fontelico-emo-laugh:before {content:'\e812'}
-.fontelico-spin1:before {content:'\e830'}
-.fontelico-spin2:before {content:'\e831'}
-.fontelico-spin3:before {content:'\e832'}
-.fontelico-spin4:before {content:'\e834'}
-.fontelico-spin5:before {content:'\e838'}
-.fontelico-spin6:before {content:'\e839'}
-.fontelico-firefox:before {content:'\e840'}
-.fontelico-chrome:before {content:'\e841'}
-.fontelico-opera:before {content:'\e842'}
-.fontelico-ie:before {content:'\e843'}
+.fontelico-emo-spin1:before {content:'\e830'}
+.fontelico-emo-spin2:before {content:'\e831'}
+.fontelico-emo-spin3:before {content:'\e832'}
+.fontelico-emo-spin4:before {content:'\e834'}
+.fontelico-emo-spin5:before {content:'\e838'}
+.fontelico-emo-spin6:before {content:'\e839'}
+.fontelico-emo-firefox:before {content:'\e840'}
+.fontelico-emo-chrome:before {content:'\e841'}
+.fontelico-emo-opera:before {content:'\e842'}
+.fontelico-emo-ie:before {content:'\e843'}
 
 /* fontelico */
 [class*="fontelico-"]:before {

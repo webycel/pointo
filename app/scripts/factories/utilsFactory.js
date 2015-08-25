@@ -5,10 +5,12 @@ angular.module('pointoApp')
 
         var utilsFactory = {};
 
+        // generate a random session ID
         utilsFactory.randomID = function(min, max) {
             return Math.floor(Math.random() * (max - min + 1) + min);
         };
 
+        // check if localStorage is supported by browser
         utilsFactory.hasStorage = function() {
             try {
                 return 'localStorage' in window && window.localStorage !== null;
@@ -17,6 +19,7 @@ angular.module('pointoApp')
             }
         };
 
+        // get closest number in an array
         utilsFactory.getClosestNumber = function(array, num) {
             var i = 0,
                 minDiff = 1000,
@@ -32,6 +35,15 @@ angular.module('pointoApp')
 
             return parseFloat(closest);
         };
+
+        // encode html
+        utilsFactory.encodeHtml = function(rawHtml) {
+            return rawHtml.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+                return '&#' + i.charCodeAt(0) + ';';
+            });
+        };
+
+
 
 
         /*
@@ -81,10 +93,12 @@ angular.module('pointoApp')
             return deferred.promise;
         };
 
+        // expose public functions
         return {
             randomID: utilsFactory.randomID,
             hasStorage: utilsFactory.hasStorage,
             getClosestNumber: utilsFactory.getClosestNumber,
+            encodeHtml: utilsFactory.encodeHtml,
             fileReader: utilsFactory.fileReader
         };
 

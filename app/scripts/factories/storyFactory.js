@@ -81,7 +81,11 @@ angular.module('pointoApp')
 			'x\(': 			'angry',		'\>\(': 'angry',			'\(angry\)': 	'angry',
 			'o\:\)': 		'saint',		'o\:\-\)': 'saint',			'\(angel\)':	'saint',
 			'\:\'\(': 		'cry',			'\(cry\)': 'cry',
-			'\(shoot\)': 	'shoot',
+			'\(shoot\)': 	'shoot',		'\(gun\)': 'shoot',
+			'\(firefox\)': 	'firefox',
+			'\(chrome\)': 	'chrome',
+			'\(ie\)': 		'ie',			'\(shit\)': 'ie',
+			'\(opera\)': 	'opera',
 			'xd': 'laugh'
 		};
 

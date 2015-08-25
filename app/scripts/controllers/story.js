@@ -15,7 +15,7 @@
         view = 2 -> enter name & passcode screen
  */
 angular.module('pointoApp')
-    .controller('StoryCtrl', function($scope, $routeParams, $window, $timeout, $route, storyFactory, accountFactory, viewFactory) {
+    .controller('StoryCtrl', function($scope, $routeParams, $window, $timeout, $route, $sce, storyFactory, accountFactory, viewFactory, utilsFactory) {
 
         var sessionID = $routeParams.sessionID,
             session, timerInterval, chatbox;
@@ -315,7 +315,7 @@ angular.module('pointoApp')
             CHAT
         */
         $scope.sendChatText = function() {
-            var message = $scope.chatInput.trim();
+            var message = utilsFactory.encodeHtml($scope.chatInput.trim());
 
             if (message.length > 0 && message.length <= 360) {
                 storyFactory.getSessionRef(sessionID).child('chat').push({
