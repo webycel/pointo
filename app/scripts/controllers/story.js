@@ -89,8 +89,6 @@ angular.module('pointoApp')
             colours: ['#16a085', '#ffffff']
         };
 
-        console.log(storyFactory.getSmilies());
-
         /* functions */
         $scope.initSession = function() {
             // init vars
