@@ -89,6 +89,8 @@ angular.module('pointoApp')
             colours: ['#16a085', '#ffffff']
         };
 
+        console.log(storyFactory.getSmilies());
+
         /* functions */
         $scope.initSession = function() {
             // init vars
@@ -105,6 +107,7 @@ angular.module('pointoApp')
             $scope.session = session.session;
             $scope.newName = storyFactory.user.name;
 
+            $scope.chatLog = storyFactory.getChatLog;
             chatbox = document.getElementById('chatlog');
 
             $timeout(function() {

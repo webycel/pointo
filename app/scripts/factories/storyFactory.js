@@ -5,7 +5,8 @@ angular.module('pointoApp')
 
 		var storyFactory = {},
 			ref = new Firebase(FIREBASE_URL),
-				chatbox = document.getElementById('chatlog');
+			chatbox = document.getElementById('chatlog'),
+			lastChatMessageID;
 
 		storyFactory.user = {
 			key: null,
@@ -60,6 +61,29 @@ angular.module('pointoApp')
 		}];
 
 		storyFactory.storyPointValues = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
+
+		storyFactory.chatLog = [];
+		storyFactory.chatEmoticons = {
+			'\:\)': 	 	'happy',		'\:\-\)': 'happy',			'\(happy\)': 'happy',
+			'\:\(':  		'unhappy', 		'\:\-\(': 'unhappy',		'\(sad\)': 'unhappy',
+			'\;\)':  		'wink', 		'\;\-\)': 'wink',			'\(wink\)': 'wink',
+			'\(\;': 		'wink2', 		'\(\-\;': 'wink2',
+			'\|\-\)': 		'sleep',		'\(\-\|': 'sleep',			'\(sleepy\)': 'sleep',
+			'\(y\)': 		'thumbsup',
+			'\(devil\)':  	'devil',		'\(evil\)': 'devil',
+			'\:p': 			'tongue',		'\:\-p': 'tongue', 			'\(tongue\)': 'tongue',
+			'\(coffee\)':	'coffee', 		'\(tea\)': 'coffee',  		'\(mug\)': 'coffee',
+			'8\)': 			'sunglasses', 	'8\-\)': 'sunglasses',  	'\(cool\)': 'sunglasses',
+			'\:o': 			'surprised',	'\:\-o': 'surprised',
+			'\:\/': 		'displeased',	'\:\-\/': 'displeased',
+			'\(beer\)': 	'beer',
+			'\:d': 			'grin',			'\:\-d': 'grin',
+			'x\(': 			'angry',		'\>\(': 'angry',			'\(angry\)': 	'angry',
+			'o\:\)': 		'saint',		'o\:\-\)': 'saint',			'\(angel\)':	'saint',
+			'\:\'\(': 		'cry',			'\(cry\)': 'cry',
+			'\(shoot\)': 	'shoot',
+			'xd': 'laugh'
+		};
 
 		storyFactory.session = {};
 		storyFactory.participants = {};
@@ -190,7 +214,7 @@ angular.module('pointoApp')
 						}
 					});
 
-					//on vote status change
+					// on vote status change
 					ref.child('sessions').child(id).child('voteStatus').on('value', function(snap) {
 						if (snap.val() === 0) {
 							ref.child('sessions').child(id).child('users').child(storyFactory.user.key).update({
@@ -203,7 +227,7 @@ angular.module('pointoApp')
 						}
 					});
 
-					//on session settings
+					// on session settings
 					ref.child('sessions').child(id).child('settings').on('value', function(snap) {
 						var sessionSettings = snap.val();
 						if (!sessionSettings.allLeader && storyFactory.session.owner !== accountFactory.getUser().data.uid) {
@@ -213,6 +237,10 @@ angular.module('pointoApp')
 						}
 					});
 
+					// on chat changed
+					ref.child('sessions').child(id).child('chat').on('child_added', storyFactory.chatChanged);
+
+					// on session change
 					$timeout(function() {
 						ref.child('sessions').child(id).once('value', storyFactory.onSessionChange);
 					}, 300);
@@ -305,11 +333,6 @@ angular.module('pointoApp')
 					storyFactory.revealVotes();
 				}
 			}
-
-			// scroll chatbox
-			$timeout(function() {
-            	chatbox.scrollTop = chatbox.scrollHeight;
-			}, 500);
 
 			storyFactory.statistics = stats;
 
@@ -562,6 +585,50 @@ angular.module('pointoApp')
 
 
 
+		/* CHAT */
+		storyFactory.chatChanged = function(childSnap, prevChildKey) {
+			var chat = childSnap.val(),
+				result, regex, emo;
+
+			// child_added event is fired twice, so don't show the last message again
+			if (prevChildKey !== lastChatMessageID) {
+				//console.log(chat.message);
+				lastChatMessageID = prevChildKey;
+
+				for(emo in storyFactory.chatEmoticons) {
+					regex = new RegExp(emo.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
+					result = chat.message.replace(regex, function (match) {
+						var smiley = storyFactory.chatEmoticons[match.toLowerCase()],
+							smileyElem;
+
+						if(typeof(smiley) !== 'undefined') {
+							smileyElem = '<span class="fontelico-emo-' + smiley + '"></span>';
+							chat.message = chat.message.replace(match, smileyElem);
+						}
+
+					});
+				}
+
+				//console.log(chat.message);
+
+				storyFactory.chatLog.push(chat);
+
+				// scroll chatbox
+				$timeout(function() {
+					chatbox.scrollTop = chatbox.scrollHeight;
+				}, 500);
+			}
+		};
+
+		storyFactory.getEmoticons = function () {
+			return storyFactory.chatEmoticons;
+		};
+		storyFactory.getChatLog = function () {
+			return storyFactory.chatLog;
+		};
+
+
+
 		/* OTHER */
 		storyFactory.errorCallback = function(error) {
 			if (error !== null && error.code === 'PERMISSION_DENIED') {
@@ -597,6 +664,9 @@ angular.module('pointoApp')
 			setActiveStory: storyFactory.setActiveStory,
 			saveStory: storyFactory.saveStory,
 			deleteStory: storyFactory.deleteStory,
+
+			getSmilies: storyFactory.getEmoticons,
+			getChatLog: storyFactory.getChatLog,
 
 			changeName: storyFactory.changeName,
 			changePasscode: storyFactory.changePasscode,
