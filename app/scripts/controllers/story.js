@@ -10,9 +10,9 @@
 
 /*
     $scope.view =
-    view = 0 -> loading screen
-    view = 1 -> session screen
-    view = 2 -> enter name & passcode screen
+        view = 0 -> loading screen
+        view = 1 -> session screen
+        view = 2 -> enter name & passcode screen
  */
 angular.module('pointoApp')
     .controller('StoryCtrl', function($scope, $routeParams, $window, $timeout, $route, storyFactory, accountFactory, viewFactory) {
@@ -106,7 +106,7 @@ angular.module('pointoApp')
             $scope.newName = storyFactory.user.name;
 
             chatbox = document.getElementById('chatlog');
-            
+
             $timeout(function() {
                 chatbox.scrollTop = chatbox.scrollHeight;
             }, 500);
@@ -129,7 +129,7 @@ angular.module('pointoApp')
             storyFactory.getTimer($scope.sessionID).on('value', function(snap) {
                 $scope.timer = snap.val() !== null ? snap.val() : $scope.timer;
 
-                if ($scope.timer !== null && !$scope.timerStarted && $scope.timer.running && $scope.timer.counter > 0) {
+                if ($scope.timer !== null && typeof(timerInterval) === 'undefined' && !$scope.timerStarted && $scope.timer.running && $scope.timer.counter > 0) {
                     // start timer
                     timerInterval = setInterval(function() {
                         $scope.timer.counter--; // count down
@@ -268,6 +268,7 @@ angular.module('pointoApp')
         $scope.stopTimer = function(ended) {
             $timeout(function() {
                 clearInterval(timerInterval);
+                timerInterval = undefined;
                 $scope.timerStarted = false;
                 $scope.countdown.data = [0, 100];
 
@@ -330,7 +331,7 @@ angular.module('pointoApp')
 
 
 
-        /* 
+        /*
 			STORIES
 		*/
         $scope.addStory = function() {
@@ -480,7 +481,7 @@ angular.module('pointoApp')
             if (u === null || !u.hasOwnProperty($scope.authUser().data.uid)) {
                 $scope.view = 0;
                 $scope.autoJoinSession();
-            } 
+            }
         });
 
     });
