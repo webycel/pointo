@@ -3,11 +3,10 @@
 	font-family: 'fontelico';
 	font-style: normal;
 	font-weight: normal;
-	src: url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.eot');
-	src: url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.eot?#iefix') format('eot'),
-	url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.woff') format('woff'),
-	url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.ttf') format('truetype'),
-	url('http://weloveiconfonts.com/api/fonts/fontelico/fontelico.svg#fontelico') format('svg');
+	src: url('/styles/fonts/fontelico.eot');
+	src: url('/styles/fonts/fontelico.eot?#iefix') format('eot'),
+	url('/styles/fonts/fontelico.woff') format('woff'),
+	url('/styles/fonts/fontelico.ttf') format('truetype');
 }
 .fontelico-emo-happy:before {content:'\e800'}
 .fontelico-emo-wink:before {content:'\e801'}
