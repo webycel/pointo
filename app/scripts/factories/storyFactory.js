@@ -620,9 +620,6 @@ angular.module('pointoApp')
 			}
 		};
 
-		storyFactory.getEmoticons = function () {
-			return storyFactory.chatEmoticons;
-		};
 		storyFactory.getChatLog = function () {
 			return storyFactory.chatLog;
 		};
@@ -665,7 +662,6 @@ angular.module('pointoApp')
 			saveStory: storyFactory.saveStory,
 			deleteStory: storyFactory.deleteStory,
 
-			getSmilies: storyFactory.getEmoticons,
 			getChatLog: storyFactory.getChatLog,
 
 			changeName: storyFactory.changeName,
