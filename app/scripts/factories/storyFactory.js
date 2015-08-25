@@ -592,7 +592,7 @@ angular.module('pointoApp')
 		/* CHAT */
 		storyFactory.chatChanged = function(childSnap, prevChildKey) {
 			var chat = childSnap.val(),
-				result, regex, emo;
+				regex, emo;
 
 			// child_added event is fired twice, so don't show the last message again
 			if (prevChildKey !== lastChatMessageID) {
@@ -601,25 +601,16 @@ angular.module('pointoApp')
 
 				for(emo in storyFactory.chatEmoticons) {
 					regex = new RegExp(emo.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
-					result = chat.message.replace(regex, function (match) {
-						var smiley = storyFactory.chatEmoticons[match.toLowerCase()],
-							smileyElem;
-
-						if(typeof(smiley) !== 'undefined') {
-							smileyElem = '<span class="fontelico-emo-' + smiley + '"></span>';
-							chat.message = chat.message.replace(match, smileyElem);
-						}
-
-					});
+					chat.message = chat.message.replace(regex, emoticonRegexMatch);
 				}
-
-				//console.log(chat.message);
 
 				storyFactory.chatLog.push(chat);
 
 				// scroll chatbox
 				$timeout(function() {
-					chatbox.scrollTop = chatbox.scrollHeight;
+					if(chatbox) {
+						chatbox.scrollTop = chatbox.scrollHeight;
+					}
 				}, 500);
 			}
 		};
@@ -627,6 +618,16 @@ angular.module('pointoApp')
 		storyFactory.getChatLog = function () {
 			return storyFactory.chatLog;
 		};
+
+		function emoticonRegexMatch(match) {
+			var smiley = storyFactory.chatEmoticons[match.toLowerCase()],
+				smileyElem;
+
+			if(typeof(smiley) !== 'undefined') {
+				smileyElem = '<span class="fontelico-emo-' + smiley + '"></span>';
+			}
+			return smileyElem;
+		}
 
 
 
