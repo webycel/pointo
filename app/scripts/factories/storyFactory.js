@@ -342,9 +342,16 @@ angular.module('pointoApp')
 
 			if (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader) {
 				// save score to database
-				ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
-				if (storyFactory.session.stories[storyFactory.session.activeStory].points === -999) {
-					ref.child('sessions').child(storyFactory.sessionID).child('stories').child(storyFactory.session.activeStory).update({ points: stats.score });
+				try {
+					ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
+					if (storyFactory.session.stories[storyFactory.session.activeStory].points === -999) {
+						ref.child('sessions').child(storyFactory.sessionID).child('stories').child(storyFactory.session.activeStory).update({ points: stats.score });
+					}
+				} catch(e) {
+					if (e instanceof TypeError) {
+						// activeStory is set but all stories have been deleted
+						ref.child('sessions').child(storyFactory.sessionID).child('activeStory').remove();
+				    }
 				}
 			}
 		};
@@ -596,9 +603,9 @@ angular.module('pointoApp')
 
 			// child_added event is fired twice, so don't show the last message again
 			if (prevChildKey !== lastChatMessageID) {
-				//console.log(chat.message);
 				lastChatMessageID = prevChildKey;
 
+				// check if there are emoticons in message and replace with html
 				for(emo in storyFactory.chatEmoticons) {
 					regex = new RegExp(emo.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
 					chat.message = chat.message.replace(regex, emoticonRegexMatch);
@@ -619,6 +626,7 @@ angular.module('pointoApp')
 			return storyFactory.chatLog;
 		};
 
+		// replace emoticons with span & font icon
 		function emoticonRegexMatch(match) {
 			var smiley = storyFactory.chatEmoticons[match.toLowerCase()],
 				smileyElem;
