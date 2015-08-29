@@ -62,7 +62,6 @@ angular.module('pointoApp')
 
 		storyFactory.storyPointValues = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
 
-		storyFactory.chatLog = [];
 		storyFactory.chatEmoticons = {
 			'\:\)': 	 	'happy',		'\:\-\)': 'happy',			'\(happy\)': 'happy',
 			'\:\(':  		'unhappy', 		'\:\-\(': 'unhappy',		'\(sad\)': 'unhappy',
@@ -242,6 +241,7 @@ angular.module('pointoApp')
 					});
 
 					// on chat changed
+					storyFactory.chatLog = [];
 					ref.child('sessions').child(id).child('chat').on('child_added', storyFactory.chatChanged);
 
 					// on session change
@@ -342,9 +342,16 @@ angular.module('pointoApp')
 
 			if (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader) {
 				// save score to database
-				ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
-				if (storyFactory.session.stories[storyFactory.session.activeStory].points === -999) {
-					ref.child('sessions').child(storyFactory.sessionID).child('stories').child(storyFactory.session.activeStory).update({ points: stats.score });
+				try {
+					ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });
+					if (storyFactory.session.stories[storyFactory.session.activeStory].points === -999) {
+						ref.child('sessions').child(storyFactory.sessionID).child('stories').child(storyFactory.session.activeStory).update({ points: stats.score });
+					}
+				} catch(e) {
+					if (e instanceof TypeError) {
+						// activeStory is set but all stories have been deleted
+						ref.child('sessions').child(storyFactory.sessionID).child('activeStory').remove();
+				    }
 				}
 			}
 		};
@@ -596,9 +603,9 @@ angular.module('pointoApp')
 
 			// child_added event is fired twice, so don't show the last message again
 			if (prevChildKey !== lastChatMessageID) {
-				//console.log(chat.message);
 				lastChatMessageID = prevChildKey;
 
+				// check if there are emoticons in message and replace with html
 				for(emo in storyFactory.chatEmoticons) {
 					regex = new RegExp(emo.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
 					chat.message = chat.message.replace(regex, emoticonRegexMatch);
@@ -619,6 +626,7 @@ angular.module('pointoApp')
 			return storyFactory.chatLog;
 		};
 
+		// replace emoticons with span & font icon
 		function emoticonRegexMatch(match) {
 			var smiley = storyFactory.chatEmoticons[match.toLowerCase()],
 				smileyElem;
