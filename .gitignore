@@ -3,5 +3,6 @@ dist
 .tmp
 .sass-cache
 .DS_Store
+.ruby-version
 bower_components
 todo.txt

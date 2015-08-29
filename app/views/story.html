@@ -100,13 +100,13 @@
                     <h2>Stories</h2>
 
                     <div class="list-group">
-                        <div class="list-group-item" ng-repeat="(id, story) in stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
+                        <div class="list-group-item" ng-repeat="(id, story) in $parent.stories.list" ng-class="{active: session.activeStory == id, 'edit-mode': story.editMode, owner: session.owner === authUser().data.uid}">
                             <div class="item-content" ng-click="setActiveStory($event, id, story.editMode)" ng-hide="stories.editMode">
                                 <span ng-hide="story.editMode">
-                                    <span class="badge" ng-if="story.points !== -999 && session.owner !== authUser().data.uid">{{story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
+                                    <span class="badge" ng-if="story.points !== -999 && session.owner !== authUser().data.uid">{{$parent.story.points !== -2 ? story.points: '?'}}</span> {{story.name}}
                                 </span>
 
-                                <select ng-model="$parent.story.points" ng-change="saveStoryEdit($event, id, story)" ng-show="session.owner === authUser().data.uid">
+                                <select ng-model="story.points" ng-change="saveStoryEdit($event, id, story)" ng-show="session.owner === authUser().data.uid">
                                     <option value="-999">-</option>
                                     <option ng-repeat="point in storypoints | filter:'!X'" value="{{point.value}}" ng-selected="story.points === point.value">{{point.text}}</option>
                                 </select>
