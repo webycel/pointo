@@ -62,7 +62,6 @@ angular.module('pointoApp')
 
 		storyFactory.storyPointValues = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
 
-		storyFactory.chatLog = [];
 		storyFactory.chatEmoticons = {
 			'\:\)': 	 	'happy',		'\:\-\)': 'happy',			'\(happy\)': 'happy',
 			'\:\(':  		'unhappy', 		'\:\-\(': 'unhappy',		'\(sad\)': 'unhappy',
@@ -242,6 +241,7 @@ angular.module('pointoApp')
 					});
 
 					// on chat changed
+					storyFactory.chatLog = [];
 					ref.child('sessions').child(id).child('chat').on('child_added', storyFactory.chatChanged);
 
 					// on session change
