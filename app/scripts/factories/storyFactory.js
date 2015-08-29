@@ -7,8 +7,8 @@ angular.module('pointoApp')
 	ref = new Firebase(FIREBASE_URL),
 	chatbox = document.getElementById('chatlog'),
 	lastChatMessageID,
-	urlExpression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi,
-	urlRegex = new RegExp(urlExpression);
+	urlRegex = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi),
+	imgRegex = new RegExp(/(https?:\/\/[^ ]*\.(?:gif|png|jpg|jpeg|svg))/i);
 
 	storyFactory.user = {
 		key: null,
@@ -601,15 +601,21 @@ angular.module('pointoApp')
 	/* CHAT */
 	storyFactory.chatChanged = function(childSnap, prevChildKey) {
 		var chat = childSnap.val(),
-		emoRegex, emo, urlMatch, url;
+		emoRegex, emo, urlMatch, url, imgMatch, img;
 
 		// child_added event is fired twice, so don't show the last message again
 		if (prevChildKey !== lastChatMessageID) {
 			lastChatMessageID = prevChildKey;
 
-			// check if message contains a URL
+			// check if message contains a URL or image
+			imgMatch = chat.message.match(imgRegex);
 			urlMatch = chat.message.match(urlRegex);
-			if (urlMatch) {
+			if (imgMatch) { // check if message contains an image (jpg, png, svg, gif)
+				img = imgMatch[0];
+				console.log(img);
+				// replace image witch an html image
+				chat.message = chat.message.replace(urlMatch, '<img src="' + img + '" />');
+			} else if (urlMatch) { // check if message contains a URL
 				url = urlMatch[0];
 				// prepend http if it's not there
 				if (url.indexOf('http') < 0) {

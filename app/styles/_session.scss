@@ -179,17 +179,26 @@
             border: 1px solid $greyCCC;
             overflow: scroll;
             overflow-x: hidden;
+            word-break: break-all;
 
             p {
                 margin: 0;
                 font-size: 0.85em;
+
+                b {
+                    vertical-align: top;
+                }
+                img {
+                    margin-top: 5px;
+                    width: 75%;
+                }
             }
         }
         .input {
             width: 100%;
         }
     }
-    
+
     .stories {
         .edit-story-link {
             float: right;
