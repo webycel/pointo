@@ -611,18 +611,13 @@ angular.module('pointoApp')
 			imgMatch = chat.message.match(imgRegex);
 			urlMatch = chat.message.match(urlRegex);
 			if (imgMatch) { // check if message contains an image (jpg, png, svg, gif)
-				img = imgMatch[0];
-				console.log(img);
+				img = addHttpToURL(imgMatch[0]);
 				// replace image witch an html image
 				chat.message = chat.message.replace(urlMatch, '<a href="' + img + '" target="_blank"><img src="' + img + '" /></a>');
 			} else if (urlMatch) { // check if message contains a URL
-				url = urlMatch[0];
-				// prepend http if it's not there
-				if (url.indexOf('http') < 0) {
-					url = 'http://' + url;
-				}
+				url = addHttpToURL(urlMatch[0]);
 				// replace URL witch a hyperlink
-				chat.message = chat.message.replace(urlMatch, '<a href="' + url + '" target="_blank">' + url + '</a>');
+				chat.message = chat.message.replace(urlMatch, '<a href="' + url + '" target="_blank">' + urlMatch[0] + '</a>');
 			} else {
 				// check if there are emoticons in message and replace with html
 				for (emo in storyFactory.chatEmoticons) {
@@ -645,6 +640,14 @@ angular.module('pointoApp')
 	storyFactory.getChatLog = function () {
 		return storyFactory.chatLog;
 	};
+
+	// prepend 'http' to a URL if it's not there
+	function addHttpToURL(url) {
+		if (url.indexOf('http') < 0) {
+			return 'http://' + url;
+		}
+		return url;
+	}
 
 	// replace emoticons with span & font icon
 	function emoticonRegexMatch(match) {
