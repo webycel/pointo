@@ -294,7 +294,7 @@ angular.module('pointoApp')
         // start or stop timer
         $scope.toggleTimer = function() {
             if (!$scope.timer.running) {
-                if ($scope.timer.value >= 5 && $scope.user.leader) {
+                if ($scope.timer.value >= 5 && $scope.user.leader && $scope.session.voteStatus === 0) {
                     $scope.timer.running = true;
                     $scope.timer.counter = parseInt($scope.timer.value);
                     storyFactory.setTimer($scope.timer);
