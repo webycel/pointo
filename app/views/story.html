@@ -92,7 +92,8 @@
                                 <b>{{msg.user}}:</b> <span ng-bind-html="msg.message"></span>
                             </p>
                         </div>
-                        <input type="text" class="input" placeholder="Type message and send with enter" maxlength="360" ng-model="chatInput" required />
+                        <input type="text" class="input" placeholder="Type a message" maxlength="360" ng-model="chatInput" required />
+                        <button class="btn btn-default send glyphicon glyphicon-menu-right" type="submit"></button>
                     </form>
                 </div>
 
