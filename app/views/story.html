@@ -22,7 +22,7 @@
                     <form ng-submit="toggleTimer()" ng-show="user.leader">
                         <input type="number" class="timer-input" ng-model="$parent.timer.value" min="5" ng-disabled="timer.running" />
                         <span class="timer-unit">sec</span>
-                        <button type="submit" class="btn-action timer-start" ng-class="{disabled: timer.value <= 0, 'btn-secondary': timer.running}">
+                        <button type="submit" class="btn-action timer-start" ng-class="{disabled: timer.value <= 0 || session.voteStatus === 1, 'btn-secondary': timer.running}" ng-disabled="session.voteStatus === 1">
                             <span class="glyphicon" ng-class="{'glyphicon-hourglass': !timer.running, 'glyphicon-stop': timer.running}"></span>
                         </button>
                     </form>
