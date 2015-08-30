@@ -194,8 +194,19 @@
                 }
             }
         }
+        form {
+            position: relative;
+        }
         .input {
+            padding-right: 50px;
             width: 100%;
+        }
+        .send {
+            position: absolute;
+            top: auto;
+            right: 0;
+            bottom: 0;
+            height: 34px;
         }
     }
 
