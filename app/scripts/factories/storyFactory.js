@@ -614,7 +614,7 @@ angular.module('pointoApp')
 				img = imgMatch[0];
 				console.log(img);
 				// replace image witch an html image
-				chat.message = chat.message.replace(urlMatch, '<img src="' + img + '" />');
+				chat.message = chat.message.replace(urlMatch, '<a href="' + img + '" target="_blank"><img src="' + img + '" /></a>');
 			} else if (urlMatch) { // check if message contains a URL
 				url = urlMatch[0];
 				// prepend http if it's not there
