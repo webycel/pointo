@@ -118,6 +118,14 @@ angular.module('pointoApp')
                 editMode: false
             };
 
+            // when navigationg away from session
+        	$scope.$on('$destroy', function() {
+                if (!$scope.authUser().account) {
+                    storyFactory.getSessionRef(sessionID).child('users').child($scope.user.key).remove();
+                    accountFactory.logout();
+                }
+        	});
+
             // init timer
             $scope.timer = {
                 value: 15,

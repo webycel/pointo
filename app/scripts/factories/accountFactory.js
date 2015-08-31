@@ -116,7 +116,7 @@ angular.module('pointoApp')
 			} else {
 				//accountFactory.anonymousLogin();
 				accountFactory.setUser(null, '');
-				
+
 				if (accountFactory.inited) {
 					accountFactory.inited = false;
 					$window.location.assign('#/');
@@ -178,6 +178,7 @@ angular.module('pointoApp')
 			getUserName: accountFactory.getUserName,
 			setUserName: accountFactory.setLocalUserName,
 			login: accountFactory.login,
+			logout: accountFactory.logout,
 			register: accountFactory.register,
 			updateAccount: accountFactory.updateAccount,
 			sendFeedback: accountFactory.sendFeedback
