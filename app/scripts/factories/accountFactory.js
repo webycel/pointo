@@ -19,8 +19,8 @@ angular.module('pointoApp')
 			userRef, sessionRef;
 
 		//public
-		accountFactory.init = function() {
-			if (!accountFactory.inited) {
+		accountFactory.init = function(force) {
+			if (force || !accountFactory.inited) {
 				ref.onAuth(accountFactory.authDataCallback);
 
 				accountFactory.user.data = ref.getAuth();
@@ -66,10 +66,12 @@ angular.module('pointoApp')
 			}, accountFactory.authHandler);
 		};
 
-		accountFactory.logout = function() {
+		accountFactory.logout = function(noRedirect) {
 			ref.unauth();
 			accountFactory.user.account = false;
-			$window.location.assign('#/');
+			if (!noRedirect) {
+				$window.location.assign('#/');
+			}
 		};
 
 		//private
@@ -116,7 +118,7 @@ angular.module('pointoApp')
 			} else {
 				//accountFactory.anonymousLogin();
 				accountFactory.setUser(null, '');
-				
+
 				if (accountFactory.inited) {
 					accountFactory.inited = false;
 					$window.location.assign('#/');
@@ -178,6 +180,7 @@ angular.module('pointoApp')
 			getUserName: accountFactory.getUserName,
 			setUserName: accountFactory.setLocalUserName,
 			login: accountFactory.login,
+			logout: accountFactory.logout,
 			register: accountFactory.register,
 			updateAccount: accountFactory.updateAccount,
 			sendFeedback: accountFactory.sendFeedback
