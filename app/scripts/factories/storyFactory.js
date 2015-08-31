@@ -165,7 +165,8 @@ angular.module('pointoApp')
 					if (error) {
 						console.log('Login Failed!', error);
 					} else {
-						console.log('Logged in as Anonymous');
+						// console.log('Logged in as Anonymous');
+						accountFactory.init(true);
 						storyFactory.addUser(id, name, spectator, authData.uid, redirect);
 					}
 				});
@@ -254,7 +255,9 @@ angular.module('pointoApp')
 
 				ref.child('sessions').child(id).child('users').child(storyFactory.user.key).on('value', storyFactory.onParticipantChange);
 
-				$window.location.assign('#/' + id);
+				if (redirect) {
+					$window.location.assign('#/' + id);
+				}
 			} else {
 				console.log(error);
 			}
@@ -342,7 +345,7 @@ angular.module('pointoApp')
 
 		storyFactory.statistics = stats;
 
-		if (storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader) {
+		if (accountFactory.getUser().data && storyFactory.session.owner === accountFactory.getUser().data.uid || storyFactory.user.leader) {
 			// save score to database
 			try {
 				ref.child('sessions').child(storyFactory.sessionID).update({ score: stats.score });

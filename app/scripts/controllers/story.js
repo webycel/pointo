@@ -109,7 +109,9 @@ angular.module('pointoApp')
             chatbox = document.getElementById('chatlog');
 
             $timeout(function() {
-                chatbox.scrollTop = chatbox.scrollHeight;
+                if (chatbox) {
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                }
             }, 500);
 
             $scope.stories = {
@@ -121,8 +123,9 @@ angular.module('pointoApp')
             // when navigationg away from session
         	$scope.$on('$destroy', function() {
                 if (!$scope.authUser().account) {
-                    storyFactory.getSessionRef(sessionID).child('users').child($scope.user.key).remove();
-                    accountFactory.logout();
+                    storyFactory.getSessionRef(sessionID).child('users').off(); // stop listening to userlist change event
+                    storyFactory.getSessionRef(sessionID).child('users').child($scope.user.key).remove(); // remove user from session
+                    accountFactory.logout(true);
                 }
         	});
 
@@ -479,17 +482,17 @@ angular.module('pointoApp')
                         });
                     } else {
                         $scope.autoJoinSession();
+
+                        // observe user list, if the current user is not in it, add him to session
+                        storyFactory.getSessionRef(sessionID).child('users').on('value', function(snapshot) {
+                            var u = snapshot.val();
+                            if (u === null || !($scope.authUser().data && u.hasOwnProperty($scope.authUser().data.uid))) {
+                                $scope.view = 0;
+                                $scope.autoJoinSession();
+                            }
+                        });
                     }
                 }
-            }
-        });
-
-        // observe user list, if the current user is not in it, add him to session
-        storyFactory.getSessionRef(sessionID).child('users').on('value', function(snapshot) {
-            var u = snapshot.val();
-            if (u === null || !u.hasOwnProperty($scope.authUser().data.uid)) {
-                $scope.view = 0;
-                $scope.autoJoinSession();
             }
         });
 
