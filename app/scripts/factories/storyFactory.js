@@ -188,13 +188,15 @@ angular.module('pointoApp')
 		points = {
 			text: -1,
 			value: -1
-		};
+		},
+		leader = accountFactory.getUser().account ? true : false;
 
 		name = name.toString();
 
 		usersRef.child(uid).set({
 			name: name,
 			points: points,
+			leader: leader,
 			spectator: spectator
 		}, function(error) {
 			if (!error) {
@@ -203,6 +205,7 @@ angular.module('pointoApp')
 				storyFactory.user.redirect = redirect;
 				storyFactory.user.points = points;
 				storyFactory.user.spectator = spectator;
+				storyFactory.user.leader = leader;
 
 				if (utilsFactory.hasStorage()) {
 					localStorage[uid] = name;
