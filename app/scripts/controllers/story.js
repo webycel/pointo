@@ -122,9 +122,10 @@ angular.module('pointoApp')
 
             // when navigationg away from session
         	$scope.$on('$destroy', function() {
+                storyFactory.getSessionRef(sessionID).child('users').off(); // stop listening to userlist change event
+                storyFactory.getSessionRef(sessionID).child('users').child($scope.user.key).remove(); // remove user from session
+
                 if (!$scope.authUser().account) {
-                    storyFactory.getSessionRef(sessionID).child('users').off(); // stop listening to userlist change event
-                    storyFactory.getSessionRef(sessionID).child('users').child($scope.user.key).remove(); // remove user from session
                     accountFactory.logout(true);
                 }
         	});
