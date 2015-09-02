@@ -20,10 +20,10 @@
             <div class="form-group" ng-hide="passcodeNeeded">
                 <input type="text" class="name" placeholder="Your name" ng-model="joinName().name" ng-hide="authUser().account" required />
                 <input type="number" class="join_id" placeholder="123 456" min="100000" max="999999" ng-model="sessionID" required />
-                
+
                 <button type="submit" class="join-btn" ng-class="{loading: loading().join, disabled: loading().join}" ng-click="spectator = false"><span class="glyphicon glyphicon-transfer"></span> Join Session</button>
                 <button type="submit" class="btn-light" ng-class="{loading: loading().joinSpectator, disabled: loading().joinSpectator}" ng-click="spectator = true"><span class="glyphicon glyphicon-sunglasses"></span> Join as spectator</button>
-                
+
                 <div class="error warning" ng-show="errors().noSession">This session does not exist.</div>
             </div>
 
@@ -53,7 +53,7 @@
             <div class="form-group" ng-show="auth.state.login">
                 <input type="text" class="name" placeholder="Your email" ng-model="auth.login.email" focus-on="enterLogin" required />
                 <input type="password" class="join_id" placeholder="Your password" ng-model="auth.login.password" required />
-                
+
                 <button type="submit" ng-class="{loading: loading().login, disabled: loading().login}" ng-click="spectator = false">Login</button>
                 <div class="error" ng-show="errors().loginError">{{errors().loginError}}</div>
                 <a href="#/forgotpassword" class="forgot-pwd">Forgot password?</a>
@@ -68,7 +68,7 @@
             <div class="form-group" ng-show="auth.state.register">
                 <input type="email" class="name" placeholder="Your email" ng-model="auth.register.email" focus-on="enterRegister" required />
                 <input type="password" class="join_id" placeholder="Your password" ng-model="auth.register.password" required />
-                
+
                 <button type="submit" class="btn-action join-btn" ng-class="{loading: loading().register, disabled: loading().register}" ng-click="spectator = false">Register</button>
                 <div class="error" ng-show="errors().registerError">{{errors().registerError}}</div>
             </div>
@@ -87,10 +87,10 @@
     <div class="col col-md-6 col-sm-6 col-xs-12 my-sessions" ng-show="authUser().account">
 
         <h2>My sessions</h2>
-            
+
         <ul>
             <li ng-repeat="session in authUser().sessions">
-                <a ng-click="joinSession(session.sessionId)">{{session.sessionId}}</a>
+                <a ng-click="joinSession(session.sessionId, false, false)">{{session.sessionId}}</a>
             </li>
         </ul>
 
