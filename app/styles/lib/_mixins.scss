@@ -53,13 +53,13 @@
   	}
   	@-moz-keyframes $animation-name {
     	@content;
-  	}  
+  	}
   	@-ms-keyframes $animation-name {
     	@content;
   	}
   	@-o-keyframes $animation-name {
     	@content;
-  	}  
+  	}
  	@keyframes $animation-name {
     	@content;
   	}
@@ -70,7 +70,7 @@
 	-moz-animation: #{$str};
 	-ms-animation: #{$str};
 	-o-animation: #{$str};
-	animation: #{$str};      
+	animation: #{$str};
 }
 /*
 	USAGE
@@ -87,6 +87,22 @@
 		@include animation('slide-down 5s 3');
 	}
 */
+
+
+
+
+
+/* ARROWS */
+@mixin arrow-up($size, $colour) {
+	border-left: $size solid transparent;
+	border-right: $size solid transparent;
+	border-bottom: $size solid $colour;
+}
+@mixin arrow-down($size, $colour) {
+	border-left: $size solid transparent;
+	border-right: $size solid transparent;
+	border-top: $size solid $colour;
+}
 
 
 
