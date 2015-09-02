@@ -53,12 +53,14 @@ angular.module('pointoApp')
 			}
 		};
 
-		$scope.joinSession = function(id, passcodeEntered) {
+		$scope.joinSession = function(id, passcodeEntered, showLoading) {
 			if (!$scope.loading().join) {
-				if ($scope.spectator) {
-					viewFactory.setLoading('joinSpectator', true);
-				} else {
-					viewFactory.setLoading('join', true);
+				if (showLoading) {
+					if ($scope.spectator) {
+						viewFactory.setLoading('joinSpectator', true);
+					} else {
+						viewFactory.setLoading('join', true);
+					}
 				}
 
 				viewFactory.setErrors('noSession', false);
