@@ -108,7 +108,7 @@ angular.module('pointoApp')
             $scope.chatLog = storyFactory.getChatLog;
             $scope.chatInput = '';
             $scope.emoticons = storyFactory.getEmoticons();
-            $scope.showEmoMenu = true;
+            $scope.showEmoMenu = false;
             chatbox = document.getElementById('chatlog');
 
             $timeout(function() {
