@@ -106,6 +106,9 @@ angular.module('pointoApp')
             $scope.newName = storyFactory.user.name;
 
             $scope.chatLog = storyFactory.getChatLog;
+            $scope.chatInput = '';
+            $scope.emoticons = storyFactory.getEmoticons();
+            $scope.showEmoMenu = false;
             chatbox = document.getElementById('chatlog');
 
             $timeout(function() {
@@ -338,7 +341,16 @@ angular.module('pointoApp')
                 });
             }
 
+            $scope.closeEmoMenu();
             $scope.chatInput = '';
+        };
+
+        $scope.addEmoToMessage = function(emo) {
+            $scope.chatInput += '' + emo;
+        };
+
+        $scope.closeEmoMenu = function() {
+            $scope.showEmoMenu = false;
         };
 
 

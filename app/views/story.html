@@ -92,8 +92,14 @@
                                 <b>{{msg.user}}:</b> <span ng-bind-html="msg.message"></span>
                             </p>
                         </div>
-                        <input type="text" class="input" placeholder="Type a message" maxlength="360" ng-model="chatInput" required />
+                        <a href="" class="fakelink fontelico-emo-happy emo-menu-btn" ng-click="showEmoMenu = !showEmoMenu"></a>
+                        <input type="text" class="input" placeholder="Type a message" maxlength="360" ng-model="chatInput" ng-focus="closeEmoMenu()" required />
                         <button class="btn btn-default send glyphicon glyphicon-menu-right" type="submit"></button>
+
+                        <div class="emo-menu" ng-show="showEmoMenu">
+                            <div class="arrow"></div>
+                            <a href="" ng-repeat="emo in emoticons" class="fakelink fontelico-emo-{{emo.text}}" ng-click="addEmoToMessage(emo.code)"></a>
+                        </div>
                     </form>
                 </div>
 

@@ -64,7 +64,7 @@ angular.module('pointoApp')
 
 	storyFactory.storyPointValues = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
 
-	storyFactory.chatEmoticons = {
+	storyFactory.chatEmoticonsMap = {
 		'\:\)': 	 	'happy',		'\:\-\)': 'happy',			'\(happy\)': 'happy',
 		'\:\(':  		'unhappy', 		'\:\-\(': 'unhappy',		'\(sad\)': 'unhappy',
 		'\;\)':  		'wink', 		'\;\-\)': 'wink',			'\(wink\)': 'wink',
@@ -89,6 +89,31 @@ angular.module('pointoApp')
 		'\(opera\)': 	'opera',
 		'xd': 'laugh'
 	};
+
+	storyFactory.chatEmoticons =[
+		{ text: 'happy', code: ':)'},
+		{ text: 'unhappy', code: ':('},
+		{ text: 'wink', code: ';)'},
+		{ text: 'wink2', code: '(;'},
+		{ text: 'sleep', code: '|-)'},
+		{ text: 'thumbsup', code: '(y)'},
+		{ text: 'devil', code: '(devil)'},
+		{ text: 'tongue', code: ':P'},
+		{ text: 'coffee', code: '(coffee)'},
+		{ text: 'sunglasses', code: '8)'},
+		{ text: 'surprised', code: ':O'},
+		{ text: 'displeased', code: ':/'},
+		{ text: 'beer', code: '(beer)'},
+		{ text: 'grin', code: ':D'},
+		{ text: 'angry', code: 'x('},
+		{ text: 'saint', code: '(angel)'},
+		{ text: 'cry', code: ':\'('},
+		{ text: 'shoot', code: '(shoot)'},
+		{ text: 'firefox', code: '(firefox)'},
+		{ text: 'chrome', code: '(chrome)'},
+		{ text: 'ie', code: '(ie)'},
+		{ text: 'opera', code: '(opera)'}
+	 ];
 
 	storyFactory.session = {};
 	storyFactory.participants = {};
@@ -626,7 +651,7 @@ angular.module('pointoApp')
 				chat.message = chat.message.replace(urlMatch, '<a href="' + url + '" target="_blank">' + urlMatch[0] + '</a>');
 			} else {
 				// check if there are emoticons in message and replace with html
-				for (emo in storyFactory.chatEmoticons) {
+				for (emo in storyFactory.chatEmoticonsMap) {
 					emoRegex = new RegExp(emo.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
 					chat.message = chat.message.replace(emoRegex, emoticonRegexMatch);
 				}
@@ -647,6 +672,10 @@ angular.module('pointoApp')
 		return storyFactory.chatLog;
 	};
 
+	storyFactory.getEmoticons = function () {
+		return storyFactory.chatEmoticons;
+	};
+
 	// prepend 'http' to a URL if it's not there
 	function addHttpToURL(url) {
 		if (url.indexOf('http') < 0) {
@@ -657,7 +686,7 @@ angular.module('pointoApp')
 
 	// replace emoticons with span & font icon
 	function emoticonRegexMatch(match) {
-		var smiley = storyFactory.chatEmoticons[match.toLowerCase()],
+		var smiley = storyFactory.chatEmoticonsMap[match.toLowerCase()],
 		smileyElem;
 
 		if(typeof(smiley) !== 'undefined') {
@@ -705,6 +734,7 @@ angular.module('pointoApp')
 		deleteStory: storyFactory.deleteStory,
 
 		getChatLog: storyFactory.getChatLog,
+		getEmoticons: storyFactory.getEmoticons,
 
 		changeName: storyFactory.changeName,
 		changePasscode: storyFactory.changePasscode,
